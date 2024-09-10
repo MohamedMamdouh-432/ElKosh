@@ -1,16 +1,24 @@
 # elkosh
 
-A new Flutter project.
+11/9/2024
 
-## Getting Started
+	splash screen
+	create account
+	-UI
+	-BloC
+	-Logic
+	-Firebase
 
-This project is a starting point for a Flutter application.
+12/9/2024
 
-A few resources to get you started if this is your first Flutter project:
+	Login
+	Forget Password
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+13/9
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+	just UI Search 
+	Account
+
+15/9
+
+	
