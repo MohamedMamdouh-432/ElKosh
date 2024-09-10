@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "225453014214",
+    "project_id": "elkoshecommerce",
+    "storage_bucket": "elkoshecommerce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225453014214:android:90e0e307ccbb5883f42bc7",
+        "android_client_info": {
+          "package_name": "com.example.elkosh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVeoVgyEIrJX3aRSmfqgBdZo4EY2zgUqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
