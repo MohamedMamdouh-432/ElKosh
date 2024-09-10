@@ -8,6 +8,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = const AppBlocObserver();
-
+//asddddddddddddd
   runApp(const ElKoshApp());
 }
+//dsokd
