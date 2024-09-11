@@ -17,11 +17,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  String? email;
-  String? password;
-  String? PhoneNumber;
-  String? firstName;
-  String? lastName;
+  String? email, password, PhoneNumber;
+  String? firstName, lastName;
   GlobalKey<FormState> formkey = GlobalKey();
   bool isLoaded = false;
 
