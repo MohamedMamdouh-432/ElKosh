@@ -1,5 +1,5 @@
 import 'package:elkosh/core/observer.dart';
-import 'package:elkosh/screens/register_Page.dart';
+import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +21,8 @@ class ElKoshApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: RegisterPage(),
+    return MaterialApp.router(
+      routerConfig: RouteManager.router,
     );
   }
 }

@@ -1,9 +1,11 @@
 import 'package:auth_repository/auth_repository.dart';
+import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/widgets/custom_buttom.dart';
 import 'package:elkosh/widgets/custom_textform_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:quickalert/quickalert.dart';
 
@@ -108,6 +110,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               title: 'Sucessfully Registered',
                               text: 'You can now login',
                             );
+
                             // Navigate to another page after successful registration.
                             // Navigator.pushNamed(context, LoginPage.id);
                           } on SignUpWithEmailAndPasswordFailure catch (e) {
@@ -147,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.pop(context);
+                            GoRouter.of(context).push(RouteManager.signInRoute);
                           },
                           child: const Text(
                             ' LOGIN',
