@@ -12,7 +12,12 @@
           "package_name": "com.example.elkosh"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "225453014214-mk6qstl69qvrdvirfk0hkk3bp8jkiae5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDVeoVgyEIrJX3aRSmfqgBdZo4EY2zgUqY"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225453014214-mk6qstl69qvrdvirfk0hkk3bp8jkiae5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "225453014214-t2p9nj9sjafug57kbhg3r1hj1l224m0i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.elkosh"
+              }
+            }
+          ]
         }
       }
     }

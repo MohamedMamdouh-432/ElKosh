@@ -69,6 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '225453014214',
     projectId: 'elkoshecommerce',
     storageBucket: 'elkoshecommerce.appspot.com',
+    iosClientId: '225453014214-t2p9nj9sjafug57kbhg3r1hj1l224m0i.apps.googleusercontent.com',
     iosBundleId: 'com.example.elkosh',
   );
 }

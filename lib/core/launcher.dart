@@ -1,11 +1,13 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
 
 class ElKoshApp extends StatelessWidget {
@@ -24,8 +26,12 @@ class ElKoshApp extends StatelessWidget {
             RepositoryProvider.value(value: sl.get<AuthRepository>()),
             RepositoryProvider.value(value: sl.get<UserRepository>()),
           ],
-          // todo: replace by MutliBlocProvider later
-          child: const AppView(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => RegisterBloc()),
+            ],
+            child: const AppView(),
+          ),
         );
       },
     );
@@ -37,20 +43,36 @@ class AppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: AppConstants.primaryColor.withOpacity(0.8),
-    //     systemNavigationBarColor: AppConstants.primaryColor.withOpacity(0.6),
-    //     statusBarIconBrightness: Brightness.dark,
-    //     systemNavigationBarIconBrightness: Brightness.light,
-    //   ),
-    // );
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarDividerColor: Colors.transparent,
+      ),
+    );
 
-    return MaterialApp(
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      initialRoute: sl.get<SharedPreferences>().getBool('newToApp?')!
-          ? RouteManager.onboardingRoute
-          : RouteManager.signInRoute,
+      routerConfig: RouteManager.router,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: const Color(0xffFF6100),
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Color(0xffFF6100),
+        ),
+      ),
+      supportedLocales: const [Locale('ar', '')],
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: const Locale('ar', ''),
     );
   }
 }

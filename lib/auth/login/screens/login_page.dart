@@ -1,5 +1,5 @@
-import 'package:elkosh/widgets/custom_buttom.dart';
-import 'package:elkosh/widgets/custom_textform_field.dart';
+import 'package:elkosh/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -64,22 +64,22 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                     const Gap(15),
-                    CustomTextformField(
+                    AuthFormField(
                       onChange: (data) {
                         email = data;
                       },
-                      hintText: 'Email',
+                      labelText: 'Email',
                     ),
                     const Gap(10),
-                    CustomTextformField(
+                    AuthFormField(
                       onChange: (data) {
                         password = data;
                       },
-                      hintText: 'Password',
+                      labelText: 'Password',
                     ),
                     const Gap(15),
                     CustomButtom(
-                      Ontap: () async {
+                      ontap: () async {
                         if (formkey.currentState!.validate()) {
                           isLoaded = true;
                           setState(() {});
