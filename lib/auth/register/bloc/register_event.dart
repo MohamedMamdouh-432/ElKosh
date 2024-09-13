@@ -3,7 +3,7 @@ part of 'register_bloc.dart';
 @immutable
 sealed class RegisterEvent extends Equatable {
   const RegisterEvent();
-  
+
   @override
   List<Object> get props => [];
 }
@@ -40,4 +40,6 @@ class RegisterPhoneChanged extends RegisterEvent {
   List<Object> get props => [phone];
 }
 
-class RegisterWithCredentials extends RegisterEvent {}
+class FormRegisterRequested extends RegisterEvent {}
+
+class RegisterStateReset extends RegisterEvent {}
