@@ -1,156 +1,93 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:either_dart/either.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUpWithEmailAndPasswordFailure implements Exception {
-  final String message;
-
-  const SignUpWithEmailAndPasswordFailure([this.message = '']);
-
-  factory SignUpWithEmailAndPasswordFailure.fromCode(String code) {
+class CodeErrorGetter {
+  static String epRegisterError(String code) {
     switch (code) {
       case 'invalid-email':
-        return const SignUpWithEmailAndPasswordFailure(
-          'Email is not valid or badly formatted.',
-        );
+        return 'البريد الإلكتروني غير صالح';
       case 'user-disabled':
-        return const SignUpWithEmailAndPasswordFailure(
-          'This user has been disabled. Please contact support for help.',
-        );
+        return 'هذا الحساب موقوف';
       case 'email-already-in-use':
-        return const SignUpWithEmailAndPasswordFailure(
-          'An account already exists for that email.',
-        );
+        return 'يوجد حساب بالفعل لهذا البريد الإلكتروني';
       case 'operation-not-allowed':
-        return const SignUpWithEmailAndPasswordFailure(
-          'Operation is not allowed.  Please contact support.',
-        );
+        return 'غير مسموح بتسجيل الدخول لهذا الحساب';
       case 'weak-password':
-        return const SignUpWithEmailAndPasswordFailure(
-          'Please enter a stronger password.',
-        );
+        return 'الرجاء إدخال كلمة مرور قوية';
       default:
-        return const SignUpWithEmailAndPasswordFailure();
+        return 'حدث خطأ أثناء انشاء الحساب';
     }
   }
-}
 
-class LogInWithEmailAndPasswordFailure implements Exception {
-  final String message;
-
-  const LogInWithEmailAndPasswordFailure([this.message = '']);
-
-  factory LogInWithEmailAndPasswordFailure.fromCode(String code) {
+  static String epLoginError(String code) {
     switch (code) {
       case 'invalid-email':
-        return const LogInWithEmailAndPasswordFailure(
-          'Email is not valid or badly formatted.',
-        );
+        return 'البريد الإلكتروني غير صالح';
       case 'user-disabled':
-        return const LogInWithEmailAndPasswordFailure(
-          'This user has been disabled. Please contact support for help.',
-        );
+        return 'هذا الحساب موقوف';
       case 'user-not-found':
-        return const LogInWithEmailAndPasswordFailure(
-          'Email is not found, please create an account.',
-        );
+        return 'هذا الحساب غير موجود';
       case 'wrong-password':
-        return const LogInWithEmailAndPasswordFailure(
-          'Incorrect password, please try again.',
-        );
+        return 'كلمة المرور غير صحيحه';
       default:
-        return const LogInWithEmailAndPasswordFailure();
+        return 'حدث خطأ أثناء تسجيل الدخول';
     }
   }
-}
 
-class LogInWithGoogleFailure implements Exception {
-  final String message;
-
-  const LogInWithGoogleFailure([this.message = '']);
-
-  factory LogInWithGoogleFailure.fromCode(String code) {
+  static String googleLoginError(String code) {
     switch (code) {
       case 'account-exists-with-different-credential':
-        return const LogInWithGoogleFailure(
-          'Account exists with different credentials.',
-        );
+        return 'الحساب موجود ببيانات اعتماد مختلفة';
       case 'invalid-credential':
-        return const LogInWithGoogleFailure(
-          'The credential received is malformed or has expired.',
-        );
+        return 'هذا الحساب موقوف';
       case 'operation-not-allowed':
-        return const LogInWithGoogleFailure(
-          'Operation is not allowed.  Please contact support.',
-        );
+        return 'غير مسموح بتسجيل الدخول لهذا الحساب';
       case 'user-disabled':
-        return const LogInWithGoogleFailure(
-          'This user has been disabled. Please contact support for help.',
-        );
+        return 'هذا الحساب موقوف';
       case 'user-not-found':
-        return const LogInWithGoogleFailure(
-          'Email is not found, please create an account.',
-        );
+        return 'هذا الحساب غير موجود';
       case 'wrong-password':
-        return const LogInWithGoogleFailure(
-          'Incorrect password, please try again.',
-        );
-      case 'invalid-verification-code':
-        return const LogInWithGoogleFailure(
-          'The credential verification code received is invalid.',
-        );
-      case 'invalid-verification-id':
-        return const LogInWithGoogleFailure(
-          'The credential verification ID received is invalid.',
-        );
+        return 'كلمة المرور غير صحيحه';
       default:
-        return const LogInWithGoogleFailure();
+        return 'حدث خطأ أثناء تسجيل الدخول بحساب جوجل';
     }
   }
-}
-
-class LogOutFailure implements Exception {}
-
-class AuthFailure {
-  final String message;
-  AuthFailure({this.message = ''});
 }
 
 class AuthRepository {
   final FirebaseAuth _fireAuth;
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
-  final SharedPreferences _sharedPreference;
+  final SharedPreferences _sharedPref;
   String? _userId;
 
   AuthRepository({
     required FirebaseAuth firebaseAuth,
+    GoogleSignIn? googleSignIn,
     required FirebaseFirestore firestore,
     required SharedPreferences sharedPreferences,
-    GoogleSignIn? googleSignIn,
   })  : _fireAuth = firebaseAuth,
         _firestore = firestore,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
-        _sharedPreference = sharedPreferences;
+        _sharedPref = sharedPreferences;
 
   bool get userExists => _userId != null;
 
   Future<String?> get userId async {
-    _userId = _sharedPreference.getString('userId');
+    _userId = _sharedPref.getString('userId');
     if (_userId == null || _userId == '' || _userId!.isEmpty) return null;
     return _userId;
   }
 
-  Future<Either<SignUpWithEmailAndPasswordFailure, void>>
-      signUpWithEmailAndPassword({
+  Future<void> registerWithEmailAndPassword({
+    required String name,
+    required String phone,
     required String email,
     required String password,
-    required String name,
   }) async {
     try {
       UserCredential userCredentials =
@@ -160,46 +97,34 @@ class AuthRepository {
       );
       _firestore.collection('users').doc(userCredentials.user!.uid).set({
         'name': name,
+        'phone': phone,
         'email': email,
       });
-      await _sharedPreference.setString('userId', userCredentials.user!.uid);
-      await _sharedPreference.setBool('first_time', false);
-
-      return const Right(null);
+      await _sharedPref.setString('userId', userCredentials.user!.uid);
     } on FirebaseAuthException catch (e) {
-      return Left(SignUpWithEmailAndPasswordFailure.fromCode(e.code));
+      throw Exception(CodeErrorGetter.epRegisterError(e.code));
     } catch (_) {
-      throw const SignUpWithEmailAndPasswordFailure();
+      throw Exception("حدث خطأ أثناء انشاء الحساب");
     }
   }
 
   Future<void> logInWithGoogle() async {
     try {
-      late final AuthCredential credential;
-      if (kIsWeb) {
-        final googleProvider = GoogleAuthProvider();
-        final userCredential = await _fireAuth.signInWithPopup(
-          googleProvider,
-        );
-        credential = userCredential.credential!;
-      } else {
-        final googleUser = await _googleSignIn.signIn();
-        final googleAuth = await googleUser!.authentication;
-        credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-      }
-
+      final googleUser = await _googleSignIn.signIn();
+      final googleAuth = await googleUser!.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
       await _fireAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      throw LogInWithGoogleFailure.fromCode(e.code);
+      throw Exception(CodeErrorGetter.googleLoginError(e.code));
     } catch (_) {
-      throw const LogInWithGoogleFailure();
+      throw Exception("حدث خطأ اثناء تسجيل الدخول الى حساب جوجل");
     }
   }
 
-  Future<Either<AuthFailure, String>> logInWithEmailAndPassword({
+  Future<String> logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
@@ -210,32 +135,25 @@ class AuthRepository {
         password: password,
       );
       _userId = userCredentials.user!.uid;
-
-      await _sharedPreference.setString('userId', _userId!);
-      await _sharedPreference.setBool('first_time', false);
-
-      return Right(_userId!);
-    } on LogInWithEmailAndPasswordFailure catch (e) {
-      return Left(AuthFailure(message: e.message));
+      await _sharedPref.setString('userId', _userId!);
+      return _userId!;
     } on FirebaseAuthException catch (e) {
-      return Left(AuthFailure(
-          message: LogInWithEmailAndPasswordFailure.fromCode(e.code).message));
+      throw Exception(CodeErrorGetter.googleLoginError(e.code));
     } catch (_) {
-      return Left(AuthFailure());
+      throw Exception("حدث خطأ اثناء تسجيل الدخول");
     }
   }
 
   Future<void> logOut() async {
     try {
       _userId = null;
-
-      await _sharedPreference.remove('userId');
+      await _sharedPref.remove('userId');
       await Future.wait([
         _fireAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
     } catch (_) {
-      throw LogOutFailure();
+      throw Exception("حدث خطأ اثناء تسجيل الخروج");
     }
   }
 }

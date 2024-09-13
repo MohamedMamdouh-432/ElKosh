@@ -11,10 +11,9 @@ final GetIt sl = GetIt.instance;
 
 void setup() async {
   //* Single Dependencies
-  sl.registerSingleton<SharedPreferences>(
-      await SharedPreferences.getInstance());
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
   sl.registerSingleton<FirebaseStorage>(FirebaseStorage.instance);
+  sl.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
 
   //* Repositories Dependencies
   sl.registerSingleton<DataRepository>(DataRepository(
