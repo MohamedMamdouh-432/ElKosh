@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
+import 'package:elkosh/auth/register/widgets/tip_text.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';
 import 'package:elkosh/shared/widgets/custom_buttom.dart';
@@ -156,6 +157,12 @@ class RegisterPage extends StatelessWidget {
                                                   ? "يجب ان تحتوى كلمة المرور على الاقل على حرف خاص واحد"
                                                   : null,
                     ),
+                    const Gap(5),
+                    const TipText(
+                        tip: "يجب ان تتكون كلمة المرور من ٥ احرف فأكثر"),
+                    const TipText(tip: "يجب ان تحتوى كلمة المرور على ارقام"),
+                    const TipText(
+                        tip: "يجب ان تحتوى كلمة المرور على حروف كبيره و صغيره"),
                     const Gap(40),
                     CustomButtom(
                       text: 'تسجيل الحساب',
