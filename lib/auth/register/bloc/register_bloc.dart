@@ -17,7 +17,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<RegisterPhoneChanged>(_onPhoneChanged);
     on<RegisterEmailChanged>(_onEmailChanged);
     on<RegisterPasswordChanged>(_onPsswordChanged);
-    on<RegisterWithCredentials>(_onRegisterWithCredentials);
+    on<FormRegisterRequested>(_onRegisterWithEmailAndPassword);
+    on<RegisterStateReset>(_onRegisterStateReset);
   }
 
   FutureOr<void> _onNameChanged(RegisterNameChanged event, emit) {
@@ -80,16 +81,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     ));
   }
 
-  FutureOr<void> _onRegisterWithCredentials(event, emit) async {
+  FutureOr<void> _onRegisterWithEmailAndPassword(event, emit) async {
     if (state.inputStatus == FormStatus.invalid) return;
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
     try {
       await sl.get<AuthRepository>().registerWithEmailAndPassword(
-        email: state.email.value,
-        password: state.password.value,
-        name: state.name.value,
-        phone: state.phone.value,
-      );
+            email: state.email.value,
+            password: state.password.value,
+            name: state.name.value,
+            phone: state.phone.value,
+          );
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
     } catch (e) {
       emit(state.copyWith(
@@ -97,5 +98,9 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         submissionStatus: FormzSubmissionStatus.failure,
       ));
     }
+  }
+
+  FutureOr<void> _onRegisterStateReset(event, emit) {
+    emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
   }
 }

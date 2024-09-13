@@ -138,7 +138,7 @@ class AuthRepository {
       await _sharedPref.setString('userId', _userId!);
       return _userId!;
     } on FirebaseAuthException catch (e) {
-      throw Exception(CodeErrorGetter.googleLoginError(e.code));
+      throw Exception(CodeErrorGetter.epLoginError(e.code));
     } catch (_) {
       throw Exception("حدث خطأ اثناء تسجيل الدخول");
     }

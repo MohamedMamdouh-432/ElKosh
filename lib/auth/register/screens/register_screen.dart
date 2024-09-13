@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/register/widgets/tip_text.dart';
 import 'package:elkosh/core/utils/utils.dart';
@@ -14,8 +12,8 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+class RegisterScreen extends StatelessWidget {
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +22,31 @@ class RegisterPage extends StatelessWidget {
         body: BlocConsumer<RegisterBloc, RegisterState>(
           listener: (context, state) {
             if (state.submissionStatus.isFailure) {
+              String msg = state.errMsg;
+              if (msg.startsWith("Exception:"))
+                msg = msg.substring(msg.indexOf(":") + 1);
               QuickAlert.show(
                 context: context,
                 type: QuickAlertType.error,
                 title: 'خطأ',
-                text: state.errMsg,
+                text: msg,
                 borderRadius: 20,
                 animType: QuickAlertAnimType.scale,
               );
+              context.read<RegisterBloc>().add(RegisterStateReset());
             } else if (state.submissionStatus.isSuccess) {
               QuickAlert.show(
                 context: context,
                 type: QuickAlertType.success,
                 title: 'نجاح',
-                text: state.errMsg,
+                text: "تم إنشاء حسابك بنجاح",
                 borderRadius: 20,
                 animType: QuickAlertAnimType.scale,
               );
-              log('login suceessed');
-              // context.goNamed(RouteManager.homeRoute);
+              Future.delayed(
+                const Duration(seconds: 2),
+                () => context.go(RouteManager.homeRoute),
+              );
             }
           },
           builder: (context, state) {
@@ -54,14 +58,14 @@ class RegisterPage extends StatelessWidget {
                   children: [
                     const Gap(50),
                     Text(
-                      'أهلا فى خير بلدنا',
+                      'أهلا بك فى خير بلدنا',
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: ColorManager.primary,
                       ),
                     ),
-                    const Gap(70),
+                    const Gap(50),
                     const Align(
                       alignment: Alignment.centerRight,
                       child: Text(
@@ -70,7 +74,7 @@ class RegisterPage extends StatelessWidget {
                             fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    const Gap(30),
+                    const Gap(20),
                     AuthFormField(
                       labelText: 'الأسم',
                       onChange: (data) => context
@@ -94,7 +98,6 @@ class RegisterPage extends StatelessWidget {
                     const Gap(15),
                     AuthFormField(
                       labelText: 'رقم الهاتف',
-                      inputType: TextInputType.phone,
                       onChange: (data) => context
                           .read<RegisterBloc>()
                           .add(RegisterPhoneChanged(data)),
@@ -157,7 +160,7 @@ class RegisterPage extends StatelessWidget {
                                                   ? "يجب ان تحتوى كلمة المرور على الاقل على حرف خاص واحد"
                                                   : null,
                     ),
-                    const Gap(5),
+                    const Gap(10),
                     const TipText(
                         tip: "يجب ان تتكون كلمة المرور من ٥ احرف فأكثر"),
                     const TipText(tip: "يجب ان تحتوى كلمة المرور على ارقام"),
@@ -169,7 +172,7 @@ class RegisterPage extends StatelessWidget {
                       ontap: state.inputStatus == FormStatus.valid
                           ? () => context
                               .read<RegisterBloc>()
-                              .add(RegisterWithCredentials())
+                              .add(FormRegisterRequested())
                           : null,
                     ),
                     const Gap(10),
@@ -179,9 +182,9 @@ class RegisterPage extends StatelessWidget {
                         const Text('لدى حساب بالفعل'),
                         TextButton(
                           onPressed: () =>
-                              context.goNamed(RouteManager.loginRoute),
+                              context.push(RouteManager.loginRoute),
                           child: Text(
-                            ' تسجيل الدخول',
+                            "تسجيل الدخول",
                             style: TextStyle(
                               color: ColorManager.primary,
                               fontWeight: FontWeight.bold,
