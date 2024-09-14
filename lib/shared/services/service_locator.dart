@@ -9,7 +9,7 @@ import 'package:user_repository/user_repository.dart';
 
 final GetIt sl = GetIt.instance;
 
-void setup() async {
+Future<void> setup() async {
   //* Single Dependencies
   sl.registerSingleton<FirebaseFirestore>(FirebaseFirestore.instance);
   sl.registerSingleton<FirebaseStorage>(FirebaseStorage.instance);
