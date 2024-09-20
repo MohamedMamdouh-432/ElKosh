@@ -1,6 +1,6 @@
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
-import 'package:elkosh/home/screens/home_screen.dart';
+import 'package:elkosh/home/screens/navbar_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,7 +22,7 @@ abstract class RouteManager {
       ),
       GoRoute(
         path: homeRoute,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const NavBarScreen(),
       ),
       GoRoute(
         path: searchRoute,

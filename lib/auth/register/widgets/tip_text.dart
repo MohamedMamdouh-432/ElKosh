@@ -21,7 +21,7 @@ class TipText extends StatelessWidget {
         const Gap(10),
         Text(
           tip,
-          textScaler: const TextScaler.linear(1),
+          textScaler: const TextScaler.linear(.8),
         ),
       ],
     );
