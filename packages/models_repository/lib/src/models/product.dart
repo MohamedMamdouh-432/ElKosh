@@ -23,7 +23,7 @@ class Product extends Equatable {
     required this.unitVal,
   });
 
-  factory Product.fromMap(String productId, Map<String, dynamic> productDoc) =>
+  factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
       Product(
         id: productId,
         name: productDoc['name'],
