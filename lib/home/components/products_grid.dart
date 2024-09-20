@@ -2,6 +2,7 @@ import 'package:elkosh/home/widgets/product_card.dart';
 import 'package:elkosh/shared/dummy/dummy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid({
@@ -27,18 +28,19 @@ class ProductsGrid extends StatelessWidget {
           shrinkWrap: true,
           maxCrossAxisExtent: 110,
           crossAxisSpacing: 5,
-          childAspectRatio: 2 / 2.3,
+          childAspectRatio: 2 / 1.8,
           physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           children: [
             for (int i = 0; i < 7; i++) ProductCard(product: products[i]),
             InkWell(
               onTap: () {},
               child: Column(
                 children: [
+                  const Gap(10),
                   Container(
-                    width: 70,
-                    height: 70,
+                    width: 60,
+                    height: 60,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
