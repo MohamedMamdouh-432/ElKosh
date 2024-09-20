@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await setup();
   Bloc.observer = const AppBlocObserver();
+  await setup();
   runApp(const ElKoshApp());
 }
