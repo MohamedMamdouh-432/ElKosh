@@ -8,6 +8,8 @@ sealed class LoginEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoginRecognizeRequested extends LoginEvent {}
+
 class LoginEmailChanged extends LoginEvent {
   final String email;
   const LoginEmailChanged(this.email);

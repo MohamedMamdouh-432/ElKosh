@@ -13,10 +13,18 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginState.initial) {
+    on<LoginRecognizeRequested>(_onRecognizeLogin);
     on<LoginEmailChanged>(_onEmailChanged);
     on<LoginPasswordChanged>(_onPsswordChanged);
     on<FormLoginRequested>(_onLoginWithEmailAndPassword);
     on<LoginStateReset>(_onLoginStateReset);
+    add(LoginRecognizeRequested());
+  }
+
+  FutureOr<void> _onRecognizeLogin(event, emit) async {
+    final userId = await sl.get<AuthRepository>().userId;
+    if (userId != null)
+      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.canceled));
   }
 
   FutureOr<void> _onEmailChanged(LoginEmailChanged event, emit) {
