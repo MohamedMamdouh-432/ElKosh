@@ -18,8 +18,20 @@
 	
 ### 15/9/2024 - 16/9/2024
 	Home
-	- Models (Market, Category, Product)
+	- Models (Market, Product)
 	- Dummy Data
 	- Cursual Slider Component
 	- Products Grid Component
 	- Markets List Component
+
+
+### 23/9/2024 - 25-9-2024
+
+	- cart screen UI
+	- Product details screen(UI)
+	- market details screen (UI)
+	
+### 25/9 -> 27/9
+
+	- dummy to firebase
+	
