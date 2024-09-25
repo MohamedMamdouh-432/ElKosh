@@ -1,7 +1,7 @@
 import 'package:elkosh/home/components/markets_view.dart';
 import 'package:elkosh/home/components/products_grid.dart';
-import 'package:elkosh/home/widgets/custom_app_bar.dart';
-import 'package:elkosh/home/widgets/slider.dart';
+import 'package:elkosh/home/components/custom_app_bar.dart';
+import 'package:elkosh/home/components/slider.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomAppBar(),
-          SliderHomeScreen(),
+          ProductsSlider(),
           ProductsGrid(),
           MarketsView(),
         ],
