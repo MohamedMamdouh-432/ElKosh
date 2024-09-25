@@ -11,8 +11,6 @@ class ProductsScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: const Text("تصفح المنتجات")),
         body: GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(
             vertical: 10,
             horizontal: 20,

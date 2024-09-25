@@ -1,6 +1,7 @@
+import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
-import 'package:elkosh/home/components/product_quantity_counter.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/home/widgets/product_card.dart';
+import 'package:elkosh/shared/dummy/dummy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,43 +27,41 @@ class MarkettDetailsScreen extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          child: BlocBuilder<ProductsBloc, ProductsState>(
+          child: BlocBuilder<MarketsBloc, MarketsState>(
             builder: (context, state) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ImageSection(imageUrl: state.curProduct.imgUrl),
+                ImageSection(imageUrl: state.curMarket.imgUrl),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        state.curProduct.name,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            state.curMarket.name,
+                            style: const TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            state.curMarket.hotline,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                       Text(
-                        '${state.curProduct.unitVal} ${state.curProduct.unit}',
+                        state.curMarket.scope,
                         style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black54,
                         ),
-                      ),
-                      const Gap(10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const ProductQuantityCounter(),
-                          Text(
-                            '${state.curProduct.price} جنيه',
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
                       ),
                       const Gap(10),
                       const Divider(),
@@ -76,7 +75,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                       ),
                       const Gap(5),
                       Text(
-                        state.curProduct.desc,
+                        state.curMarket.desc,
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
@@ -84,6 +83,28 @@ class MarkettDetailsScreen extends StatelessWidget {
                       ),
                       const Gap(10),
                       const Divider(),
+                      const Gap(10),
+                      const Text(
+                        "منتجات المتجر",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Gap(10),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                          crossAxisSpacing: 5,
+                          maxCrossAxisExtent: 110,
+                          childAspectRatio: 2 / 2.3,
+                        ),
+                        itemCount: products.length,
+                        itemBuilder: (context, index) =>
+                            ProductCard(product: products[index]),
+                      ),
                     ],
                   ),
                 ),

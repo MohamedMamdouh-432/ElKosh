@@ -14,6 +14,7 @@ class ImageSection extends StatelessWidget {
       width: double.infinity,
       height: MediaQuery.sizeOf(context).height * 0.4,
       margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(30),
       clipBehavior: Clip.hardEdge,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
@@ -23,12 +24,15 @@ class ImageSection extends StatelessWidget {
           bottomRight: Radius.circular(40),
         ),
       ),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        fit: BoxFit.contain,
-        filterQuality: FilterQuality.high,
-        width: double.infinity,
-        height: MediaQuery.sizeOf(context).height * 0.4,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.fill,
+          filterQuality: FilterQuality.high,
+          width: double.infinity,
+          height: MediaQuery.sizeOf(context).height * 0.4,
+        ),
       ),
     );
   }

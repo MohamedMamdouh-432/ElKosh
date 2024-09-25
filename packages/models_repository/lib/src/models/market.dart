@@ -20,6 +20,16 @@ class Market extends Equatable {
     required this.address,
   });
 
+  static Market empty = const Market(
+    id: 'id',
+    name: 'name',
+    desc: 'desc',
+    imgUrl: 'imgUrl',
+    hotline: 'hotline',
+    scope: 'scope',
+    address: GeoPoint(0, 0),
+  );
+
   Market copyWith({
     String? id,
     String? name,

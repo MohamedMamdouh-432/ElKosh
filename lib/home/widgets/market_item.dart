@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
@@ -15,7 +17,10 @@ class MarketItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(RouteManager.marketDetailsRoute),
+      onTap: () {
+        context.read<MarketsBloc>().add(MarketSelectedEvent(market));
+        context.push(RouteManager.marketDetailsRoute);
+      },
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
