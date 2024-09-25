@@ -23,6 +23,17 @@ class Product extends Equatable {
     required this.unitVal,
   });
 
+  static Product empty = const Product(
+    id: 'id',
+    name: 'name',
+    desc: 'desc',
+    price: 0.0,
+    quantity: 0.0,
+    imgUrl: 'imgUrl',
+    marketId: 'marketId',
+    unitVal: 0,
+  );
+
   factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
       Product(
         id: productId,

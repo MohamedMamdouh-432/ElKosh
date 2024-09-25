@@ -1,8 +1,10 @@
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/widgets/product_card.dart';
 import 'package:elkosh/shared/dummy/dummy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid({
@@ -17,7 +19,7 @@ class ProductsGrid extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            "تصفح المنتجات",
+            "المنتجات",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -28,13 +30,13 @@ class ProductsGrid extends StatelessWidget {
           shrinkWrap: true,
           maxCrossAxisExtent: 110,
           crossAxisSpacing: 5,
-          childAspectRatio: 2 / 1.8,
+          childAspectRatio: 2 / 2.3,
           physics: const NeverScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           children: [
             for (int i = 0; i < 7; i++) ProductCard(product: products[i]),
             InkWell(
-              onTap: () {},
+              onTap: () => context.push(RouteManager.productsRoute),
               child: Column(
                 children: [
                   const Gap(10),
