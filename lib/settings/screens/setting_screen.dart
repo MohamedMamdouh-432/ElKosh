@@ -1,6 +1,10 @@
+import 'package:auth_repository/auth_repository.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
@@ -74,10 +78,9 @@ class SettingScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('الـخروج'),
-            onTap: () {
-              //FirebaseAuth.instance.signOut();
-
-              // Handle "Logout" tap
+            onTap: () async{
+              await sl.get<AuthRepository>().logOut();
+              context.go(RouteManager.loginRoute);
             },
           ),
         ],
