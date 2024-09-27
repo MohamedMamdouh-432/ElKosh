@@ -37,6 +37,7 @@
 		
 	* 28/9 -> 30/9
 		- add to cart (run)
+		- delete from cart
 		- increase & decrease quantity (run)
 		- Cart Bloc
 		- place order
@@ -45,7 +46,7 @@
 		- Profile Bloc
 		- about app
 		- Orders 
-			1. order model
+			
 			2. orders view
 				2.1 ongoing orders
 				2.2 history orders
