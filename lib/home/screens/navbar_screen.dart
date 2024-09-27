@@ -1,8 +1,10 @@
 import 'package:elkosh/cart/screens/cart_screen.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
 import 'package:elkosh/settings/screens/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 class NavBarScreen extends StatefulWidget {
   const NavBarScreen({super.key});
@@ -29,31 +31,60 @@ class _NavBarScreenState extends State<NavBarScreen> {
           onPageChanged: (value) => setState(() => currentIndex = value),
           children: pages,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.home),
-              label: "الرئيسيه",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.cart_fill),
-              label: "الـسله",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.settings_solid),
-              label: "الاعدادات",
-            ),
-          ],
-          currentIndex: currentIndex,
-          onTap: (index) {
+        bottomNavigationBar: GNav(
+          selectedIndex: currentIndex,
+          activeColor: ColorManager.primary,
+          color: Colors.blueGrey,
+          backgroundColor: ColorManager.primary.withOpacity(0.07),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+          onTabChange: (index) {
             pageController.animateToPage(
               index,
-              duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 500),
             );
             setState(() => currentIndex = index);
           },
+          tabs: const [
+            GButton(
+              text: "الرئيسية",
+              icon: CupertinoIcons.home,
+            ),
+            GButton(
+              icon: CupertinoIcons.cart_fill,
+              text: "السلة",
+            ),
+            GButton(
+              icon: CupertinoIcons.settings_solid,
+              text: "الاعدادات",
+            ),
+          ],
         ),
+        // bottomNavigationBar: BottomNavigationBar(
+        //   items: const [
+        //     BottomNavigationBarItem(
+        //       icon: Icon(CupertinoIcons.home),
+        //       label: "الرئيسيه",
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(CupertinoIcons.cart_fill),
+        //       label: "الـسله",
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(CupertinoIcons.settings_solid),
+        //       label: "الاعدادات",
+        //     ),
+        //   ],
+        //   currentIndex: currentIndex,
+        //   onTap: (index) {
+        //     pageController.animateToPage(
+        //       index,
+        //       duration: const Duration(milliseconds: 400),
+        //       curve: Curves.easeInOut,
+        //     );
+        //     setState(() => currentIndex = index);
+        //   },
+        // ),
       ),
     );
   }

@@ -28,7 +28,9 @@ class SettingScreen extends StatelessWidget {
                   Text(
                     '${user.email}',
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const Row(
                     children: [
