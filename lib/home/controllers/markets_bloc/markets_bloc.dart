@@ -16,10 +16,51 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
     add(const MarketsLoadingEvent());
   }
 
-  FutureOr<void> _onMarketsLoading(MarketsLoadingEvent event, emit) {}
+  FutureOr<void> _onMarketsLoading(MarketsLoadingEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: LoadingStatus.inProgress));
+      final results = await sl.get<DataRepository>().fetchMarkets(event.limit);
+      results.fold(
+        (l) => emit(state.copyWith(
+          errMsg: l.errorMessage,
+          status: LoadingStatus.failure,
+        )),
+        (r) => emit(state.copyWith(
+          markets: r,
+          status: LoadingStatus.success,
+        )),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadingStatus.failure,
+      ));
+    }
+  }
 
-  FutureOr<void> _onMarketSelected(MarketSelectedEvent event, emit) {
-    sl.get<DataRepository>().setCurMarket(event.market);
-    emit(state.copyWith(curMarket: event.market));
+  FutureOr<void> _onMarketSelected(MarketSelectedEvent event, emit) async {
+    try {
+      emit(state.copyWith(
+        curMarket: event.market,
+        status: LoadingStatus.inProgress,
+      ));
+      sl.get<DataRepository>().setCurMarket(event.market);
+      final results = await sl.get<DataRepository>().fetchRelatedProducts();
+      results.fold(
+        (l) => emit(state.copyWith(
+          errMsg: l.errorMessage,
+          status: LoadingStatus.failure,
+        )),
+        (r) => emit(state.copyWith(
+          relProducts: r,
+          status: LoadingStatus.success,
+        )),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadingStatus.failure,
+      ));
+    }
   }
 }

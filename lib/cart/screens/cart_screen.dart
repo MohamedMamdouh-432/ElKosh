@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
           const CustomCartAppbar(),
           products.isEmpty
               ? const EmptyBageWidgetScreen()
-              : const cartlistview(),
+              : const Cartlistview(),
         ],
       ),
     );

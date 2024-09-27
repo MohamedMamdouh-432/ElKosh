@@ -13,10 +13,30 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc() : super(ProductsState.initial) {
     on<ProductsLoadingEvent>(_onProductLoading);
     on<ProductSelectedEvent>(_onProductSelected);
-    add(const ProductsLoadingEvent());
+    add(const ProductsLoadingEvent(7));
   }
 
-  FutureOr<void> _onProductLoading(ProductsLoadingEvent event, emit) {}
+  FutureOr<void> _onProductLoading(ProductsLoadingEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: LoadingStatus.inProgress));
+      final results = await sl.get<DataRepository>().fetchProducts(event.limit);
+      results.fold(
+        (l) => emit(state.copyWith(
+          errMsg: l.errorMessage,
+          status: LoadingStatus.failure,
+        )),
+        (r) => emit(state.copyWith(
+          products: r,
+          status: LoadingStatus.success,
+        )),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadingStatus.failure,
+      ));
+    }
+  }
 
   FutureOr<void> _onProductSelected(ProductSelectedEvent event, emit) {
     sl.get<DataRepository>().setCurProduct(event.product);

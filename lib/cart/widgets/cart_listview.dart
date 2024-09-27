@@ -1,8 +1,8 @@
 import 'package:elkosh/cart/widgets/cart_item_widget.dart';
 import 'package:flutter/material.dart';
 
-class cartlistview extends StatelessWidget {
-  const cartlistview({
+class Cartlistview extends StatelessWidget {
+  const Cartlistview({
     super.key,
   });
 
