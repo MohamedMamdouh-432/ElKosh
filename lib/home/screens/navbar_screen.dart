@@ -60,31 +60,6 @@ class _NavBarScreenState extends State<NavBarScreen> {
             ),
           ],
         ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   items: const [
-        //     BottomNavigationBarItem(
-        //       icon: Icon(CupertinoIcons.home),
-        //       label: "الرئيسيه",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(CupertinoIcons.cart_fill),
-        //       label: "الـسله",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(CupertinoIcons.settings_solid),
-        //       label: "الاعدادات",
-        //     ),
-        //   ],
-        //   currentIndex: currentIndex,
-        //   onTap: (index) {
-        //     pageController.animateToPage(
-        //       index,
-        //       duration: const Duration(milliseconds: 400),
-        //       curve: Curves.easeInOut,
-        //     );
-        //     setState(() => currentIndex = index);
-        //   },
-        // ),
       ),
     );
   }
