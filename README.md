@@ -35,23 +35,22 @@
 	* 25/9 -> 27/9
 		- dummy to firebase
 		
-	* 28/9 -> 30/9
-		- add to cart (run)
-		- delete from cart
-		- increase & decrease quantity (run)
-		- Cart Bloc
-		- place order
-
-	* 1/10 -> 3/10
-		- Profile Bloc
-		- about app
-		- Orders 
-			
-			2. orders view
-				2.1 ongoing orders
-				2.2 history orders
-			3. order details
-			4. Order Bloc
+	* 28/9 -> 2/10
+		@Dooha
+			- Cart Bloc
+			- add to cart (run)
+			- delete from cart
+			- increase & decrease quantity (run)
+			- place order
+			- Profile Bloc
+			- Order Bloc
+		@Mohaned
+			- about app
+			- Orders 
+				1. orders view
+					1.1 ongoing orders
+					1.2 history orders
+				2. order details
 
 ### Seller Part App
 
