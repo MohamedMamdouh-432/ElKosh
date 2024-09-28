@@ -38,8 +38,7 @@
 	* 28/9 -> 2/10
 		@Dooha
 			- Cart Bloc
-			- add to cart (run)
-			- delete from cart
+			- add & delete in cart (run)
 			- increase & decrease quantity (run)
 			- place order
 			- Profile Bloc
