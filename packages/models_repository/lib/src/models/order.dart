@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:models_repository/models_repository.dart';
 
-OrderStatus convertToState(String stateValue) {
+OrderStatus getOrderStatus(String stateValue) {
   switch (stateValue) {
-    case "Pending":
+    case "pending":
       return OrderStatus.pending;
-    case "Shipped":
+    case "shipped":
       return OrderStatus.shipped;
-    case "Delivered":
+    case "delivered":
       return OrderStatus.delivered;
     default:
       return OrderStatus.cancelled;
@@ -50,18 +50,27 @@ class UserOrder extends Equatable {
     Map<String, dynamic> map,
     Map<Product, int> shoppingList,
     String id,
-  ) {
-    return UserOrder(
-      id: id,
-      total: map['price'],
-      shopping: shoppingList,
-      status: convertToState(map['status']),
-      createdAt: DateTime.parse(map['createdAt']),
-      marketId: map['marketId'],
-      userId: map['userId'],
-      deliveryId: map['deliveryId'],
-    );
-  }
+  ) =>
+      UserOrder(
+        id: id,
+        total: map['price'],
+        shopping: shoppingList,
+        status: getOrderStatus(map['status']),
+        createdAt: DateTime.parse(map['createdAt']),
+        marketId: map['marketId'],
+        userId: map['userId'],
+        deliveryId: map['deliveryId'],
+      );
+
+  Map<String, dynamic> toDoc(shoppingMap) => {
+        'price': total,
+        'status': status.name,
+        'createdAt': createdAt,
+        'marketId': marketId,
+        'userId': userId,
+        'deliveryId': deliveryId,
+        'shoppings': shoppingMap,
+      };
 
   UserOrder copyWith({
     String? id,

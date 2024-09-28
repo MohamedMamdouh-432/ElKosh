@@ -1,3 +1,4 @@
+import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
@@ -18,6 +19,7 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<MarketsBloc>(create: (_) => MarketsBloc()),
         BlocProvider<ProductsBloc>(create: (_) => ProductsBloc()),
         BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
+        BlocProvider<CartBloc>(create: (context) => CartBloc()),
       ],
       child: const ElKoshLauncher(),
     );

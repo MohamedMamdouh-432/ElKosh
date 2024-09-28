@@ -12,7 +12,7 @@ class UserRepository {
   String? _userId;
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
-  final SharedPreferences _sharedPreferences;
+  final SharedPreferences _sharedPref;
 
   UserRepository({
     required FirebaseFirestore firestore,
@@ -20,42 +20,36 @@ class UserRepository {
     required SharedPreferences sharedPreferences,
   })  : _firestore = firestore,
         _storage = storage,
-        _sharedPreferences = sharedPreferences;
+        _sharedPref = sharedPreferences;
 
   Future<void> setUserID(String userId) async {
     _userId = userId;
-    await _sharedPreferences.setString('userId', _userId!);
+    await _sharedPref.setString('userId', _userId!);
   }
 
-  Future<Either<UserError, User>> getUser() async {
-    _userId = _sharedPreferences.getString('userId');
-    log("userId from get user is $_userId  ");
-    if (_userId == null || _userId!.isEmpty) {
-      return const Left(UserError(message: "Could not find user id"));
-    }
-
+  Future<Either<Failure, User>> getUser() async {
     try {
-      final DocumentSnapshot userDoc =
-          await _firestore.collection('users').doc(_userId).get();
-      if (userDoc.exists) {
-        _user = User.fromUserDoc(userDoc);
-      } else {
+      _userId = _sharedPref.getString('userId');
+      log("userId : $_userId  ");
+      if (_userId == null || _userId!.isEmpty)
+        return const Left(Failure("لم تقم بتسجيل الدخول"));
+      final userDoc = await _firestore.collection('users').doc(_userId).get();
+      if (userDoc.exists) _user = User.fromDoc(userDoc);
+      else
         log("User does't exist according to the database inside getUser() in user_repository.dart ");
-      }
-      await _sharedPreferences.setString('userId', _userId!);
-
+      await _sharedPref.setString('userId', _userId!);
       return _user != null
           ? Right(_user!)
-          : const Left(UserError.userDoesNotExist);
+          : const Left(Failure("المستخدم غير موجود"));
     } catch (e) {
-      return Left(UserError(message: "Error 404! $e"));
+      return Left(Failure(e.toString()));
     }
   }
-  
+
   Future<void> signOut() async {
     _user = null;
     _userId = null;
-    await _sharedPreferences.remove('userId');
+    await _sharedPref.remove('userId');
   }
 
   Future<void> deleteAccount() async {
@@ -63,6 +57,6 @@ class UserRepository {
     await _firestore.collection('users').doc(_userId!).delete();
     _user = null;
     _userId = null;
-    await _sharedPreferences.remove('userId');
+    await _sharedPref.remove('userId');
   }
 }

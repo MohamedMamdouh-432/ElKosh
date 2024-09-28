@@ -14,6 +14,7 @@ class DataRepository {
   Market? _market;
   Product? _product;
   double price;
+  String? marketId;
   Map<String, int> shoppings;
 
   DataRepository({
@@ -205,7 +206,7 @@ class DataRepository {
       await sharedPref.setString('shoppings', json.encode(shoppings));
       return Right({
         'price': price,
-        'shopping': const {},
+        'shopping': const <Product, int>{},
       });
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -287,24 +288,25 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, Null>> placeOrder(
+  Future<Either<Failure, Null>> placeOrder({
     // double lat,
     // double long,
-    String userName,
-    String imgUrl,
-  ) async {
+    required String userName,
+    required String userId,
+    required Map<Product, int> shopping,
+  }) async {
     try {
-      Map<String, dynamic> orderData = {
-        'price': price,
-        'shoppings': shoppings,
-        // 'location': GeoPoint(lat, long),
-        'status': OrderStatus.pending.name,
-        'userId': sharedPref.getString('userId'),
-        'createdDate': DateTime.now().toString(),
-        'imgUrl': imgUrl,
-        'userName': userName,
-      };
-      await firestore.collection('orders').add(orderData);
+      final order = UserOrder(
+        id: "",
+        total: price,
+        shopping: shopping,
+        marketId: marketId!,
+        userId: userId,
+        deliveryId: "",
+        status: OrderStatus.pending,
+        createdAt: DateTime.now(),
+      );
+      await firestore.collection('orders').add(order.toDoc(shoppings));
       log('Order Succeesed');
       price = 0;
       shoppings = {};
