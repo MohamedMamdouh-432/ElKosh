@@ -21,31 +21,27 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(state.copyWith(status: ProfileStatus.loading));
     var user = await sl.get<UserRepository>().getUser();
     user.fold(
-      (l) => emit(
-        state.copyWith(
-          user: User.empty,
-          errMsg: l.message,
-          status: ProfileStatus.userNotFound,
-        ),
-      ),
-      (r) => emit(
-        state.copyWith(
-          user: r,
-          status: ProfileStatus.userExists,
-        ),
-      ),
+      (l) => emit(state.copyWith(
+        user: User.empty,
+        errMsg: l.message,
+        status: ProfileStatus.userNotFound,
+      )),
+      (r) => emit(state.copyWith(
+        user: r,
+        status: ProfileStatus.userExists,
+      )),
     );
   }
 
   Future<void> _onProfileSignOut(event, emit) async {
     await sl.get<AuthRepository>().logOut();
     await sl.get<UserRepository>().signOut();
-    emit(state.copyWith(user: User.empty));
+    emit(ProfileState.initial);
   }
 
   FutureOr<void> _onProfileDeleting(event, emit) async {
     await sl.get<AuthRepository>().deleteAccount();
     await sl.get<UserRepository>().deleteAccount();
-    emit(state.copyWith(user: User.empty));
+    emit(ProfileState.initial);
   }
 }

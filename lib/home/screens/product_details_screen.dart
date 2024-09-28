@@ -1,4 +1,5 @@
-import 'package:elkosh/home/components/product_quantity_counter.dart';
+import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,99 +14,158 @@ class ProductDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<ProductsBloc, ProductsState>(
-          builder: (context, state) {
-            return CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: const Color(0xffF2F3F2),
-                  leading: IconButton(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(
-                      CupertinoIcons.back,
-                      size: 35,
-                      color: Colors.black,
+      child: BlocConsumer<CartBloc, CartState>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          return BlocBuilder<ProductsBloc, ProductsState>(
+            builder: (context, productState) {
+              bool isInCart =
+                  state.shopping.containsKey(productState.curProduct);
+              return Scaffold(
+                body: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      backgroundColor: const Color(0xffF2F3F2),
+                      leading: IconButton(
+                        onPressed: () => context.pop(),
+                        icon: const Icon(
+                          CupertinoIcons.back,
+                          size: 35,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SliverImageSection(imageUrl: state.curProduct.imgUrl),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.curProduct.name,
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          '${state.curProduct.unitVal} ${state.curProduct.unit}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const Gap(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    SliverImageSection(
+                        imageUrl: productState.curProduct.imgUrl),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const ProductQuantityCounter(),
                             Text(
-                              '${state.curProduct.price} جنيه',
+                              productState.curProduct.name,
                               style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
+                            Text(
+                              '${productState.curProduct.unitVal} ${productState.curProduct.unit}',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const Gap(10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: !isInCart
+                                          ? null
+                                          : () => context.read<CartBloc>().add(
+                                              CartDecreasingProductQuantityEvent(
+                                                  productState.curProduct)),
+                                      icon: Icon(
+                                        Icons.remove,
+                                        size: 35,
+                                        color: isInCart
+                                            ? ColorManager.primary
+                                            : Colors.grey,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                        vertical: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(color: Colors.grey),
+                                      ),
+                                      child: Text(
+                                        isInCart
+                                            ? state.shopping[
+                                                    productState.curProduct]!
+                                                .toString()
+                                            : "0",
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () => context
+                                          .read<CartBloc>()
+                                          .add(
+                                              CartIncreasingProductQuantityEvent(
+                                                  productState.curProduct)),
+                                      icon: Icon(
+                                        Icons.add,
+                                        size: 35,
+                                        color: ColorManager.primary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  '${productState.curProduct.price} جنيه',
+                                  style: const TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Gap(10),
+                            const Divider(),
+                            const Gap(10),
+                            const Text(
+                              "الوصف",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const Gap(5),
+                            Text(
+                              productState.curProduct.desc,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            const Gap(10),
+                            const Divider(),
                           ],
                         ),
-                        const Gap(10),
-                        const Divider(),
-                        const Gap(10),
-                        const Text(
-                          "الوصف",
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const Gap(5),
-                        Text(
-                          state.curProduct.desc,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const Gap(10),
-                        const Divider(),
-                      ],
+                      ),
+                    ),
+                  ],
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: SizedBox(
+                  width: MediaQuery.sizeOf(context).width * 0.8,
+                  child: ElevatedButton(
+                    onPressed: isInCart
+                        ? null
+                        : () => context.read<CartBloc>().add(
+                            CartAddingProductEvent(productState.curProduct)),
+                    child: const Text(
+                      "أضف الى السلة",
+                      textScaler: TextScaler.linear(1.6),
                     ),
                   ),
                 ),
-              ],
-            );
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.8,
-          child: ElevatedButton(
-            onPressed: () {
-              // if product is not in the cart => add it with quantity 1
-              // if product is in the cart => button is disabled
+              );
             },
-            child: const Text(
-              "أضف الى السلة",
-              textScaler: TextScaler.linear(1.6),
-            ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

@@ -181,8 +181,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final userProfileState =
           BlocProvider.of<ProfileBloc>(event.context).state;
       final result = await sl.get<DataRepository>().placeOrder(
-            userProfileState.user.name,
-            userProfileState.user.imgUrl,
+            userName: userProfileState.user.name,
+            userId: userProfileState.user.id,
+            shopping: state.shopping,
           );
       result.fold(
           (left) => emit(state.copyWith(

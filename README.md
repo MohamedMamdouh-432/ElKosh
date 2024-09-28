@@ -1,6 +1,6 @@
 # elkosh
 
-### User Part App
+### Consumer Part App
 
 	* 11/9/2024
 		splash screen
@@ -42,6 +42,7 @@
 			- increase & decrease quantity (run)
 			- place order
 			- Profile Bloc
+			- view all (check)
 			- Order Bloc
 		@Mohaned
 			- about app

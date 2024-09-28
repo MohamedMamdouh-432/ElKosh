@@ -1,6 +1,8 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/register/widgets/tip_text.dart';
+import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';
 import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,8 @@ class RegisterScreen extends StatelessWidget {
                   borderRadius: 20,
                   animType: QuickAlertAnimType.scale,
                 );
+                context.read<ProfileBloc>().add(ProfileLoadingEvent());
+                context.read<CartBloc>().add(CartFetchingEvent());
                 Future.delayed(
                   const Duration(seconds: 2),
                   () => context.go(RouteManager.navbarRoute),
