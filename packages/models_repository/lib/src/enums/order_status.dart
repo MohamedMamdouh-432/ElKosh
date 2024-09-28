@@ -1,6 +1,6 @@
 enum OrderStatus {
   pending,
-  canceled,
+  cancelled,
   delivered,
   shipped,
 }

@@ -22,7 +22,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       final results = await sl.get<DataRepository>().fetchProducts(event.limit);
       results.fold(
         (l) => emit(state.copyWith(
-          errMsg: l.errorMessage,
+          errMsg: l.message,
           status: LoadingStatus.failure,
         )),
         (r) => emit(state.copyWith(
