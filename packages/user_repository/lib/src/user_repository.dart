@@ -51,4 +51,18 @@ class UserRepository {
       return Left(UserError(message: "Error 404! $e"));
     }
   }
+  
+  Future<void> signOut() async {
+    _user = null;
+    _userId = null;
+    await _sharedPreferences.remove('userId');
+  }
+
+  Future<void> deleteAccount() async {
+    _storage.ref().child('users').child(_userId!).delete();
+    await _firestore.collection('users').doc(_userId!).delete();
+    _user = null;
+    _userId = null;
+    await _sharedPreferences.remove('userId');
+  }
 }

@@ -156,4 +156,17 @@ class AuthRepository {
       throw Exception("حدث خطأ اثناء تسجيل الخروج");
     }
   }
+  
+  Future<void> deleteAccount() async {
+    try {
+      _userId = null;
+      await _sharedPref.remove('userId');
+      await Future.wait([
+        _fireAuth.signOut(),
+        _googleSignIn.signOut(),
+      ]);
+    } catch (e) {
+      throw Exception("حدث خطأ اثناء حذف حسابك");
+    }
+  }
 }
