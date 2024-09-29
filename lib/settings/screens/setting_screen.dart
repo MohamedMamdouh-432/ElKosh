@@ -60,6 +60,7 @@ class SettingScreen extends StatelessWidget {
             leading: const Icon(Icons.assignment),
             title: const Text('طلباتي'),
             onTap: () {
+              context.go(RouteManager.talabatyScreen);
               // Handle "Your orders" tap
             },
           ),
@@ -78,7 +79,7 @@ class SettingScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('الـخروج'),
-            onTap: () async{
+            onTap: () async {
               await sl.get<AuthRepository>().logOut();
               context.go(RouteManager.loginRoute);
             },

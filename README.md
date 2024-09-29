@@ -41,17 +41,19 @@
 		- increase & decrease quantity (run)
 		- Cart Bloc
 		- place order
-
-	* 1/10 -> 3/10
-		- Profile Bloc
 		- about app
+
 		- Orders 
 			
 			2. orders view
 				2.1 ongoing orders
 				2.2 history orders
 			3. order details
-			4. Order Bloc
+
+
+	* 1/10 -> 3/10
+		- Profile Bloc
+		4. Order Bloc
 
 ### Seller Part App
 
