@@ -46,7 +46,7 @@
 	* 1/10 -> 3/10
 		- Profile Bloc
 		4. Order Bloc
-=======
+		
 	* 28/9 -> 2/10
 		@Dooha
 			- Cart Bloc
@@ -54,6 +54,8 @@
 			- increase & decrease quantity (run)
 			- Profile Bloc
 			- place order (need location picker)
+				- open bottom sheet (price, market)
+				- confirm => open map, then send order
 			- after reset (cart not working well)
 			- Order Bloc
 		@Mohaned
@@ -63,6 +65,7 @@
 					1.1 ongoing orders
 					1.2 history orders
 				2. order details
+			- image slider
 
 ### Seller Part App
 

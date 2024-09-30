@@ -1,6 +1,6 @@
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
-import 'package:elkosh/cart/screens/talabty_screen.dart';
+import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
 import 'package:elkosh/home/screens/market_details_screen.dart';
 import 'package:elkosh/home/screens/navbar_screen.dart';

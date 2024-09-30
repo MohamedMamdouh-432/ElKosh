@@ -116,9 +116,7 @@ class SettingScreen extends StatelessWidget {
                     'طلباتي',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () {
-                    // Handle "Your orders" tap
-                  },
+                  onTap: () => context.push(RouteManager.talabatyScreen),
                 ),
                 ListTile(
                   leading: const Icon(
