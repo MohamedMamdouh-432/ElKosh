@@ -2,9 +2,11 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/screens/empty_bag_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -59,9 +61,7 @@ class CartScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: state.shopping.isEmpty
                   ? null
-                  : () => context
-                      .read<CartBloc>()
-                      .add(CartPlaceOrderEvent(context)),
+                  : () => context.push(RouteManager.locationPickerRoute),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 5),
               ),

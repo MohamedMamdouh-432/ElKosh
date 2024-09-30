@@ -53,12 +53,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           status: CartStatus.failure,
           errorMessage: left.message,
         )),
-        (right) => emit(state.copyWith(
-          errorMessage: '',
-          price: right['price'],
-          shopping: right['shopping'],
-          status: CartStatus.success,
-        )),
+        (right) => emit(CartState.initial),
       );
     } catch (e) {
       emit(state.copyWith(
