@@ -34,7 +34,19 @@
 		
 	* 25/9 -> 27/9
 		- dummy to firebase
-		
+
+		- Orders 
+			
+			2. orders view
+				2.1 ongoing orders
+				2.2 history orders
+			3. order details
+
+
+	* 1/10 -> 3/10
+		- Profile Bloc
+		4. Order Bloc
+=======
 	* 28/9 -> 2/10
 		@Dooha
 			- Cart Bloc

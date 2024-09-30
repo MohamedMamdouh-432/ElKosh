@@ -171,6 +171,7 @@ class SettingScreen extends StatelessWidget {
                     'حذف الحساب',
                     style: TextStyle(fontSize: 20),
                   ),
+
                   onTap: () async {
                     context.read<ProfileBloc>().add(ProfileDeletingEvent());
                     context.go(RouteManager.loginRoute);

@@ -1,6 +1,7 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/screens/empty_bag_screen.dart';
+
 import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         return Scaffold(
