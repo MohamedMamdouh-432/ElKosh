@@ -99,6 +99,7 @@ class AuthRepository {
         'name': name,
         'phone': phone,
         'email': email,
+        'userType': "consumer",
       });
       await _sharedPref.setString('userId', userCredentials.user!.uid);
     } on FirebaseAuthException catch (e) {
