@@ -1,4 +1,4 @@
-import 'package:elkosh/cart/screens/talabaty_history.dart';
+import 'package:elkosh/orders/screens/talabaty_history.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

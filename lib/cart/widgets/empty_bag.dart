@@ -48,18 +48,6 @@ class EmptyBagWidget extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(20), elevation: 0),
-              onPressed: () {},
-              child: Text(
-                buttonText,
-                style: const TextStyle(fontSize: 22),
-              ),
-            ),
           ],
         ),
       ),
