@@ -1,6 +1,6 @@
 # elkosh
 
-### User Part App
+### Consumer Part App
 
 	* 11/9/2024
 		splash screen
@@ -34,14 +34,6 @@
 		
 	* 25/9 -> 27/9
 		- dummy to firebase
-		
-	* 28/9 -> 30/9
-		- add to cart (run)
-		- delete from cart
-		- increase & decrease quantity (run)
-		- Cart Bloc
-		- place order
-		- about app
 
 		- Orders 
 			
@@ -54,6 +46,23 @@
 	* 1/10 -> 3/10
 		- Profile Bloc
 		4. Order Bloc
+=======
+	* 28/9 -> 2/10
+		@Dooha
+			- Cart Bloc
+			- add & delete in cart (run)
+			- increase & decrease quantity (run)
+			- Profile Bloc
+			- place order (need location picker)
+			- after reset (cart not working well)
+			- Order Bloc
+		@Mohaned
+			- about app
+			- Orders 
+				1. orders view
+					1.1 ongoing orders
+					1.2 history orders
+				2. order details
 
 ### Seller Part App
 

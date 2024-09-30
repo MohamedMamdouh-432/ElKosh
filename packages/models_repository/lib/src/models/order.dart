@@ -1,7 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:models_repository/models_repository.dart';
 
-class Order extends Equatable {
+OrderStatus getOrderStatus(String stateValue) {
+  switch (stateValue) {
+    case "pending":
+      return OrderStatus.pending;
+    case "shipped":
+      return OrderStatus.shipped;
+    case "delivered":
+      return OrderStatus.delivered;
+    default:
+      return OrderStatus.cancelled;
+  }
+}
+
+class UserOrder extends Equatable {
   final String id;
   final double total;
   final Map<Product, int> shopping;
@@ -9,9 +22,9 @@ class Order extends Equatable {
   final String userId;
   final String deliveryId;
   final OrderStatus status;
-  final String createdAt;
+  final DateTime createdAt;
 
-  const Order({
+  const UserOrder({
     required this.id,
     required this.total,
     required this.shopping,
@@ -22,7 +35,44 @@ class Order extends Equatable {
     required this.createdAt,
   });
 
-  Order copyWith({
+  static UserOrder empty = UserOrder(
+    id: '',
+    status: OrderStatus.pending,
+    shopping: const {},
+    total: 0,
+    createdAt: DateTime(0),
+    deliveryId: '',
+    marketId: '',
+    userId: '',
+  );
+
+  factory UserOrder.fromDoc(
+    Map<String, dynamic> map,
+    Map<Product, int> shoppingList,
+    String id,
+  ) =>
+      UserOrder(
+        id: id,
+        total: map['price'],
+        shopping: shoppingList,
+        status: getOrderStatus(map['status']),
+        createdAt: DateTime.parse(map['createdAt']),
+        marketId: map['marketId'],
+        userId: map['userId'],
+        deliveryId: map['deliveryId'],
+      );
+
+  Map<String, dynamic> toDoc(shoppingMap) => {
+        'price': total,
+        'status': status.name,
+        'createdAt': createdAt,
+        'marketId': marketId,
+        'userId': userId,
+        'deliveryId': deliveryId,
+        'shoppings': shoppingMap,
+      };
+
+  UserOrder copyWith({
     String? id,
     double? total,
     Map<Product, int>? shopping,
@@ -30,9 +80,9 @@ class Order extends Equatable {
     String? userId,
     String? deliveryId,
     OrderStatus? status,
-    String? createdAt,
+    DateTime? createdAt,
   }) {
-    return Order(
+    return UserOrder(
       id: id ?? this.id,
       total: total ?? this.total,
       shopping: shopping ?? this.shopping,

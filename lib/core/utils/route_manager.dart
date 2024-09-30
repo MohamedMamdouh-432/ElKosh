@@ -19,6 +19,7 @@ abstract class RouteManager {
   static const String productsRoute = '/products';
   static const String marketDetailsRoute = '/market_details';
   static const String talabatyScreen = '/talabaty';
+  static const String locationPickerRoute = '/location_picker';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -58,6 +59,10 @@ abstract class RouteManager {
         path: marketDetailsRoute,
         builder: (context, state) => const MarkettDetailsScreen(),
       ),
+      // GoRoute(
+      //   path: locationPickerRoute,
+      //   builder: (context, state) => const LocationPickerScreen(),
+      // ),
     ],
   );
 }

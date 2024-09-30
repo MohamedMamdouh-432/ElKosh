@@ -19,6 +19,7 @@ Future<void> setup() async {
   sl.registerSingleton<DataRepository>(DataRepository(
     firestore: sl.get<FirebaseFirestore>(),
     fireStorage: sl.get<FirebaseStorage>(),
+    sharedPref: sl.get<SharedPreferences>(),
   ));
   sl.registerSingleton<AuthRepository>(AuthRepository(
     firebaseAuth: FirebaseAuth.instance,

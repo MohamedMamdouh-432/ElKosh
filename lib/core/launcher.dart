@@ -1,6 +1,8 @@
+import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +16,10 @@ class ElKoshApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ProductsBloc>(create: (_) => ProductsBloc()),
         BlocProvider<MarketsBloc>(create: (_) => MarketsBloc()),
+        BlocProvider<ProductsBloc>(create: (_) => ProductsBloc()),
+        BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
+        BlocProvider<CartBloc>(create: (context) => CartBloc()),
       ],
       child: const ElKoshLauncher(),
     );

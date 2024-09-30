@@ -22,7 +22,7 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
       final results = await sl.get<DataRepository>().fetchMarkets(event.limit);
       results.fold(
         (l) => emit(state.copyWith(
-          errMsg: l.errorMessage,
+          errMsg: l.message,
           status: LoadingStatus.failure,
         )),
         (r) => emit(state.copyWith(
@@ -48,7 +48,7 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
       final results = await sl.get<DataRepository>().fetchRelatedProducts();
       results.fold(
         (l) => emit(state.copyWith(
-          errMsg: l.errorMessage,
+          errMsg: l.message,
           status: LoadingStatus.failure,
         )),
         (r) => emit(state.copyWith(
