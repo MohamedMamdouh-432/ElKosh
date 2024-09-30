@@ -28,9 +28,9 @@ class CartState extends Equatable {
   }) =>
       CartState(
         price: price ?? this.price,
-        shopping: shopping ?? this.shopping,
-        errorMessage: errorMessage ?? this.errorMessage,
         status: status ?? this.status,
+        errorMessage: errorMessage ?? this.errorMessage,
+        shopping: shopping != null ? Map.of(shopping) : this.shopping,
       );
 
   @override

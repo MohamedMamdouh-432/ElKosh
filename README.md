@@ -40,9 +40,9 @@
 			- Cart Bloc
 			- add & delete in cart (run)
 			- increase & decrease quantity (run)
-			- place order
 			- Profile Bloc
-			- view all (check)
+			- place order (need location picker)
+			- after reset (cart not working well)
 			- Order Bloc
 		@Mohaned
 			- about app
