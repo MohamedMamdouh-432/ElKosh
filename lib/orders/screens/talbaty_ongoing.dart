@@ -3,6 +3,8 @@ import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import 'order_details_screen.dart';
+
 class TalbatyOngoing extends StatelessWidget {
   const TalbatyOngoing({super.key});
 
@@ -51,6 +53,11 @@ class CustomHistoryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const OrderDetailsScreen(),
+        ));
+      },
       leading: CircleAvatar(
         child: Padding(
           padding: const EdgeInsets.all(2),
@@ -65,7 +72,7 @@ class CustomHistoryListTile extends StatelessWidget {
       ),
       title: const Text('الاسم'),
       subtitle: const Text('السعر 55 جنيه'),
-      trailing: Text(text!),
+      trailing: Text(DateTime.now().toString().substring(0, 10)),
     );
   }
 }
