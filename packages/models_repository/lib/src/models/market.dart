@@ -21,12 +21,12 @@ class Market extends Equatable {
   });
 
   static Market empty = const Market(
-    id: 'id',
-    name: 'name',
-    desc: 'desc',
-    imgUrl: 'imgUrl',
-    hotline: 'hotline',
-    scope: 'scope',
+    id: '',
+    name: '',
+    desc: '',
+    imgUrl: '',
+    hotline: '',
+    scope: '',
     address: GeoPoint(0, 0),
   );
 
@@ -74,7 +74,7 @@ class Market extends Equatable {
 
   @override
   String toString() {
-    return '$name Market ::\nHotline: $hotline\nDescription: $desc\nScope: $scope\nImage Url: $imgUrl\nAddress: ${address.latitude}, ${address.longitude}\n';
+    return 'Name: $name ::\nHotline: $hotline\nDescription: $desc\nScope: $scope\nImage Url: $imgUrl\nAddress: ${address.latitude}, ${address.longitude}\n';
   }
 
   @override

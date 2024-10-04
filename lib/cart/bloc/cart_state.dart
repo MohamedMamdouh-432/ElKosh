@@ -4,6 +4,8 @@ class CartState extends Equatable {
   final double price;
   final String errorMessage;
   final CartStatus status;
+  final String marketId;
+  final String marketName;
   final Map<Product, int> shopping;
 
   const CartState({
@@ -11,6 +13,8 @@ class CartState extends Equatable {
     required this.price,
     required this.errorMessage,
     required this.status,
+    required this.marketId,
+    required this.marketName,
   });
 
   static CartState initial = const CartState(
@@ -18,6 +22,8 @@ class CartState extends Equatable {
     shopping: {},
     errorMessage: '',
     status: CartStatus.initial,
+    marketId: '',
+    marketName: '',
   );
 
   CartState copyWith({
@@ -25,17 +31,21 @@ class CartState extends Equatable {
     Map<Product, int>? shopping,
     String? errorMessage,
     CartStatus? status,
+    String? marketId,
+    String? marketName,
   }) =>
       CartState(
         price: price ?? this.price,
         status: status ?? this.status,
         errorMessage: errorMessage ?? this.errorMessage,
         shopping: shopping != null ? Map.of(shopping) : this.shopping,
+        marketId: marketId ?? this.marketId,
+        marketName: marketName ?? this.marketName,
       );
 
   @override
   String toString() =>
-      "CartState ::\nPrice: $price\nStatus: $status\nShopping: $shopping\nErrorMessage: $errorMessage";
+      "CartState ::\nMarketId: $marketId\nMarketName: $marketName\nPrice: $price\nStatus: $status\nShopping: ${shopping.length}\nErrorMessage: $errorMessage";
 
   @override
   List<Object> get props => [
@@ -43,5 +53,7 @@ class CartState extends Equatable {
         shopping,
         errorMessage,
         status,
+        marketId,
+        marketName,
       ];
 }

@@ -7,6 +7,7 @@ environment:
 
 dependencies:
   cloud_firestore: ^5.4.0
+  cool_alert: ^2.0.1
   equatable: ^2.0.5
   flutter:
     sdk: flutter

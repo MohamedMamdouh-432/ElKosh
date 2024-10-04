@@ -1,5 +1,6 @@
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
+import 'package:elkosh/cart/screens/location_picker_screen.dart';
 import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
 import 'package:elkosh/home/screens/market_details_screen.dart';
@@ -59,10 +60,10 @@ abstract class RouteManager {
         path: marketDetailsRoute,
         builder: (context, state) => const MarkettDetailsScreen(),
       ),
-      // GoRoute(
-      //   path: locationPickerRoute,
-      //   builder: (context, state) => const LocationPickerScreen(),
-      // ),
+      GoRoute(
+        path: locationPickerRoute,
+        builder: (context, state) => const LocationPickerScreen(),
+      ),
     ],
   );
 }

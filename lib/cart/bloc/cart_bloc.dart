@@ -1,8 +1,6 @@
 import 'package:data_repository/data_repository.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
@@ -33,6 +31,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           errorMessage: '',
           price: right['price'],
           shopping: right['shopping'],
+          marketId: right['marketId'],
+          marketName: right['marketName'],
           status: CartStatus.success,
         )),
       );
@@ -75,15 +75,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         errorMessage: left.message,
       )),
       (right) {
-        state.shopping.update(
+        final updatedShopping = Map<Product, int>.of(state.shopping);
+        updatedShopping.update(
           event.product,
           (count) => count + 1,
           ifAbsent: () => 1,
         );
         emit(state.copyWith(
+          shopping: updatedShopping,
           errorMessage: '',
           status: CartStatus.success,
           price: state.price + event.product.price,
+          marketId: right['marketId'],
+          marketName: right['marketName'],
         ));
       },
     );
@@ -99,12 +103,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         errorMessage: left.message,
       )),
       (right) {
-        int count = state.shopping[event.product]!;
-        state.shopping.remove(event.product);
+        final updatedShopping = Map<Product, int>.of(state.shopping);
+        int count = updatedShopping[event.product]!;
+        updatedShopping.remove(event.product);
         emit(state.copyWith(
           errorMessage: '',
           price: state.price - event.product.price * count,
           status: CartStatus.success,
+          shopping: updatedShopping,
+          marketId: right['marketId'],
+          marketName: right['marketName'],
         ));
       },
     );
@@ -121,15 +129,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         errorMessage: left.message,
       )),
       (right) {
-        state.shopping.update(
+        final updatedShopping = Map<Product, int>.of(state.shopping);
+        updatedShopping.update(
           event.product,
           (value) => value + 1,
           ifAbsent: () => 1,
         );
         emit(state.copyWith(
+          shopping: updatedShopping,
           errorMessage: '',
           price: state.price + event.product.price,
           status: CartStatus.success,
+          marketId: right['marketId'],
+          marketName: right['marketName'],
         ));
       },
     );
@@ -147,18 +159,23 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           errorMessage: left.message,
         )),
         (right) {
-          bool isExist = state.shopping.containsKey(event.product);
-          state.shopping.update(
+          Map<Product, int> updatedShopping =
+              Map<Product, int>.of(state.shopping);
+          bool isExist = updatedShopping.containsKey(event.product);
+          updatedShopping.update(
             event.product,
             (value) => value - 1,
             ifAbsent: null,
           );
-          if (state.shopping[event.product] == 0)
-            state.shopping.remove(event.product);
+          if (updatedShopping[event.product] == 0)
+            updatedShopping.remove(event.product);
           emit(state.copyWith(
             errorMessage: '',
             price: state.price - (isExist ? event.product.price : 0),
             status: CartStatus.success,
+            shopping: updatedShopping,
+            marketId: right['marketId'],
+            marketName: right['marketName'],
           ));
         },
       );
@@ -173,19 +190,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> _onPlacingOrder(CartPlaceOrderEvent event, emit) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
-      final userProfileState =
-          BlocProvider.of<ProfileBloc>(event.context).state;
       final result = await sl.get<DataRepository>().placeOrder(
-            userName: userProfileState.user.name,
-            userId: userProfileState.user.id,
-            shopping: state.shopping,
+            userId: event.user.id,
+            userName: event.user.name,
+            location: event.location,
           );
       result.fold(
-          (left) => emit(state.copyWith(
+          (l) => emit(state.copyWith(
                 status: CartStatus.placingfailure,
-                errorMessage: left.message,
+                errorMessage: l.message,
               )),
-          (right) => emit(state.copyWith(status: CartStatus.placingSuccess)));
+          (r) => emit(state.copyWith(status: CartStatus.placingSuccess)));
     } catch (e) {
       emit(state.copyWith(
         status: CartStatus.placingfailure,

@@ -46,10 +46,11 @@ class CartDecreasingProductQuantityEvent extends CartEvent {
 }
 
 class CartPlaceOrderEvent extends CartEvent {
-  final BuildContext context;
+  final User user;
+  final DeliveryLocation location;
 
-  const CartPlaceOrderEvent(this.context);
-  
+  const CartPlaceOrderEvent(this.user, this.location);
+
   @override
-  List<Object> get props => [context];
+  List<Object> get props => [user, location];
 }

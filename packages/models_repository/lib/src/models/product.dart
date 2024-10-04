@@ -24,13 +24,13 @@ class Product extends Equatable {
   });
 
   static Product empty = const Product(
-    id: 'id',
-    name: 'name',
-    desc: 'desc',
+    id: '',
+    name: '',
+    desc: '',
     price: 0.0,
     quantity: 0.0,
-    imgUrl: 'imgUrl',
-    marketId: 'marketId',
+    imgUrl: '',
+    marketId: '',
     unitVal: 0,
   );
 
@@ -83,7 +83,7 @@ class Product extends Equatable {
 
   @override
   String toString() {
-    return '$name ::\nDescription: $desc\nPrice: $price\nStock Quantity: $quantity\nImgUrl: $imgUrl\nUnit: $unit, Unit Value: $unitVal\n';
+    return 'Name: $name ::\nDescription: $desc\nPrice: $price\nStock Quantity: $quantity\nImgUrl: $imgUrl\nUnit: $unit\nUnit Value: $unitVal\n';
   }
 
   @override

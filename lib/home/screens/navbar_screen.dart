@@ -19,7 +19,7 @@ class _NavBarScreenState extends State<NavBarScreen> {
   final List<Widget> pages = [
     const HomeScreen(),
     const CartScreen(),
-    SettingScreen()
+    const SettingScreen()
   ];
 
   @override

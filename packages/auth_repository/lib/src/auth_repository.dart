@@ -113,7 +113,7 @@ class AuthRepository {
     try {
       final googleUser = await _googleSignIn.signIn();
       final googleAuth = await googleUser!.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
