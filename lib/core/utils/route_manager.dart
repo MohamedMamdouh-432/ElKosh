@@ -7,6 +7,7 @@ import 'package:elkosh/home/screens/market_details_screen.dart';
 import 'package:elkosh/home/screens/navbar_screen.dart';
 import 'package:elkosh/home/screens/product_details_screen.dart';
 import 'package:elkosh/home/screens/products_screen.dart';
+import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -21,6 +22,7 @@ abstract class RouteManager {
   static const String marketDetailsRoute = '/market_details';
   static const String talabatyScreen = '/talabaty';
   static const String locationPickerRoute = '/location_picker';
+  static const String OrderDetails = '/order_details';
 
   static GoRouter router = GoRouter(
     routes: [

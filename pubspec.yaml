@@ -46,6 +46,7 @@ dependencies:
   
 dependency_overrides:
   flutter_compass: ^0.8.0
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
