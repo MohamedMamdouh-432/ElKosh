@@ -19,10 +19,12 @@ class UserOrder extends Equatable {
   final double total;
   final Map<Product, int> shopping;
   final String marketId;
+  final String marketName;
   final String userId;
   final String deliveryId;
   final OrderStatus status;
   final DateTime createdAt;
+  final DeliveryLocation location;
 
   const UserOrder({
     required this.id,
@@ -32,7 +34,9 @@ class UserOrder extends Equatable {
     required this.userId,
     required this.deliveryId,
     required this.status,
+    required this.marketName,
     required this.createdAt,
+    required this.location,
   });
 
   static UserOrder empty = UserOrder(
@@ -44,6 +48,8 @@ class UserOrder extends Equatable {
     deliveryId: '',
     marketId: '',
     userId: '',
+    marketName: "",
+    location: DeliveryLocation.empty,
   );
 
   factory UserOrder.fromDoc(
@@ -60,6 +66,8 @@ class UserOrder extends Equatable {
         marketId: map['marketId'],
         userId: map['userId'],
         deliveryId: map['deliveryId'],
+        marketName: map['marketName'],
+        location: DeliveryLocation.fromJson(map['location']),
       );
 
   Map<String, dynamic> toDoc(shoppingMap) => {
@@ -70,6 +78,8 @@ class UserOrder extends Equatable {
         'userId': userId,
         'deliveryId': deliveryId,
         'shoppings': shoppingMap,
+        'marketName': marketName,
+        'location': location.toJson(),
       };
 
   UserOrder copyWith({
@@ -81,6 +91,8 @@ class UserOrder extends Equatable {
     String? deliveryId,
     OrderStatus? status,
     DateTime? createdAt,
+    String? marketName,
+    DeliveryLocation? location,
   }) {
     return UserOrder(
       id: id ?? this.id,
@@ -91,6 +103,8 @@ class UserOrder extends Equatable {
       deliveryId: deliveryId ?? this.deliveryId,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
+      marketName: marketName ?? this.marketName,
+      location: location ?? this.location,
     );
   }
 
@@ -105,6 +119,8 @@ class UserOrder extends Equatable {
       deliveryId,
       status,
       createdAt,
+      marketName,
+      location,
     ];
   }
 }

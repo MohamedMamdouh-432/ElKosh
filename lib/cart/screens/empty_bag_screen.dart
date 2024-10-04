@@ -10,7 +10,8 @@ class EmptyBageWidgetScreen extends StatelessWidget {
     return EmptyBagWidget(
       imagePath: ImageManager.shoppingCart,
       title: "الـسـله فارغة",
-      subtitle: 'من الواضح انك لسه مضـفتش حاجه للسله يلا املاها دلوقت ',
+      subtitle:
+          'من الواضح انك لم تقم بالتسوق بعد . لذا يمكنك الانتقال الى الصفحة الرئيسية لتتصفح المنتجات و المتاجر المتاحه',
       buttonText: 'تسـوق الان',
     );
   }

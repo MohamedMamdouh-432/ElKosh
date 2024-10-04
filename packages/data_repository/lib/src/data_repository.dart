@@ -11,23 +11,25 @@ class DataRepository {
   final FirebaseFirestore firestore;
   final FirebaseStorage fireStorage;
   final SharedPreferences sharedPref;
-  Market? _market;
-  Product? _product;
-  double price;
-  String? marketId;
-  Map<String, int> shoppings;
+  Market? _selctedMarket;
+  Product? _selectedProduct;
+  double _price;
+  String? _marketId, _marketName;
+  Map<String, int> _shopping;
 
   DataRepository({
     required this.firestore,
     required this.fireStorage,
     required this.sharedPref,
-  })  : price = 0,
-        shoppings = {};
+  })  : _marketId = '',
+        _marketName = '',
+        _price = 0,
+        _shopping = {};
 
-  Market? getCurMarket() => _market;
-  Product? getCurProduct() => _product;
-  void setCurMarket(Market market) => _market = market;
-  void setCurProduct(Product product) => _product = product;
+  Market? getCurMarket() => _selctedMarket;
+  Product? getCurProduct() => _selectedProduct;
+  void setCurMarket(Market market) => _selctedMarket = market;
+  void setCurProduct(Product product) => _selectedProduct = product;
 
   Future<Either<Failure, List<Market>>> fetchMarkets(int? limits) async {
     try {
@@ -61,7 +63,7 @@ class DataRepository {
     try {
       final response = await firestore
           .collection('products')
-          .where('marketId', isEqualTo: _market?.id)
+          .where('marketId', isEqualTo: _selctedMarket?.id)
           .get();
       List<Product> productsList = [];
       for (var productDoc in response.docs)
@@ -78,6 +80,15 @@ class DataRepository {
       return Product.fromDoc(productDoc.id, productDoc.data()!);
     } catch (e) {
       throw const Failure("حدث خطأ أثناء جلب المنتج");
+    }
+  }
+
+  Future<String> getMarketName(String id) async {
+    try {
+      final marketDoc = await firestore.collection('markets').doc(id).get();
+      return marketDoc.data()!['name'];
+    } catch (e) {
+      throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
 
@@ -109,7 +120,7 @@ class DataRepository {
       for (var element in orders.docs) {
         final elementData = element.data();
         Map<Product, int> elementProducts = {};
-        elementData['shoppings'].forEach((productId, productCount) async {
+        elementData['shopping'].forEach((productId, productCount) async {
           final mappedProduct = await fetchProductById(productId);
           elementProducts.putIfAbsent(mappedProduct, () => productCount);
           orderList
@@ -133,7 +144,7 @@ class DataRepository {
       for (var element in orders.docs) {
         final elementData = element.data();
         Map<Product, int> elementProducts = {};
-        elementData['shoppings'].forEach((id, countVal) async {
+        elementData['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
           elementProducts.putIfAbsent(mappedProduct, () => countVal);
         });
@@ -142,6 +153,208 @@ class DataRepository {
       }
 
       return Right(orderList);
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
+    try {
+      String? cartMap = sharedPref.getString('shopping');
+      _price = sharedPref.getDouble('price')!;
+      if (cartMap == null || _price == 0) {
+        _price = 0;
+        _shopping = {};
+        await sharedPref.setDouble('price', _price);
+        await sharedPref.setString('shopping', json.encode(_shopping));
+
+        return const Right({
+          'shopping': {},
+          'price': 0,
+          'marketId': '',
+          'marketName': '',
+        });
+      }
+      _marketId = sharedPref.getString('marketId');
+      _marketName = sharedPref.getString('marketName');
+      Map<String, dynamic> decShopping = json.decode(cartMap);
+      Map<Product, int> shoppingData = {};
+      _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
+      for (MapEntry<String, int> entry in _shopping.entries) {
+        final mappedProduct = await fetchProductById(entry.key);
+        shoppingData.putIfAbsent(mappedProduct, () => entry.value);
+      }
+      return Right({
+        'price': _price,
+        'shopping': shoppingData,
+        'marketId': _marketId,
+        'marketName': _marketName,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, dynamic>>> resetCart() async {
+    _price = 0;
+    _shopping = {};
+    _marketId = _marketName = '';
+    try {
+      await sharedPref.setDouble('price', _price);
+      await sharedPref.setString('shopping', json.encode(_shopping));
+      await sharedPref.setString('marketId', '');
+      await sharedPref.setString('marketName', '');
+      return Right({
+        'price': _price,
+        'shopping': const <Product, int>{},
+        'marketId': _marketId,
+        'marketName': _marketName,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, String>>> addProductToCart(
+    Product product,
+  ) async {
+    try {
+      if (_shopping.isEmpty) {
+        _marketId = product.marketId;
+        _marketName = await getMarketName(_marketId!);
+      } else if (_marketId != product.marketId)
+        return const Left(Failure("يجب ان تشترى من نفس المتجر"));
+      _price += product.price;
+      _shopping.update(
+        product.id,
+        (value) => value + 1,
+        ifAbsent: () => 1,
+      );
+      await sharedPref.setDouble('price', _price);
+      await sharedPref.setString('shopping', json.encode(_shopping));
+      await sharedPref.setString('marketId', _marketId!);
+      await sharedPref.setString('marketName', _marketName!);
+      return Right({
+        'marketId': _marketId!,
+        'marketName': _marketName!,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, String>>> removeProductFromCart(
+    Product product,
+  ) async {
+    try {
+      if (_shopping.containsKey(product.id)) {
+        _price -= product.price * _shopping[product.id]!;
+        _shopping.remove(product.id);
+        if (_shopping.isEmpty) {
+          _marketId = '';
+          _marketName = '';
+        }
+        await sharedPref.setDouble('price', _price);
+        await sharedPref.setString('shopping', json.encode(_shopping));
+        await sharedPref.setString('marketId', _marketId!);
+        await sharedPref.setString('marketName', _marketName!);
+      }
+      return Right({
+        'marketId': _marketId!,
+        'marketName': _marketName!,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, String>>> increaseProductQuantityInCart(
+    Product product,
+  ) async {
+    try {
+      if (_shopping.isEmpty) {
+        _marketId = product.marketId;
+        _marketName = await getMarketName(_marketId!);
+      } else if (_marketId != product.marketId)
+        return const Left(Failure("يجب ان تشترى من نفس المتجر"));
+      _price += product.price;
+      _shopping.update(
+        product.id,
+        (value) => value + 1,
+        ifAbsent: () => 1,
+      );
+      await sharedPref.setDouble('price', _price);
+      await sharedPref.setString('shopping', json.encode(_shopping));
+      await sharedPref.setString('marketId', _marketId!);
+      await sharedPref.setString('marketName', _marketName!);
+      return Right({
+        'marketId': _marketId!,
+        'marketName': _marketName!,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Map<String, String>>> decreaseProductQuantityFromCart(
+    Product product,
+  ) async {
+    try {
+      if (_shopping.containsKey(product.id)) {
+        _price -= product.price;
+        _shopping.update(
+          product.id,
+          (value) => value - 1,
+          ifAbsent: null,
+        );
+        if (_shopping[product.id] == 0) {
+          _shopping.remove(product.id);
+        }
+        if (_shopping.isEmpty) {
+          _marketId = '';
+          _marketName = '';
+        }
+        await sharedPref.setDouble('price', _price);
+        await sharedPref.setString('shopping', json.encode(_shopping));
+        await sharedPref.setString('marketId', _marketId!);
+        await sharedPref.setString('marketName', _marketName!);
+      }
+      return Right({
+        'marketId': _marketId!,
+        'marketName': _marketName!,
+      });
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Null>> placeOrder({
+    required String userId,
+    required String userName,
+    required DeliveryLocation location,
+  }) async {
+    try {
+      final orderMap = {
+        'total': _price,
+        'shopping': _shopping,
+        'userId': userId,
+        'marketId': _marketId!,
+        'deliveryId': "",
+        'marketName': _marketName!,
+        'status': OrderStatus.pending.name,
+        'createdAt': DateTime.now(),
+        'location': location.toJson(),
+      };
+      await firestore.collection('orders').add(orderMap);
+      log('Order Succeesed');
+      _price = 0;
+      _shopping = {};
+      _marketId = _marketName = '';
+      await sharedPref.setDouble('price', _price);
+      await sharedPref.setString('shopping', json.encode(_shopping));
+      await sharedPref.setString('marketId', '');
+      await sharedPref.setString('marketName', '');
+      return const Right(null);
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -158,160 +371,9 @@ class DataRepository {
         'price': orderData['price'],
         'userId': orderData['userId'],
         'location': orderData['location'],
-        'shoppings': orderData['shoppings'],
+        'shopping': orderData['shopping'],
         'status': OrderStatus.cancelled.name,
       });
-      return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
-    try {
-      String? cartMap = sharedPref.getString('shoppings');
-      if (cartMap == null) {
-        price = 0;
-        shoppings = {};
-        await sharedPref.setDouble('price', price);
-        await sharedPref.setString('shoppings', json.encode(shoppings));
-        return const Right({
-          'shopping': {},
-          'price': 0,
-        });
-      }
-      shoppings = {};
-      price = sharedPref.getDouble('price')!;
-      final shoppingMap = json.decode(cartMap);
-      Map<Product, int> shoppingList = {};
-      shoppingMap.forEach((id, countVal) async {
-        shoppings.putIfAbsent(id, () => countVal);
-        final mappedProduct = await fetchProductById(id);
-        shoppingList.putIfAbsent(mappedProduct, () => countVal);
-      });
-      return Right({
-        'price': price,
-        'shopping': shoppingList,
-      });
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Map<String, dynamic>>> resetCart() async {
-    price = 0;
-    shoppings = {};
-    try {
-      await sharedPref.setDouble('price', price);
-      await sharedPref.setString('shoppings', json.encode(shoppings));
-      return Right({
-        'price': price,
-        'shopping': const <Product, int>{},
-      });
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Null>> addProductToCart(
-    Product product,
-  ) async {
-    try {
-      price += product.price;
-      shoppings.update(
-        product.id,
-        (value) => value + 1,
-        ifAbsent: () => 1,
-      );
-      await sharedPref.setDouble('price', price);
-      await sharedPref.setString('shoppings', json.encode(shoppings));
-      return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Null>> removeProductFromCart(
-    Product product,
-  ) async {
-    try {
-      if (shoppings.containsKey(product.id)) {
-        price -= product.price * shoppings[product.id]!;
-        shoppings.remove(product.id);
-        await sharedPref.setDouble('price', price);
-        await sharedPref.setString('shoppings', json.encode(shoppings));
-      }
-      return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Null>> increaseProductQuantityInCart(
-    Product product,
-  ) async {
-    try {
-      price += product.price;
-      shoppings.update(
-        product.id,
-        (value) => value + 1,
-        ifAbsent: () => 1,
-      );
-      await sharedPref.setDouble('price', price);
-      await sharedPref.setString('shoppings', json.encode(shoppings));
-      return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Null>> decreaseProductQuantityFromCart(
-    Product product,
-  ) async {
-    try {
-      if (shoppings.containsKey(product.id)) {
-        price -= product.price;
-        shoppings.update(
-          product.id,
-          (value) => value - 1,
-          ifAbsent: null,
-        );
-        if (shoppings[product.id] == 0) {
-          shoppings.remove(product.id);
-        }
-        await sharedPref.setDouble('price', price);
-        await sharedPref.setString('shoppings', json.encode(shoppings));
-      }
-      return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, Null>> placeOrder({
-    // double lat,
-    // double long,
-    required String userName,
-    required String userId,
-    required Map<Product, int> shopping,
-  }) async {
-    try {
-      final order = UserOrder(
-        id: "",
-        total: price,
-        shopping: shopping,
-        marketId: marketId!,
-        userId: userId,
-        deliveryId: "",
-        status: OrderStatus.pending,
-        createdAt: DateTime.now(),
-      );
-      await firestore.collection('orders').add(order.toDoc(shoppings));
-      log('Order Succeesed');
-      price = 0;
-      shoppings = {};
-      await sharedPref.setDouble('price', price);
-      await sharedPref.setString('shoppings', json.encode(shoppings));
       return const Right(null);
     } catch (e) {
       return Left(Failure(e.toString()));

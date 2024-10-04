@@ -46,26 +46,26 @@ class ElKoshLauncher extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       designSize: const Size(320, 690),
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        routerConfig: RouteManager.router,
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: const Color(0xffFF6100),
-          scaffoldBackgroundColor: Colors.white,
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
-            foregroundColor: Color(0xffFF6100),
+        child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          routerConfig: RouteManager.router,
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: const Color(0xffFF6100),
+            scaffoldBackgroundColor: Colors.white,
+            appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Color(0xffFF6100),
+            ),
           ),
+          supportedLocales: const [Locale('ar', '')],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          locale: const Locale('ar', ''),
         ),
-        supportedLocales: const [Locale('ar', '')],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        locale: const Locale('ar', ''),
-      ),
     );
   }
 }
