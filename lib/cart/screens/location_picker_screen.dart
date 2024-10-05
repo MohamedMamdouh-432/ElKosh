@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,7 +66,7 @@ class LocationPickerScreen extends StatelessWidget {
           final location = DeliveryLocation.fromMapPicker(
             pickedData.latLong.latitude,
             pickedData.latLong.longitude,
-            pickedData.addressData,
+            getAddress(pickedData.addressData),
           );
           final profileState = BlocProvider.of<ProfileBloc>(context).state;
           context.read<CartBloc>().add(CartPlaceOrderEvent(

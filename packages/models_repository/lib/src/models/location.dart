@@ -3,110 +3,65 @@ import 'package:equatable/equatable.dart';
 class DeliveryLocation extends Equatable {
   final double latitude;
   final double longitude;
-  final String houseNumber;
-  final String road;
-  final String neighbourhood;
-  final String city;
-  final String state;
-  final String country;
+  final String address;
 
   const DeliveryLocation({
     required this.latitude,
     required this.longitude,
-    required this.houseNumber,
-    required this.road,
-    required this.neighbourhood,
-    required this.city,
-    required this.state,
-    required this.country,
+    required this.address,
   });
 
   static const empty = DeliveryLocation(
     latitude: 0,
     longitude: 0,
-    houseNumber: '',
-    road: '',
-    neighbourhood: '',
-    city: '',
-    state: '',
-    country: '',
+    address: '',
   );
 
   factory DeliveryLocation.fromMapPicker(
     double latitude,
     double longitude,
-    Map<String, dynamic> jsonMap,
+    String address,
   ) =>
       DeliveryLocation(
         latitude: latitude,
         longitude: longitude,
-        houseNumber: jsonMap['house_number'],
-        road: jsonMap['road'],
-        neighbourhood: jsonMap['neighbourhood'],
-        city: jsonMap['city'],
-        state: jsonMap['state'],
-        country: jsonMap['country'],
+        address: address,
       );
 
   factory DeliveryLocation.fromJson(Map<String, dynamic> jsonMap) =>
       DeliveryLocation(
-        latitude: jsonMap['latitude'],
-        longitude: jsonMap['longitude'],
-        houseNumber: jsonMap['houseNumber'],
-        road: jsonMap['road'],
-        neighbourhood: jsonMap['neighbourhood'],
-        city: jsonMap['city'],
-        state: jsonMap['state'],
-        country: jsonMap['country'],
+        latitude: jsonMap['latitude'].toDouble(),
+        longitude: jsonMap['longitude'].toDouble(),
+        address: jsonMap['address'],
       );
 
   Map<String, dynamic> toJson() => {
         'latitude': latitude,
         'longitude': longitude,
-        'houseNumber': houseNumber,
-        'road': road,
-        'neighbourhood': neighbourhood,
-        'city': city,
-        'state': state,
-        'country': country,
+        'address': address,
       };
 
   DeliveryLocation copyWith({
     double? latitude,
     double? longitude,
-    String? houseNumber,
-    String? road,
-    String? neighbourhood,
-    String? city,
-    String? state,
-    String? country,
+    String? address,
   }) {
     return DeliveryLocation(
-      houseNumber: houseNumber ?? this.houseNumber,
-      road: road ?? this.road,
-      neighbourhood: neighbourhood ?? this.neighbourhood,
-      city: city ?? this.city,
-      state: state ?? this.state,
-      country: country ?? this.country,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      address: address ?? this.address,
     );
   }
 
   @override
-  String toString() => '';
+  String toString() => 'Delivery Location :\nLatitude: $latitude\nLongitude: $longitude\nAddress: $address\n';
 
   @override
   List<Object> get props {
     return [
-      houseNumber,
-      road,
-      neighbourhood,
-      city,
-      state,
-      country,
       latitude,
       longitude,
+      address,
     ];
   }
 }

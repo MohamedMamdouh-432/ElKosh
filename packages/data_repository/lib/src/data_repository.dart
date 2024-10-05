@@ -269,7 +269,7 @@ class DataRepository {
   }) async {
     try {
       final orderMap = {
-        'total': _price,
+        'total': _price + ((_price / 100).ceil()),
         'shopping': _shopping,
         'userId': userId,
         'marketId': _marketId!,
@@ -280,6 +280,7 @@ class DataRepository {
         'location': location.toJson(),
       };
       await firestore.collection('orders').add(orderMap);
+      // add 2 egp one from seller and one from delivery
       log('Order Succeesed');
       _price = 0;
       _shopping = {};

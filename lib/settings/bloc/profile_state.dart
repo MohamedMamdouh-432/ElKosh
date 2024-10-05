@@ -28,6 +28,11 @@ class ProfileState extends Equatable {
       status: status ?? this.status,
     );
   }
+  
+  @override
+  String toString() {
+    return 'ProfileState\nUser: \n$user\nStatus: ${status.name}\nError Message: $errMsg';
+  }
 
   @override
   List<Object> get props => [
