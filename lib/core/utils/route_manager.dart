@@ -1,13 +1,13 @@
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
 import 'package:elkosh/cart/screens/location_picker_screen.dart';
+import 'package:elkosh/orders/screens/order_details_screen.dart';
 import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
 import 'package:elkosh/home/screens/market_details_screen.dart';
 import 'package:elkosh/home/screens/navbar_screen.dart';
 import 'package:elkosh/home/screens/product_details_screen.dart';
 import 'package:elkosh/home/screens/products_screen.dart';
-import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,7 +22,7 @@ abstract class RouteManager {
   static const String marketDetailsRoute = '/market_details';
   static const String talabatyScreen = '/talabaty';
   static const String locationPickerRoute = '/location_picker';
-  static const String OrderDetails = '/order_details';
+  static const String orderDetailsRoute = '/order_details';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -65,6 +65,10 @@ abstract class RouteManager {
       GoRoute(
         path: locationPickerRoute,
         builder: (context, state) => const LocationPickerScreen(),
+      ),
+      GoRoute(
+        path: orderDetailsRoute,
+        builder: (context, state) => const OrderDetailsScreen(),
       ),
     ],
   );

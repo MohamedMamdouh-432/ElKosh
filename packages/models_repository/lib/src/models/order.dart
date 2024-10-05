@@ -59,10 +59,10 @@ class UserOrder extends Equatable {
   ) =>
       UserOrder(
         id: id,
-        total: map['price'],
+        total: map['total'].toDouble(),
         shopping: shoppingList,
         status: getOrderStatus(map['status']),
-        createdAt: DateTime.parse(map['createdAt']),
+        createdAt: map['createdAt'].toDate(),
         marketId: map['marketId'],
         userId: map['userId'],
         deliveryId: map['deliveryId'],

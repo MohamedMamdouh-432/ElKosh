@@ -30,6 +30,7 @@ dependencies:
   equatable: ^2.0.5
   quickalert: ^1.1.0
   modal_progress_hud_nsn: ^0.5.1
+  carousel_slider: ^5.0.0
   another_carousel_pro: ^1.0.2
   google_nav_bar: ^5.0.6
   location_picker_flutter_map: ^3.0.1
@@ -46,7 +47,6 @@ dependencies:
   
 dependency_overrides:
   flutter_compass: ^0.8.0
-  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
