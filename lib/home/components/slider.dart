@@ -7,34 +7,24 @@ class ProductsSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CustomCarouselSlider();
-  }
-}
-
-class CustomCarouselSlider extends StatelessWidget {
-  const CustomCarouselSlider({super.key});
-
-  @override
-  Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-          height: MediaQuery.of(context).size.height * 0.22,
-          enlargeCenterPage: true,
-          autoPlay: true,
-          aspectRatio: 16 / 8,
-          autoPlayAnimationDuration: const Duration(milliseconds: 800),
-          viewportFraction: 0.7),
-      items: products.map((product) {
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                decoration: const BoxDecoration(color: Colors.grey),
-                child: Image.network(product.imgUrl));
-          },
-        );
-      }).toList(),
+        height: MediaQuery.of(context).size.height * 0.22,
+        enlargeCenterPage: true,
+        autoPlay: true,
+        aspectRatio: 16 / 8,
+        autoPlayAnimationDuration: const Duration(milliseconds: 800),
+        viewportFraction: 0.7,
+      ),
+      items: products
+          .map(
+            (product) => Container(
+              width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.symmetric(horizontal: 5.0),
+              child: Image.network(product.imgUrl),
+            ),
+          )
+          .toList(),
     );
   }
 }
