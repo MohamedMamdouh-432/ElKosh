@@ -66,6 +66,11 @@ class User extends Equatable {
       userType: userType ?? this.userType,
     );
   }
+  
+  @override
+  String toString() {
+    return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\n';
+  }
 
   @override
   List<Object?> get props => [

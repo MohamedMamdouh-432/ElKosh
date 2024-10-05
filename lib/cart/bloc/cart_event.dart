@@ -52,5 +52,10 @@ class CartPlaceOrderEvent extends CartEvent {
   const CartPlaceOrderEvent(this.user, this.location);
 
   @override
+  String toString() {
+    return 'CartPlaceOrderEvent :\nUser: \n$user\nLocation: $location\n';
+  }
+
+  @override
   List<Object> get props => [user, location];
 }
