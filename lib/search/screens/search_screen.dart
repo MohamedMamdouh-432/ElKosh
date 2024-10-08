@@ -28,7 +28,6 @@ class SearchScreen extends StatelessWidget {
                 padding: const WidgetStatePropertyAll(
                   EdgeInsets.symmetric(horizontal: 20),
                 ),
-                // todo: will be linked with SearchBloc Later
                 onChanged: (value) {},
                 onSubmitted: (value) {},
               ),
