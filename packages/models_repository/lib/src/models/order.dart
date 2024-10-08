@@ -16,6 +16,7 @@ OrderStatus getOrderStatus(String stateValue) {
 
 class UserOrder extends Equatable {
   final String id;
+  final int code;
   final double total;
   final Map<Product, int> shopping;
   final String marketId;
@@ -28,6 +29,7 @@ class UserOrder extends Equatable {
 
   const UserOrder({
     required this.id,
+    required this.code,
     required this.total,
     required this.shopping,
     required this.marketId,
@@ -41,6 +43,7 @@ class UserOrder extends Equatable {
 
   static UserOrder empty = UserOrder(
     id: '',
+    code: 0,
     status: OrderStatus.pending,
     shopping: const {},
     total: 0,
@@ -59,6 +62,7 @@ class UserOrder extends Equatable {
   ) =>
       UserOrder(
         id: id,
+        code: map['code'].toInt(),
         total: map['total'].toDouble(),
         shopping: shoppingList,
         status: getOrderStatus(map['status']),
@@ -84,6 +88,7 @@ class UserOrder extends Equatable {
 
   UserOrder copyWith({
     String? id,
+    int? code,
     double? total,
     Map<Product, int>? shopping,
     String? marketId,
@@ -96,6 +101,7 @@ class UserOrder extends Equatable {
   }) {
     return UserOrder(
       id: id ?? this.id,
+      code: code ?? this.code,
       total: total ?? this.total,
       shopping: shopping ?? this.shopping,
       marketId: marketId ?? this.marketId,
@@ -112,6 +118,7 @@ class UserOrder extends Equatable {
   List<Object> get props {
     return [
       id,
+      code,
       total,
       shopping,
       marketId,

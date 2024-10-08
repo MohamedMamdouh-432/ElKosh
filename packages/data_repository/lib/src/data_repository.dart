@@ -101,10 +101,11 @@ class DataRepository {
         _shopping = {};
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-
+        await sharedPref.setString('marketId', '');
+        await sharedPref.setString('marketName', '');
         return const Right({
-          'shopping': {},
-          'price': 0,
+          'shopping': <Product, int>{},
+          'price': 0.0,
           'marketId': '',
           'marketName': '',
         });
@@ -268,8 +269,13 @@ class DataRepository {
     required DeliveryLocation location,
   }) async {
     try {
+      // get current val in order doc field "seqId"
+      final seqIdDoc =
+          firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
+      int seqIdVal = (await seqIdDoc.get()).data()!['seqId'];
       final orderMap = {
         'total': _price + ((_price / 100).ceil()),
+        'code': seqIdVal,
         'shopping': _shopping,
         'userId': userId,
         'marketId': _marketId!,
@@ -280,6 +286,7 @@ class DataRepository {
         'location': location.toJson(),
       };
       await firestore.collection('orders').add(orderMap);
+      await seqIdDoc.set({'seqId': seqIdVal + 1});
       // add 2 egp one from seller and one from delivery
       log('Order Succeesed');
       _price = 0;
@@ -300,15 +307,11 @@ class DataRepository {
       final orderData =
           (await firestore.collection('orders').doc(orderId).get()).data()!;
       if (orderData['status'] == OrderStatus.shipped.name)
-        return const Left(Failure('Order Already Shipped and in the road'));
-      await firestore.collection('orders').doc(orderId).set({
-        'createdDate': orderData['createdDate'],
-        'price': orderData['price'],
-        'userId': orderData['userId'],
-        'location': orderData['location'],
-        'shopping': orderData['shopping'],
-        'status': OrderStatus.cancelled.name,
-      });
+        return const Left(Failure('تم شحن الطلب بالفعل'));
+      await firestore
+          .collection('orders')
+          .doc(orderId)
+          .update({'status': OrderStatus.cancelled.name});
       return const Right(null);
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -341,6 +344,7 @@ class DataRepository {
 
       final List<UserOrder> orderList = [];
       for (var orderDoc in orders.docs) {
+        if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
@@ -368,6 +372,7 @@ class DataRepository {
 
       final List<UserOrder> orderList = [];
       for (var orderDoc in orders.docs) {
+        if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
