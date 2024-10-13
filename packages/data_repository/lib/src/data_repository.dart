@@ -340,7 +340,9 @@ class DataRepository {
       final orders = await firestore
           .collection('orders')
           .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['pending', 'shipped']).get();
+          .where('status', whereIn: ['pending', 'shipped'])
+          .orderBy('createdAt', descending: true)
+          .get();
 
       final List<UserOrder> orderList = [];
       for (var orderDoc in orders.docs) {
@@ -368,7 +370,9 @@ class DataRepository {
       final orders = await firestore
           .collection('orders')
           .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['cancelled', 'delivered']).get();
+          .where('status', whereIn: ['cancelled', 'delivered'])
+          .orderBy('createdAt', descending: true)
+          .get();
 
       final List<UserOrder> orderList = [];
       for (var orderDoc in orders.docs) {

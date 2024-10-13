@@ -73,9 +73,13 @@
 		Add Market
 		Edit Market
 		Delete Market
+		Add Category
+		Edit Category
+		Delete Category
 		Add Product
 		Edit Product
 		Delete Product
+		add discount
 		
 	* 5/10 -> 6/10
 		Notification
@@ -92,6 +96,23 @@
 		register delivery account
 
 ### Delivery Part App
+
 	* Notifications
 		- all ongoing orders
 		- later delivered orders
+		
+### Addons
+
+	1. new google maps
+	2. login by phone OPT
+	3. about app
+		- policy
+		- order cancelling
+		- safety
+	4. add discount for market
+	5. accept seller add request
+	6. discount request
+	7. delete or bloc market
+	8. users summary
+	9. view map after signup
+	10. enable blocing property for user
