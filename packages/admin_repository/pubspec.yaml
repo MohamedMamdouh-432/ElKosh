@@ -1,0 +1,14 @@
+name: admin_repository
+description: Dart package which manages admin authorization and options for control over app.
+version: 1.0.0
+publish_to: none
+environment:
+  sdk: ^3.5.2
+
+dependencies: 
+  cloud_firestore: ^5.4.0
+  firebase_storage: ^12.2.0
+  either_dart: ^1.0.0
+  shared_preferences: ^2.3.2
+  models_repository: 
+    path: ../models_repository
