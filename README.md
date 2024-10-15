@@ -69,7 +69,7 @@
 
 ### Seller Part App
 
-	* 4/10 -> 5/10 
+	* 15/10 -> 17/10 @dooha
 		Add Market
 		Edit Market
 		Delete Market
@@ -80,39 +80,37 @@
 		Edit Product
 		Delete Product
 		add discount
-		
-	* 5/10 -> 6/10
+
+	* 15/10 -> 17/10 @mohaned
 		Notification
 			- Ongoing orders
 			- History Orders (with filteration)
+		about app
+			- policy
+			- order cancelling
+			- safety
 
 ### Admin Part App
 
-	* 7/10 -> 10/10
+	* 18/10 -> 20/10
 		same as seller
 		Notification
 			- Ongoing orders
 			- History Orders (with filteration)
 		register delivery account
+		delete or bloc market
+		users summary
+		enable blocing property for user
 
 ### Delivery Part App
 
-	* Notifications
-		- all ongoing orders
-		- later delivered orders
+	* 21/10 -> 23/10
+		Notifications
+			- all ongoing orders
+			- later delivered orders
 		
-### Addons
+### Later Addons
 
 	1. new google maps
-	2. login by phone OPT
-	3. about app
-		- policy
-		- order cancelling
-		- safety
-	4. add discount for market
-	5. accept seller add request
-	6. discount request
-	7. delete or bloc market
-	8. users summary
-	9. view map after signup
-	10. enable blocing property for user
+	2. view map after signup
+	3. login by phone OPT
