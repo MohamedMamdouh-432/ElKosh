@@ -31,8 +31,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         state.email,
         state.password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
@@ -46,8 +46,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         state.email,
         state.password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
@@ -61,8 +61,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         email,
         state.password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
@@ -76,13 +76,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         state.email,
         password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
   FutureOr<void> _onRegisterWithEmailAndPassword(event, emit) async {
-    if (state.inputStatus == FormStatus.invalid) return;
+    if (state.inputStatus == FormInputStatus.invalid) return;
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
     try {
       await sl.get<AuthRepository>().registerWithEmailAndPassword(

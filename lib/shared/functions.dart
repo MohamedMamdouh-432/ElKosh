@@ -1,4 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 String getAddress(Map<String, dynamic> addressMap) {
   String address = '';
@@ -28,7 +32,19 @@ String toArNumber(String input) {
     '7': '٧',
     '8': '٨',
     '9': '٩',
+    ':': ':',
   };
 
   return input.split('').map((char) => eaMap[char] ?? char).join('');
+}
+
+String toArabicPeriod(String period) => period == 'am' ? 'ص' : 'م';
+
+Future<File?> fetchImage() async {
+  final XFile? fetchedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+  if (fetchedImage == null) return null;
+  String appDirPath = (await getApplicationDocumentsDirectory()).path;
+  final imgPath = '$appDirPath/${fetchedImage.name}';
+  final file = await File(fetchedImage.path).copy(imgPath);
+  return file;
 }

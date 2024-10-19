@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:elkosh/shared/dummy/products.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 
 class ProductsSlider extends StatelessWidget {
@@ -20,7 +21,7 @@ class ProductsSlider extends StatelessWidget {
       items: products
           .map(
             (product) => Container(
-              width: MediaQuery.of(context).size.width,
+              width: context.width,
               margin: const EdgeInsets.symmetric(horizontal: 5.0),
               child: CachedNetworkImage(imageUrl: product.imgUrl),
             ),

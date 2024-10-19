@@ -1,35 +1,34 @@
 import 'package:equatable/equatable.dart';
 
-class DeliveryLocation extends Equatable {
+class Location extends Equatable {
   final double latitude;
   final double longitude;
   final String address;
 
-  const DeliveryLocation({
+  const Location({
     required this.latitude,
     required this.longitude,
     required this.address,
   });
 
-  static const empty = DeliveryLocation(
+  static const empty = Location(
     latitude: 0,
     longitude: 0,
     address: '',
   );
 
-  factory DeliveryLocation.fromMapPicker(
+  factory Location.fromMapPicker(
     double latitude,
     double longitude,
     String address,
   ) =>
-      DeliveryLocation(
+      Location(
         latitude: latitude,
         longitude: longitude,
         address: address,
       );
 
-  factory DeliveryLocation.fromJson(Map<String, dynamic> jsonMap) =>
-      DeliveryLocation(
+  factory Location.fromJson(Map<String, dynamic> jsonMap) => Location(
         latitude: jsonMap['latitude'].toDouble(),
         longitude: jsonMap['longitude'].toDouble(),
         address: jsonMap['address'],
@@ -41,12 +40,12 @@ class DeliveryLocation extends Equatable {
         'address': address,
       };
 
-  DeliveryLocation copyWith({
+  Location copyWith({
     double? latitude,
     double? longitude,
     String? address,
   }) {
-    return DeliveryLocation(
+    return Location(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       address: address ?? this.address,
@@ -54,7 +53,8 @@ class DeliveryLocation extends Equatable {
   }
 
   @override
-  String toString() => 'Delivery Location :\nLatitude: $latitude\nLongitude: $longitude\nAddress: $address\n';
+  String toString() =>
+      'Delivery Location :\nLatitude: $latitude\nLongitude: $longitude\nAddress: $address\n';
 
   @override
   List<Object> get props {

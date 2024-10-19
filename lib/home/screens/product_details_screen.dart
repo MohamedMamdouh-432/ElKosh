@@ -2,6 +2,7 @@ import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -150,7 +151,7 @@ class ProductDetailsScreen extends StatelessWidget {
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
                 floatingActionButton: SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.8,
+                  width: context.width * 0.8,
                   child: ElevatedButton(
                     onPressed: isInCart
                         ? null

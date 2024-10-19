@@ -1,92 +1,116 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:models_repository/models_repository.dart';
 
 class Market extends Equatable {
   final String id;
+  final String sellerId;
   final String name;
   final String desc;
   final String hotline;
-  final String scope;
   final String imgUrl;
-  final GeoPoint address;
+  final TimeOfDay beginTime;
+  final TimeOfDay endTime;
+  final Location location;
 
   const Market({
     required this.id,
+    required this.sellerId,
     required this.name,
     required this.desc,
     required this.hotline,
-    required this.scope,
     required this.imgUrl,
-    required this.address,
+    required this.location,
+    required this.beginTime,
+    required this.endTime,
   });
 
-  static Market empty = const Market(
+  static Market empty = Market(
     id: '',
+    sellerId: '',
     name: '',
     desc: '',
     imgUrl: '',
     hotline: '',
-    scope: '',
-    address: GeoPoint(0, 0),
+    location: Location.empty,
+    beginTime: TimeOfDay.now(),
+    endTime: TimeOfDay.now(),
   );
 
   Market copyWith({
     String? id,
+    String? sellerId,
     String? name,
     String? desc,
     String? hotline,
-    String? scope,
     String? imgUrl,
-    GeoPoint? address,
+    Location? location,
+    TimeOfDay? beginTime,
+    TimeOfDay? endTime,
   }) =>
       Market(
         id: id ?? this.id,
+        sellerId: sellerId ?? this.sellerId,
         name: name ?? this.name,
         desc: desc ?? this.desc,
         hotline: hotline ?? this.hotline,
-        scope: scope ?? this.scope,
         imgUrl: imgUrl ?? this.imgUrl,
-        address: address ?? this.address,
+        location: location ?? this.location,
+        beginTime: beginTime ?? this.beginTime,
+        endTime: endTime ?? this.endTime,
       );
 
   factory Market.fromDoc(String marketId, Map<String, dynamic> marketDoc) =>
       Market(
         id: marketId,
+        sellerId: marketDoc['sellerId'],
         name: marketDoc['name'],
         desc: marketDoc['desc'],
         hotline: marketDoc['hotline'],
-        scope: marketDoc['scope'],
         imgUrl: marketDoc['imgUrl'],
-        address: GeoPoint(
-          marketDoc['address'].latitude,
-          marketDoc['address'].longitude,
-        ),
+        location: Location.fromJson(marketDoc['location']),
+        beginTime: TimeOfDay(
+            hour: marketDoc['beginTime']['hour'],
+            minute: marketDoc['beginTime']['minute']),
+        endTime: TimeOfDay(
+            hour: marketDoc['endTime']['hour'],
+            minute: marketDoc['endTime']['minute']),
       );
 
   Map<String, dynamic> toDoc() => {
         'name': name,
+        'sellerId': sellerId,
         'desc': desc,
         'hotline': hotline,
-        'scope': scope,
         'imgUrl': imgUrl,
-        'address': address,
+        'location': location.toJson(),
+        'beginTime': {
+          'hour': beginTime.hour,
+          'minute': beginTime.minute,
+        },
+        'endTime': {
+          'hour': endTime.hour,
+          'minute': endTime.minute,
+        },
       };
 
   @override
   String toString() {
-    return 'Name: $name ::\nHotline: $hotline\nDescription: $desc\nScope: $scope\nImage Url: $imgUrl\nAddress: ${address.latitude}, ${address.longitude}\n';
+    return '\nName: $name ::\nHotline: $hotline\nDescription: $desc\nImage Url: $imgUrl\nBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\nEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\nAddress: ${location.latitude}, ${location.longitude}';
   }
 
   @override
   List<Object> get props {
     return [
       id,
+      sellerId,
       name,
       desc,
       hotline,
-      scope,
       imgUrl,
-      address,
+      location,
+      beginTime,
+      endTime,
     ];
   }
 }

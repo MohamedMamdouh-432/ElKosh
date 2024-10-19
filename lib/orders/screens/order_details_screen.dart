@@ -1,6 +1,7 @@
 import 'package:elkosh/home/widgets/title_text.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:elkosh/shared/widgets/product_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,7 +80,7 @@ class OrderDetailsScreen extends StatelessWidget {
             visible: state.curOrder.status == OrderStatus.pending ||
                 state.curOrder.status == OrderStatus.shipped,
             child: SizedBox(
-              width: 250.w,
+              width: context.width * 0.8,
               child: ElevatedButton(
                 onPressed: () {
                   context

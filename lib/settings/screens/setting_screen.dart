@@ -41,70 +41,73 @@ class SettingScreen extends StatelessWidget {
             enabled: state.status == ProfileStatus.loading,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 25,
-                      child: Center(
-                        child: Text(
-                          state.user.name[0],
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 25,
+                        child: Center(
+                          child: Text(
+                            state.user.name[0],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const Gap(16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          state.user.name,
-                          style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            wordSpacing: 3,
+                      const Gap(16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            state.user.name,
+                            style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              wordSpacing: 3,
+                            ),
                           ),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.phone_enabled_rounded,
-                              color: Colors.green,
-                              size: 25,
-                            ),
-                            const Gap(10),
-                            Text(
-                              state.user.phone,
-                              style: const TextStyle(
-                                fontSize: 20,
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.phone_enabled_rounded,
+                                color: Colors.green,
+                                size: 25,
                               ),
-                            ),
-                          ],
-                        ),
-                        const Row(
-                          children: [
-                            Icon(
-                              Icons.location_on,
-                              color: Colors.lime,
-                              size: 25,
-                            ),
-                            Gap(10),
-                            Text(
-                              'مصر',
-                              style: TextStyle(
-                                fontSize: 20,
+                              const Gap(10),
+                              Text(
+                                state.user.phone,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                            ],
+                          ),
+                          const Row(
+                            children: [
+                              Icon(
+                                Icons.location_on,
+                                color: Colors.lime,
+                                size: 25,
+                              ),
+                              Gap(10),
+                              Text(
+                                'مصر',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                const Divider(height: 32),
+                const Divider(height: 32, indent: 20, endIndent: 20),
                 ListTile(
                   leading: const Icon(
                     Icons.assignment,
@@ -131,6 +134,38 @@ class SettingScreen extends StatelessWidget {
                     // Handle "talabat pay" tap
                   },
                 ),
+                const Divider(height: 5, indent: 100, endIndent: 100),
+                Visibility(
+                  visible: state.user.userType != UserType.admin,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.store,
+                      size: 35,
+                      color: ColorManager.primary,
+                    ),
+                    title: const Text(
+                      'إدارة متاجرى',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onTap: () => context.push(RouteManager.sellerRoute),
+                  ),
+                ),
+                Visibility(
+                  visible: state.user.userType == UserType.admin,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.settings,
+                      size: 35,
+                      color: Colors.cyan,
+                    ),
+                    title: const Text(
+                      'إدارة التطبيق',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    onTap: () {},
+                  ),
+                ),
+                const Divider(height: 5, indent: 100, endIndent: 100),
                 ListTile(
                   leading: const Icon(
                     Icons.info_outline,
