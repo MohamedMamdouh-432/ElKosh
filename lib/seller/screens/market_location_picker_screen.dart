@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,8 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 import 'package:models_repository/models_repository.dart';
 
-class LocationPickerScreen extends StatelessWidget {
-  const LocationPickerScreen({super.key});
+class MarketLocationPickerScreen extends StatelessWidget {
+  const MarketLocationPickerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class LocationPickerScreen extends StatelessWidget {
         trackMyPosition: true,
         initPosition: const LatLong(23, 89),
         // selected location button
-        selectLocationButtonWidth: 200.w,
+        selectLocationButtonWidth: context.width * 0.8,
         selectLocationButtonText: 'تحديد الموقع الحالى',
         selectLocationButtonLeadingIcon: const Icon(
           Icons.location_on,
@@ -43,7 +43,7 @@ class LocationPickerScreen extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
         // search bar
-        searchBarHintText: 'ابحث عن موقع التوصيل',
+        searchBarHintText: 'ابحث عن موقع المتجر',
         searchbarBorderRadius: BorderRadius.circular(20),
         searchbarInputBorder:
             OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
@@ -63,17 +63,12 @@ class LocationPickerScreen extends StatelessWidget {
         showCurrentLocationPointer: false,
         onError: (e) => log(e.toString()),
         onPicked: (pickedData) {
-          final location = DeliveryLocation.fromMapPicker(
+          final location = Location.fromMapPicker(
             pickedData.latLong.latitude,
             pickedData.latLong.longitude,
             getAddress(pickedData.addressData),
           );
-          final profileState = BlocProvider.of<ProfileBloc>(context).state;
-          context.read<CartBloc>().add(CartPlaceOrderEvent(
-                profileState.user,
-                location,
-              ));
-          context.pop();
+          context.read<MarketFormBloc>().add(MarketFormLocationChanged(location));
           context.pop();
         },
       ),

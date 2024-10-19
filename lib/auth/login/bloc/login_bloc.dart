@@ -35,8 +35,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         email,
         state.password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
@@ -48,13 +48,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         state.email,
         password,
       ])
-          ? FormStatus.valid
-          : FormStatus.invalid,
+          ? FormInputStatus.valid
+          : FormInputStatus.invalid,
     ));
   }
 
   FutureOr<void> _onLoginWithEmailAndPassword(event, emit) async {
-    if (state.inputStatus == FormStatus.invalid) return;
+    if (state.inputStatus == FormInputStatus.invalid) return;
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
     try {
       await sl.get<AuthRepository>().logInWithEmailAndPassword(

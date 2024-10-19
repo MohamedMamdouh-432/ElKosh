@@ -47,7 +47,7 @@ class CartDecreasingProductQuantityEvent extends CartEvent {
 
 class CartPlaceOrderEvent extends CartEvent {
   final User user;
-  final DeliveryLocation location;
+  final Location location;
 
   const CartPlaceOrderEvent(this.user, this.location);
 

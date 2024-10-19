@@ -57,13 +57,6 @@ class MarkettDetailsScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Text(
-                          state.curMarket.scope,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          ),
-                        ),
                         const Gap(10),
                         const Divider(),
                         const Gap(10),

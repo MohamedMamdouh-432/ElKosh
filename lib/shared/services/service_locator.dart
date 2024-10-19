@@ -1,3 +1,4 @@
+import 'package:admin_repository/admin_repository.dart';
 import 'package:auth_repository/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/data_repository.dart';
@@ -16,11 +17,6 @@ Future<void> setup() async {
   sl.registerSingleton<SharedPreferences>(await SharedPreferences.getInstance());
 
   //* Repositories Dependencies
-  sl.registerSingleton<DataRepository>(DataRepository(
-    firestore: sl.get<FirebaseFirestore>(),
-    fireStorage: sl.get<FirebaseStorage>(),
-    sharedPref: sl.get<SharedPreferences>(),
-  ));
   sl.registerSingleton<AuthRepository>(AuthRepository(
     firebaseAuth: FirebaseAuth.instance,
     firestore: sl.get<FirebaseFirestore>(),
@@ -30,5 +26,15 @@ Future<void> setup() async {
     firestore: sl.get<FirebaseFirestore>(),
     storage: sl.get<FirebaseStorage>(),
     sharedPreferences: sl.get<SharedPreferences>(),
+  ));
+  sl.registerSingleton<DataRepository>(DataRepository(
+    firestore: sl.get<FirebaseFirestore>(),
+    fireStorage: sl.get<FirebaseStorage>(),
+    sharedPref: sl.get<SharedPreferences>(),
+  ));
+  sl.registerSingleton<AdminRepository>(AdminRepository(
+    firestore: sl.get<FirebaseFirestore>(),
+    fireStorage: sl.get<FirebaseStorage>(),
+    sharedPref: sl.get<SharedPreferences>(),
   ));
 }

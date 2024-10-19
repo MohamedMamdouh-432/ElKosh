@@ -25,7 +25,7 @@ class UserOrder extends Equatable {
   final String deliveryId;
   final OrderStatus status;
   final DateTime createdAt;
-  final DeliveryLocation location;
+  final Location location;
 
   const UserOrder({
     required this.id,
@@ -52,7 +52,7 @@ class UserOrder extends Equatable {
     marketId: '',
     userId: '',
     marketName: "",
-    location: DeliveryLocation.empty,
+    location: Location.empty,
   );
 
   factory UserOrder.fromDoc(
@@ -71,7 +71,7 @@ class UserOrder extends Equatable {
         userId: map['userId'],
         deliveryId: map['deliveryId'],
         marketName: map['marketName'],
-        location: DeliveryLocation.fromJson(map['location']),
+        location: Location.fromJson(map['location']),
       );
 
   Map<String, dynamic> toDoc(shoppingMap) => {
@@ -97,7 +97,7 @@ class UserOrder extends Equatable {
     OrderStatus? status,
     DateTime? createdAt,
     String? marketName,
-    DeliveryLocation? location,
+    Location? location,
   }) {
     return UserOrder(
       id: id ?? this.id,

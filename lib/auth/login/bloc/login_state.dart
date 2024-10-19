@@ -4,7 +4,7 @@ class LoginState extends Equatable {
   final Email email;
   final Password password;
   final String errMsg;
-  final FormStatus inputStatus;
+  final FormInputStatus inputStatus;
   final FormzSubmissionStatus submissionStatus;
 
   const LoginState({
@@ -14,12 +14,12 @@ class LoginState extends Equatable {
     required this.inputStatus,
     required this.submissionStatus,
   });
-  
+
   static LoginState initial = const LoginState(
     errMsg: '',
     email: Email.pure(),
     password: Password.pure(),
-    inputStatus: FormStatus.initial,
+    inputStatus: FormInputStatus.initial,
     submissionStatus: FormzSubmissionStatus.initial,
   );
 
@@ -27,7 +27,7 @@ class LoginState extends Equatable {
     Email? email,
     Password? password,
     String? errMsg,
-    FormStatus? inputStatus,
+    FormInputStatus? inputStatus,
     FormzSubmissionStatus? submissionStatus,
   }) {
     return LoginState(
@@ -38,8 +38,8 @@ class LoginState extends Equatable {
       submissionStatus: submissionStatus ?? this.submissionStatus,
     );
   }
-  
-    @override
+
+  @override
   String toString() {
     return 'LoginState\nEmail: ${email.value}\npassword: ${password.value}\nError: $errMsg\nInput Status: ${inputStatus.name}\nSubmission Status: ${submissionStatus.name}';
   }

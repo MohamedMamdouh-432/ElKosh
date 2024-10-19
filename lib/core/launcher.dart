@@ -3,10 +3,12 @@ import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
+import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,6 +24,8 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
         BlocProvider<CartBloc>(create: (context) => CartBloc()),
         BlocProvider<OrdersBloc>(create: (context) => OrdersBloc()),
+        BlocProvider<SellerMarketsBloc>(create: (context) => SellerMarketsBloc()),
+        BlocProvider<MarketFormBloc>(create: (context) => MarketFormBloc()),
       ],
       child: const ElKoshLauncher(),
     );
@@ -36,7 +40,7 @@ class ElKoshLauncher extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: ColorManager.secondary,
-        statusBarBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: const Color(0xffFFF9F6),
         systemNavigationBarIconBrightness: Brightness.dark,
@@ -48,26 +52,26 @@ class ElKoshLauncher extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       designSize: const Size(320, 690),
-        child: MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          routerConfig: RouteManager.router,
-          theme: ThemeData(
-            useMaterial3: true,
-            colorSchemeSeed: const Color(0xffFF6100),
-            scaffoldBackgroundColor: Colors.white,
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Color(0xffFF6100),
-            ),
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: RouteManager.router,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: const Color(0xffFF6100),
+          scaffoldBackgroundColor: Colors.white,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Color(0xffFF6100),
           ),
-          supportedLocales: const [Locale('ar', '')],
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          locale: const Locale('ar', ''),
         ),
+        supportedLocales: const [Locale('ar', '')],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        locale: const Locale('ar', ''),
+      ),
     );
   }
 }

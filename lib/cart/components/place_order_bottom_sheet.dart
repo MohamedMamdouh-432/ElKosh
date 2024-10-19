@@ -54,7 +54,7 @@ class PlaceOrderBottomSheet extends StatelessWidget {
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () =>
-                      context.push(RouteManager.locationPickerRoute),
+                      context.push(RouteManager.deliveryLocationPickerRoute),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 100),
                     elevation: 15,

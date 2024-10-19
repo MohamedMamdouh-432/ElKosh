@@ -52,13 +52,6 @@ class MarketItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    market.scope,
-                    style: const TextStyle(
-                      fontSize: 18,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
                     market.hotline,
                     style: const TextStyle(fontSize: 16),
                   ),

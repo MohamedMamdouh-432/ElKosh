@@ -1,4 +1,4 @@
-enum FormStatus {
+enum FormInputStatus {
   initial,
   invalid,
   valid,

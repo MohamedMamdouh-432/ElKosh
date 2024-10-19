@@ -8,6 +8,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  data_repository: 
+    path: packages/data_repository
+  auth_repository: 
+    path: packages/auth_repository
+  user_repository:
+    path: packages/user_repository
+  models_repository: 
+    path: packages/models_repository
+  admin_repository:
+    path: packages/admin_repository
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   flutter_screenutil: ^5.9.3
@@ -34,19 +46,8 @@ dependencies:
   another_carousel_pro: ^1.0.2
   google_nav_bar: ^5.0.6
   location_picker_flutter_map: ^3.0.1
-  flutter_localizations:
-    sdk: flutter
-  data_repository: 
-    path: packages/data_repository
-  auth_repository: 
-    path: packages/auth_repository
-  user_repository:
-    path: packages/user_repository
-  models_repository: 
-    path: packages/models_repository
-  
-dependency_overrides:
-  flutter_compass: ^0.8.0
+  image_picker: ^1.1.2
+  path_provider: ^2.1.4
 
 dev_dependencies:
   flutter_test:

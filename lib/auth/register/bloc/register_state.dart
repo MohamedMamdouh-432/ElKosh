@@ -6,7 +6,7 @@ class RegisterState extends Equatable {
   final Phone phone;
   final Password password;
   final String errMsg;
-  final FormStatus inputStatus;
+  final FormInputStatus inputStatus;
   final FormzSubmissionStatus submissionStatus;
 
   const RegisterState({
@@ -25,7 +25,7 @@ class RegisterState extends Equatable {
     email: Email.pure(),
     phone: Phone.pure(),
     password: Password.pure(),
-    inputStatus: FormStatus.initial,
+    inputStatus: FormInputStatus.initial,
     submissionStatus: FormzSubmissionStatus.initial,
   );
 
@@ -35,7 +35,7 @@ class RegisterState extends Equatable {
     Phone? phone,
     Password? password,
     String? errMsg,
-    FormStatus? inputStatus,
+    FormInputStatus? inputStatus,
     FormzSubmissionStatus? submissionStatus,
   }) {
     return RegisterState(

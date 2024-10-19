@@ -266,7 +266,7 @@ class DataRepository {
   Future<Either<Failure, Null>> placeOrder({
     required String userId,
     required String userName,
-    required DeliveryLocation location,
+    required Location location,
   }) async {
     try {
       // get current val in order doc field "seqId"
