@@ -110,8 +110,10 @@ class AdminRepository {
 
   Future<Either<Failure, void>> deleteMarket(String docId) async {
     try {
-      await firestore.collection('markets').doc(docId).delete();
       await fireStorage.ref("markets/img-$docId").delete();
+      await firestore.collection('markets').doc(docId).delete();
+      // delete all categories that marketId = docId
+      // delete all products that marketId = docId
       return const Right(null);
     } catch (e) {
       throw const Failure("حدث خطأ أثناء حذف المتجر");
