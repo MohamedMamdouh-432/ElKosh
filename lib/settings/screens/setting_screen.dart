@@ -1,4 +1,5 @@
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -138,17 +139,19 @@ class SettingScreen extends StatelessWidget {
                 Visibility(
                   visible: state.user.userType != UserType.admin,
                   child: ListTile(
-                    leading: Icon(
-                      Icons.store,
-                      size: 35,
-                      color: ColorManager.primary,
-                    ),
-                    title: const Text(
-                      'إدارة متاجرى',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onTap: () => context.push(RouteManager.sellerRoute),
-                  ),
+                      leading: Icon(
+                        Icons.store,
+                        size: 35,
+                        color: ColorManager.primary,
+                      ),
+                      title: const Text(
+                        'إدارة متاجرى',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      onTap: () {
+                        context.read<SellerMarketsBloc>().add(const SellerMarketsLoadingEvent());
+                        context.push(RouteManager.sellerMarketsRoute);
+                      }),
                 ),
                 Visibility(
                   visible: state.user.userType == UserType.admin,

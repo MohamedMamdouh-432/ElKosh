@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,8 +12,9 @@ class AdminRepository {
   final FirebaseFirestore firestore;
   final FirebaseStorage fireStorage;
   final SharedPreferences sharedPref;
-  Market? _selctedMarket;
-  Product? _selectedProduct;
+  Market? _curMarket;
+  Category? _curCategory;
+  Product? _curProduct;
 
   AdminRepository({
     required this.firestore,
@@ -21,10 +23,12 @@ class AdminRepository {
   });
 
   String getUserId() => sharedPref.getString('userId')!;
-  Market? getCurMarket() => _selctedMarket;
-  Product? getCurProduct() => _selectedProduct;
-  void setCurMarket(Market market) => _selctedMarket = market;
-  void setCurProduct(Product product) => _selectedProduct = product;
+  Market? getCurMarket() => _curMarket;
+  Category? getCurCategory() => _curCategory;
+  Product? getCurProduct() => _curProduct;
+  void setCurMarket(Market market) => _curMarket = market;
+  void setCurCategory(Category category) => _curCategory = category;
+  void setCurProduct(Product product) => _curProduct = product;
 
   Future<String> uploadImage(File image, String docId) async {
     try {
@@ -33,6 +37,7 @@ class AdminRepository {
       final url = await fileRef.ref.getDownloadURL();
       return url;
     } catch (e) {
+      log(e.toString());
       throw Exception('حدث خطأ أثناء تحميل الصورة');
     }
   }
@@ -70,7 +75,8 @@ class AdminRepository {
       await marketDoc.set(market.toDoc());
       return const Right(null);
     } catch (e) {
-      throw const Failure("حدث خطأ أثناء اضافة المتجر");
+      log(e.toString());
+      return const Left(Failure("حدث خطأ أثناء اضافة المتجر"));
     }
   }
 
@@ -104,6 +110,7 @@ class AdminRepository {
       await marketDoc.set(market.toDoc());
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء تعديل بيانات المتجر"));
     }
   }
@@ -116,6 +123,7 @@ class AdminRepository {
       // delete all products that marketId = docId
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء حذف المتجر");
     }
   }
@@ -137,18 +145,60 @@ class AdminRepository {
         marketsList.add(Market.fromDoc(marketDoc.id, marketDoc.data()));
       return Right(marketsList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
 
-  Future<Either<Failure, List<Product>>> fetchCategories() async {
+  Future<Either<Failure, void>> addCategory(MapEntry categoryItem) async {
     try {
-      final response = await firestore.collection('categories').get();
-      List<Product> categoriesList = [];
+      final similar = await firestore
+          .collection('categories')
+          .where('marketId', isEqualTo: _curMarket?.id)
+          .where('name', isEqualTo: categoryItem.key)
+          .get();
+      if (similar.docs.isNotEmpty)
+        return const Left(Failure('هذا الصنف موجود بالفعل'));
+      await firestore.collection('categories').add({
+        'name': categoryItem.key,
+        'marketId': _curMarket?.id,
+        'imgUrl': categoryItem.value,
+      });
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return const Left(Failure('حدث خطأ أثناء اضافة هذا الصنف'));
+    }
+  }
+
+  Future<Either<Failure, void>> deleteCategory(String docId) async {
+    try {
+      await firestore.collection('categories').doc(docId).delete();
+      await firestore
+          .collection('products')
+          .where('categoryId', isEqualTo: docId)
+          .get();
+      // delete all products that marketId = docId
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return const Left(Failure("حدث خطأ أثناء حذف هذا الصنف"));
+    }
+  }
+
+  Future<Either<Failure, List<Category>>> fetchCategories() async {
+    try {
+      final response = await firestore
+          .collection('categories')
+          .where('marketId', isEqualTo: _curMarket?.id)
+          .get();
+      List<Category> categoriesList = [];
       for (var categoryDoc in response.docs)
-        categoriesList.add(Product.fromDoc(categoryDoc.id, categoryDoc.data()));
+        categoriesList
+            .add(Category.fromDoc(categoryDoc.id, categoryDoc.data()));
       return Right(categoriesList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -163,6 +213,7 @@ class AdminRepository {
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       return Right(productsList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -172,6 +223,7 @@ class AdminRepository {
       final productDoc = await firestore.collection('products').doc(id).get();
       return Product.fromDoc(productDoc.id, productDoc.data()!);
     } catch (e) {
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -201,6 +253,7 @@ class AdminRepository {
       }
       return Right(orderList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -230,6 +283,7 @@ class AdminRepository {
       }
       return Right(orderList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }

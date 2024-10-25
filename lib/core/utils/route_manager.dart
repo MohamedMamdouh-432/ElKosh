@@ -11,10 +11,12 @@ import 'package:elkosh/home/screens/products_screen.dart';
 import 'package:elkosh/orders/screens/order_details_screen.dart';
 import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
+import 'package:elkosh/seller/forms/add_category.dart';
 import 'package:elkosh/seller/forms/add_market.dart';
 import 'package:elkosh/seller/forms/edit_market.dart';
+import 'package:elkosh/seller/screens/categorys_screen.dart';
 import 'package:elkosh/seller/screens/market_location_picker_screen.dart';
-import 'package:elkosh/seller/screens/seller_screen.dart';
+import 'package:elkosh/seller/screens/markets_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,10 +32,12 @@ abstract class RouteManager {
   static const String talabatyScreen = '/talabaty';
   static const String deliveryLocationPickerRoute = '/delivery_location_picker';
   static const String orderDetailsRoute = '/order_details';
-  static const String sellerRoute = '/seller';
+  static const String sellerMarketsRoute = '/seller';
   static const String addMarketRoute = '/add_market';
   static const String editMarketRoute = '/edit_market';
   static const String marketLocationPickerRoute = '/market_location_picker';
+  static const String sellerCategorysRoute = '/seller_categories';
+  static const String addCategoryRoute = '/add_category';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -88,8 +92,8 @@ abstract class RouteManager {
         builder: (context, state) => const OrderDetailsScreen(),
       ),
       GoRoute(
-        path: sellerRoute,
-        builder: (context, state) => const SellerScreen(),
+        path: sellerMarketsRoute,
+        builder: (context, state) => const MarketsScreen(),
       ),
       GoRoute(
         path: addMarketRoute,
@@ -102,6 +106,14 @@ abstract class RouteManager {
       GoRoute(
         path: marketLocationPickerRoute,
         builder: (context, state) => const MarketLocationPickerScreen(),
+      ),
+      GoRoute(
+        path: sellerCategorysRoute,
+        builder: (context, state) => const CategorysScreen(),
+      ),
+      GoRoute(
+        path: addCategoryRoute,
+        builder: (context, state) => const AddCategoryForm(),
       ),
     ],
   );

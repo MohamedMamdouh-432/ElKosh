@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/seller/controllers/category_bloc/seller_category_bloc.dart';
 import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
 import 'package:elkosh/shared/services/context_media.dart';
@@ -26,7 +27,8 @@ class SellerMarketItem extends StatelessWidget {
         context
             .read<SellerMarketsBloc>()
             .add(SellerMarketSelectedEvent(market));
-        // todo: nav to categories screen
+        context.read<SellerCategoryBloc>().add(SellerCategorysLoadingEvent());
+        context.push(RouteManager.sellerCategorysRoute);
       },
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),

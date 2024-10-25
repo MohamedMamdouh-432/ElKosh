@@ -3,3 +3,17 @@ enum FormInputStatus {
   invalid,
   valid,
 }
+
+enum AddingStatus {
+  initial,
+  inProgress,
+  success,
+  failure,
+}
+
+enum LoadingStatus {
+  initial,
+  inProgress,
+  success,
+  failure,
+}
