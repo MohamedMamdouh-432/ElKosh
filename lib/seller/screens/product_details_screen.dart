@@ -18,6 +18,8 @@ class SellerProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SellerProductsBloc, SellerProductsState>(
       builder: (context, state) {
+        final curPrice = state.curProduct.price -
+            (state.curProduct.price * (state.curProduct.discount / 100));
         return SafeArea(
           child: Scaffold(
             body: Skeletonizer(
@@ -58,7 +60,7 @@ class SellerProductDetailsScreen extends StatelessWidget {
                           ),
                           const Gap(10),
                           Text(
-                            '${state.curProduct.price} جنيه',
+                            '$curPrice جنيه',
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
