@@ -74,7 +74,6 @@
 		Edit Market
 		Delete Market
 		Add Category
-		Edit Category
 		Delete Category
 		Add Product
 		Edit Product

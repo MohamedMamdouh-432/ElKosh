@@ -3,8 +3,11 @@ import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/seller/controllers/category_bloc/seller_category_bloc.dart';
 import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
+import 'package:elkosh/seller/controllers/product_form_bloc/product_form_bloc.dart';
+import 'package:elkosh/seller/controllers/products_bloc/seller_products_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,11 +24,14 @@ class ElKoshApp extends StatelessWidget {
       providers: [
         BlocProvider<MarketsBloc>(create: (_) => MarketsBloc()),
         BlocProvider<ProductsBloc>(create: (_) => ProductsBloc()),
-        BlocProvider<ProfileBloc>(create: (context) => ProfileBloc()),
-        BlocProvider<CartBloc>(create: (context) => CartBloc()),
-        BlocProvider<OrdersBloc>(create: (context) => OrdersBloc()),
-        BlocProvider<SellerMarketsBloc>(create: (context) => SellerMarketsBloc()),
-        BlocProvider<MarketFormBloc>(create: (context) => MarketFormBloc()),
+        BlocProvider<ProfileBloc>(create: (_) => ProfileBloc()),
+        BlocProvider<CartBloc>(create: (_) => CartBloc()),
+        BlocProvider<OrdersBloc>(create: (_) => OrdersBloc()),
+        BlocProvider<SellerMarketsBloc>(create: (_) => SellerMarketsBloc()),
+        BlocProvider<MarketFormBloc>(create: (_) => MarketFormBloc()),
+        BlocProvider<SellerCategoryBloc>(create: (_) => SellerCategoryBloc()),
+        BlocProvider<SellerProductsBloc>(create: (_) => SellerProductsBloc()),
+        BlocProvider<ProductFormBloc>(create: (_) => ProductFormBloc()),
       ],
       child: const ElKoshLauncher(),
     );

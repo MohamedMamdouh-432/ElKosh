@@ -59,9 +59,7 @@ class AddMarketForm extends StatelessWidget {
           appBar: AppBar(
             title: const Text(
               "اضافة متجر جديد",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           body: ModalProgressHUD(

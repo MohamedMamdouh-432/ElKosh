@@ -86,7 +86,7 @@ class MarketFormState extends Equatable {
 
   @override
   String toString() =>
-      "Market Form State::\nInput Status: ${inputStatus.name}\nSubmission Status: ${submissionStatus.name}\nName: ${name.value}\nHotline: ${hotline.value}\nDescription: ${desc.value}\nBeginTime: $beginTime\nEndTime: $endTime\nAddress: ${location.address}\nIsImgChanged: $isImgChanged\nMarketImg: ${marketImg.path.split('\\').last}\nError: $errMsg";
+      "Market Form State::\nInput Status: ${inputStatus.name}\nSubmission Status: ${submissionStatus.name}\nName: ${name.value}\nHotline: ${hotline.value}\nDescription: ${desc.value}\nBeginTime: $beginTime\nEndTime: $endTime\nAddress: ${location.address}\nIsImgChanged: $isImgChanged\nMarketImg: $imgName\nError: $errMsg";
 
   @override
   List<Object> get props => [

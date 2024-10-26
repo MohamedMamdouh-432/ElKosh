@@ -25,7 +25,7 @@ class Market extends Equatable {
     required this.endTime,
   });
 
-  static Market empty = Market(
+  static Market empty = const Market(
     id: '',
     sellerId: '',
     name: '',
@@ -33,8 +33,8 @@ class Market extends Equatable {
     imgUrl: '',
     hotline: '',
     location: Location.empty,
-    beginTime: TimeOfDay.now(),
-    endTime: TimeOfDay.now(),
+    beginTime: TimeOfDay(hour: 0, minute: 0),
+    endTime: TimeOfDay(hour: 0, minute: 0),
   );
 
   Market copyWith({
@@ -96,7 +96,7 @@ class Market extends Equatable {
 
   @override
   String toString() {
-    return '\nName: $name ::\nHotline: $hotline\nDescription: $desc\nImage Url: $imgUrl\nBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\nEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\nAddress: ${location.latitude}, ${location.longitude}';
+    return '\n\tName: $name ::\n\tHotline: $hotline\n\tDescription: $desc\n\tImage Url: $imgUrl\n\tBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\n\tEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\n\tAddress: ${location.latitude}, ${location.longitude}';
   }
 
   @override

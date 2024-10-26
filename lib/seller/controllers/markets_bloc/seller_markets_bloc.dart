@@ -14,7 +14,6 @@ class SellerMarketsBloc extends Bloc<SellerMarketsEvent, SellerMarketsState> {
     on<SellerMarketsLoadingEvent>(_onMarketsLoading);
     on<SellerMarketSelectedEvent>(_onMarketSelected);
     on<SellerMarketDeletingEvent>(_onMarketDeleting);
-    add(const SellerMarketsLoadingEvent());
   }
 
   FutureOr<void> _onMarketsLoading(

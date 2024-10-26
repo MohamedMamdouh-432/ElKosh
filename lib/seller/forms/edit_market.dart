@@ -59,9 +59,7 @@ class EditMarketForm extends StatelessWidget {
           appBar: AppBar(
             title: const Text(
               "تعديل بيانات المتجر",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           body: ModalProgressHUD(

@@ -1,6 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/seller/components/empty_markets_view.dart';
-import 'package:elkosh/seller/components/seller_markets_view.dart';
+import 'package:elkosh/seller/components/markets_view.dart';
 import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +9,8 @@ import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class SellerScreen extends StatelessWidget {
-  const SellerScreen({super.key});
+class MarketsScreen extends StatelessWidget {
+  const MarketsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +39,14 @@ class SellerScreen extends StatelessWidget {
               );
             }
           },
-          builder: (context, state) {
-            return Skeletonizer(
-              enabled: state.status == LoadingStatus.inProgress,
-              child: ConditionalBuilder(
-                condition: state.markets.isEmpty,
-                builder: (_) =>
-                    const EmptyMarketsView(),
-                fallback: (_) => SellerMarketsView(markets: state.markets),
-              ),
-            );
-          },
+          builder: (context, state) => Skeletonizer(
+            enabled: state.status == LoadingStatus.inProgress,
+            child: ConditionalBuilder(
+              condition: state.markets.isEmpty,
+              builder: (_) => const EmptyMarketsView(),
+              fallback: (_) => SellerMarketsView(markets: state.markets),
+            ),
+          ),
         ),
       ),
     );
