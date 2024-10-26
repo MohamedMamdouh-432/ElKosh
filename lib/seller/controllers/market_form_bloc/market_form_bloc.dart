@@ -149,7 +149,7 @@ class MarketFormBloc extends Bloc<MarketFormEvent, MarketFormState> {
     ));
   }
 
-  Future<void> _onMarketFormPrepared(event, emit) async {
+  Future<void> _onMarketFormPrepared(MarketFormPrepared event, emit) async {
     try {
       emit(state.copyWith(
         id: event.market.id,

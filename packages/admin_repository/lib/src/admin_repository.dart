@@ -119,8 +119,8 @@ class AdminRepository {
     try {
       await fireStorage.ref("markets/img-$docId").delete();
       await firestore.collection('markets').doc(docId).delete();
-      // delete all categories that marketId = docId
-      // delete all products that marketId = docId
+      // todo: delete all categories that marketId = docId
+      // todo: delete all products that marketId = docId
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -178,7 +178,7 @@ class AdminRepository {
           .collection('products')
           .where('categoryId', isEqualTo: docId)
           .get();
-      // delete all products that marketId = docId
+      // todo: delete all products that marketId = docId
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -203,18 +203,88 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, List<Product>>> fetchProducts(int? limits) async {
+  Future<Either<Failure, void>> addProduct({
+    required String name,
+    required String desc,
+    required File imageFile,
+    required double price,
+    required String unit,
+    required double unitVal,
+    required double quantity,
+  }) async {
     try {
-      final response = limits != null
-          ? await firestore.collection('products').limit(limits).get()
-          : await firestore.collection('products').get();
-      List<Product> productsList = [];
-      for (var productDoc in response.docs)
-        productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
-      return Right(productsList);
+      final sameProducts = await firestore
+          .collection('products')
+          .where('categoryId', isEqualTo: _curCategory?.id)
+          .where('name', isEqualTo: name)
+          .get();
+
+      if (sameProducts.docs.isNotEmpty)
+        return const Left(Failure("المنتج موجود بالفعل"));
+      final productDoc = firestore.collection('products').doc();
+      final imgUrl = await uploadImage(imageFile, productDoc.id);
+      final product = Product(
+        id: productDoc.id,
+        name: name,
+        desc: desc,
+        imgUrl: imgUrl,
+        price: price,
+        unit: unit,
+        unitVal: unitVal,
+        quantity: quantity,
+        categoryId: _curCategory!.id,
+      );
+      await productDoc.set(product.toDoc());
+      return const Right(null);
     } catch (e) {
       log(e.toString());
-      return Left(Failure(e.toString()));
+      return const Left(Failure("حدث خطأ أثناء اضافة المنتج"));
+    }
+  }
+
+  Future<Either<Failure, void>> editProduct({
+    required String id,
+    required String name,
+    required String desc,
+    required File imageFile,
+    required String originalImgUrl,
+    required bool isImgChanged,
+    required double price,
+    required String unit,
+    required double unitVal,
+    required double quantity,
+  }) async {
+    try {
+      final productDoc = firestore.collection('products').doc(id);
+      String imgUrl = originalImgUrl;
+      if (isImgChanged) imgUrl = await uploadImage(imageFile, productDoc.id);
+      final product = Product(
+        id: productDoc.id,
+        name: name,
+        desc: desc,
+        imgUrl: imgUrl,
+        price: price,
+        unit: unit,
+        unitVal: unitVal,
+        quantity: quantity,
+        categoryId: _curCategory!.id,
+      );
+      await productDoc.set(product.toDoc());
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return const Left(Failure("حدث خطأ أثناء تعديل بيانات المنتج"));
+    }
+  }
+
+  Future<Either<Failure, void>> deleteProduct(String docId) async {
+    try {
+      await fireStorage.ref("products/img-$docId").delete();
+      await firestore.collection('products').doc(docId).delete();
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء حذف المنتج");
     }
   }
 
@@ -225,6 +295,23 @@ class AdminRepository {
     } catch (e) {
       log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
+    }
+  }
+
+  Future<Either<Failure, List<Product>>> fetchProducts() async {
+    try {
+      log(_curCategory!.id);
+      final response = await firestore
+          .collection('products')
+          .where('categoryId', isEqualTo: _curCategory?.id)
+          .get();
+      List<Product> productsList = [];
+      for (var productDoc in response.docs)
+        productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
+      return Right(productsList);
+    } catch (e) {
+      log(e.toString());
+      return Left(Failure(e.toString()));
     }
   }
 

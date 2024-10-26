@@ -4,3 +4,7 @@ export 'email.dart';
 export 'password.dart';
 export 'desc.dart';
 export 'hotline.dart';
+export 'price.dart';
+export 'quantity.dart';
+export 'unit.dart';
+export 'unit_val.dart';

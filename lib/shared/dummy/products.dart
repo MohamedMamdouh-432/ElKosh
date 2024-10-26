@@ -9,7 +9,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -21,7 +21,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -33,7 +33,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -45,7 +45,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -57,7 +57,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -69,7 +69,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -81,7 +81,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -93,7 +93,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -105,7 +105,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),
@@ -117,7 +117,7 @@ List<Product> products = [
     quantity: 300,
     imgUrl:
         "https://firebasestorage.googleapis.com/v0/b/elkoshecommerce.appspot.com/o/tomato.png?alt=media&token=cf11752e-f2a6-46ad-97d4-e58741972f40",
-    marketId: "10250",
+    categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
   ),

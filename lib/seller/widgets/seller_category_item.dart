@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/seller/controllers/category_bloc/seller_category_bloc.dart';
+import 'package:elkosh/seller/controllers/products_bloc/seller_products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,9 +21,16 @@ class SellerCategoryItem extends StatelessWidget {
         Expanded(
           child: InkWell(
             onTap: category is Category
-                ? null
-                : () {
-                    QuickAlert.show(
+                ? () {
+                    context
+                        .read<SellerCategoryBloc>()
+                        .add(SellerCategorySelectedEvent(category));
+                    context.push(RouteManager.sellerProductsRoute);
+                    context
+                        .read<SellerProductsBloc>()
+                        .add(SellerProductsLoadingEvent());
+                  }
+                : () => QuickAlert.show(
                       context: context,
                       type: QuickAlertType.confirm,
                       title:
@@ -39,8 +48,7 @@ class SellerCategoryItem extends StatelessWidget {
                       },
                       cancelBtnText: 'رجوع',
                       onCancelBtnTap: () => context.pop(),
-                    );
-                  },
+                    ),
             child: Container(
               decoration: BoxDecoration(
                 color: const Color(0xffFAEFD9),

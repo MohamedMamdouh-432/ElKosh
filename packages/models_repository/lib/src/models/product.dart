@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
   final String id;
-  final String marketId;
+  final String categoryId;
   final String name;
   final String desc;
   final String imgUrl;
@@ -18,8 +18,8 @@ class Product extends Equatable {
     required this.price,
     required this.quantity,
     required this.imgUrl,
-    required this.marketId,
-    this.unit = 'kg',
+    required this.categoryId,
+    this.unit = 'كيلو',
     required this.unitVal,
   });
 
@@ -30,7 +30,7 @@ class Product extends Equatable {
     price: 0.0,
     quantity: 0.0,
     imgUrl: '',
-    marketId: '',
+    categoryId: '',
     unitVal: 0,
   );
 
@@ -40,7 +40,7 @@ class Product extends Equatable {
         name: productDoc['name'],
         desc: productDoc['desc'],
         imgUrl: productDoc['imgUrl'],
-        marketId: productDoc['marketId'],
+        categoryId: productDoc['categoryId'],
         unit: productDoc['unit'],
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
@@ -53,7 +53,7 @@ class Product extends Equatable {
         'price': price,
         'quantity': quantity,
         'imgUrl': imgUrl,
-        'marketId': marketId,
+        'categoryId': categoryId,
         'unit': unit,
         'unitVal': unitVal
       };
@@ -64,7 +64,7 @@ class Product extends Equatable {
     String? desc,
     double? price,
     double? quantity,
-    String? marketId,
+    String? categoryId,
     String? imgUrl,
     String? unit,
     double? unitVal,
@@ -75,7 +75,7 @@ class Product extends Equatable {
         desc: desc ?? this.desc,
         price: price ?? this.price,
         quantity: quantity ?? this.quantity,
-        marketId: marketId ?? this.marketId,
+        categoryId: categoryId ?? this.categoryId,
         imgUrl: imgUrl ?? this.imgUrl,
         unit: unit ?? 'packet',
         unitVal: unitVal ?? this.unitVal,
@@ -83,7 +83,7 @@ class Product extends Equatable {
 
   @override
   String toString() {
-    return 'Name: $name ::\nDescription: $desc\nPrice: $price\nStock Quantity: $quantity\nImgUrl: $imgUrl\nUnit: $unit\nUnit Value: $unitVal\n';
+    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal';
   }
 
   @override
@@ -95,7 +95,7 @@ class Product extends Equatable {
       price,
       quantity,
       imgUrl,
-      marketId,
+      categoryId,
       unit,
       unitVal,
     ];

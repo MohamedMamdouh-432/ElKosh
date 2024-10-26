@@ -155,9 +155,9 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.isEmpty) {
-        _marketId = product.marketId;
+        _marketId = product.categoryId;
         _marketName = await getMarketName(_marketId!);
-      } else if (_marketId != product.marketId)
+      } else if (_marketId != product.categoryId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
       _shopping.update(
@@ -208,9 +208,9 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.isEmpty) {
-        _marketId = product.marketId;
+        _marketId = product.categoryId;
         _marketName = await getMarketName(_marketId!);
-      } else if (_marketId != product.marketId)
+      } else if (_marketId != product.categoryId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
       _shopping.update(

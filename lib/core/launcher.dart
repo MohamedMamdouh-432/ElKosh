@@ -6,6 +6,8 @@ import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/seller/controllers/category_bloc/seller_category_bloc.dart';
 import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
+import 'package:elkosh/seller/controllers/product_form_bloc/product_form_bloc.dart';
+import 'package:elkosh/seller/controllers/products_bloc/seller_products_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +29,9 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<OrdersBloc>(create: (_) => OrdersBloc()),
         BlocProvider<SellerMarketsBloc>(create: (_) => SellerMarketsBloc()),
         BlocProvider<MarketFormBloc>(create: (_) => MarketFormBloc()),
-        BlocProvider(create: (_) => SellerCategoryBloc()),
+        BlocProvider<SellerCategoryBloc>(create: (_) => SellerCategoryBloc()),
+        BlocProvider<SellerProductsBloc>(create: (_) => SellerProductsBloc()),
+        BlocProvider<ProductFormBloc>(create: (_) => ProductFormBloc()),
       ],
       child: const ElKoshLauncher(),
     );
