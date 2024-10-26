@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class SliverImageSection extends StatelessWidget {
+class SellerImageItem extends StatelessWidget {
   final String imageUrl;
-  const SliverImageSection({
+  const SellerImageItem({
     super.key,
     required this.imageUrl,
   });

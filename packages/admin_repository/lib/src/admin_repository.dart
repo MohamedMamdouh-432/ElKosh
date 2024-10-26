@@ -229,6 +229,7 @@ class AdminRepository {
         desc: desc,
         imgUrl: imgUrl,
         price: price,
+        discount: 0,
         unit: unit,
         unitVal: unitVal,
         quantity: quantity,
@@ -265,6 +266,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         price: price,
         unit: unit,
+        discount: _curProduct!.discount,
         unitVal: unitVal,
         quantity: quantity,
         categoryId: _curCategory!.id,
@@ -274,6 +276,20 @@ class AdminRepository {
     } catch (e) {
       log(e.toString());
       return const Left(Failure("حدث خطأ أثناء تعديل بيانات المنتج"));
+    }
+  }
+
+  Future<Either<Failure, void>> addProductDiscount(double newPrice) async {
+    try {
+      final discount =
+          ((_curProduct!.price - newPrice) / _curProduct!.price) * 100;
+      await firestore
+          .collection('products')
+          .doc(_curProduct!.id)
+          .update({'dicount': discount});
+      return const Right(null);
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 

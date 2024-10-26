@@ -72,3 +72,5 @@ class ProductEditFormSubmitted extends ProductFormEvent {}
 class ProductFormResetRequested extends ProductFormEvent {}
 
 class ProductFormStatusResetRequested extends ProductFormEvent {}
+
+class ProductAddDiscountFormSubmitted extends ProductFormEvent {}
