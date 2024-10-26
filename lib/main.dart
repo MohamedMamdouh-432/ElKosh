@@ -10,5 +10,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Bloc.observer = const AppBlocObserver();
   await setup();
+
   runApp(const ElKoshApp());
 }

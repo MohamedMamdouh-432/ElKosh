@@ -25,7 +25,7 @@ class ProductItemCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 110.h,
+          height: 120.h,
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           decoration: BoxDecoration(
@@ -83,45 +83,50 @@ class ProductItemCard extends StatelessWidget {
                       onPressed: () => context
                           .read<CartBloc>()
                           .add(CartRemovingProductEvent(product)),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.delete,
                         color: Colors.red,
-                        size: 35,
+                        size: 30.sp,
                       ),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: quantity <= 1
-                                ? null
-                                : () => context.read<CartBloc>().add(
-                                    CartDecreasingProductQuantityEvent(
+                    Flexible(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Flexible(
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: quantity <= 1
+                                    ? null
+                                    : () => context.read<CartBloc>().add(
+                                        CartDecreasingProductQuantityEvent(
+                                            product)),
+                                icon: const Icon(
+                                  Icons.remove,
+                                  color: Colors.black,
+                                  size: 28,
+                                ),
+                              ),
+                              Text(
+                                '$quantity',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              IconButton(
+                                onPressed: () => context.read<CartBloc>().add(
+                                    CartIncreasingProductQuantityEvent(
                                         product)),
-                            icon: const Icon(
-                              Icons.remove,
-                              color: Colors.black,
-                              size: 28,
-                            ),
+                                icon: const Icon(
+                                  Icons.add,
+                                  color: Colors.black,
+                                  size: 28,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            '$quantity',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          IconButton(
-                            onPressed: () => context.read<CartBloc>().add(
-                                CartIncreasingProductQuantityEvent(product)),
-                            icon: const Icon(
-                              Icons.add,
-                              color: Colors.black,
-                              size: 28,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

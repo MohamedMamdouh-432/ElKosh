@@ -36,8 +36,8 @@ class SellerMarketItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 100,
-              width: 100,
+              height: MediaQuery.of(context).size.height * 0.11,
+              width: MediaQuery.of(context).size.width * 0.22,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
