@@ -95,8 +95,7 @@ class DataRepository {
   Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
     try {
       String? cartMap = sharedPref.getString('shopping');
-      _price = sharedPref.getDouble('price')!;
-      if (cartMap == null || _price == 0) {
+      if (cartMap == null) {
         _price = 0;
         _shopping = {};
         await sharedPref.setDouble('price', _price);
@@ -110,6 +109,7 @@ class DataRepository {
           'marketName': '',
         });
       }
+      _price = sharedPref.getDouble('price')!;
       _marketId = sharedPref.getString('marketId');
       _marketName = sharedPref.getString('marketName');
       Map<String, dynamic> decShopping = json.decode(cartMap);
