@@ -286,7 +286,7 @@ class AdminRepository {
       await firestore
           .collection('products')
           .doc(_curProduct!.id)
-          .update({'dicount': discount});
+          .update({'discount': discount});
       return const Right(null);
     } catch (e) {
       return Left(Failure(e.toString()));
