@@ -10,6 +10,7 @@ class Product extends Equatable {
   final String unit;
   final double unitVal;
   final double quantity;
+  final double discount;
 
   const Product({
     required this.id,
@@ -21,6 +22,7 @@ class Product extends Equatable {
     required this.categoryId,
     this.unit = 'كيلو',
     required this.unitVal,
+    required this.discount,
   });
 
   static Product empty = const Product(
@@ -32,6 +34,7 @@ class Product extends Equatable {
     imgUrl: '',
     categoryId: '',
     unitVal: 0,
+    discount: 0,
   );
 
   factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
@@ -45,6 +48,7 @@ class Product extends Equatable {
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
         unitVal: productDoc['unitVal'].toDouble(),
+        discount: productDoc['discount'].toDouble(),
       );
 
   Map<String, dynamic> toDoc() => {
@@ -55,7 +59,8 @@ class Product extends Equatable {
         'imgUrl': imgUrl,
         'categoryId': categoryId,
         'unit': unit,
-        'unitVal': unitVal
+        'unitVal': unitVal,
+        'discount': discount,
       };
 
   Product copyWith({
@@ -68,6 +73,7 @@ class Product extends Equatable {
     String? imgUrl,
     String? unit,
     double? unitVal,
+    double? discount,
   }) =>
       Product(
         id: id ?? this.id,
@@ -79,11 +85,12 @@ class Product extends Equatable {
         imgUrl: imgUrl ?? this.imgUrl,
         unit: unit ?? 'packet',
         unitVal: unitVal ?? this.unitVal,
+        discount: discount ?? this.discount,
       );
 
   @override
   String toString() {
-    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal';
+    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal\nDiscount; $discount';
   }
 
   @override
@@ -98,6 +105,7 @@ class Product extends Equatable {
       categoryId,
       unit,
       unitVal,
+      discount,
     ];
   }
 }

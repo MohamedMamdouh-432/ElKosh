@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class InputFormField extends StatelessWidget {
   final String? labelText, errorText, initialValue;
-  final bool obsecured;
+  final bool obsecured, isEnabled;
   final TextInputType inputType;
   final Function(String)? onChange;
 
@@ -13,7 +13,8 @@ class InputFormField extends StatelessWidget {
     this.initialValue,
     this.errorText,
     this.inputType = TextInputType.text,
-    this.obsecured = false,
+    this.obsecured = false, 
+    this.isEnabled = true,
   });
 
   @override
@@ -22,6 +23,7 @@ class InputFormField extends StatelessWidget {
       initialValue: initialValue,
       onChanged: onChange,
       obscureText: obsecured,
+      enabled: isEnabled,
       keyboardType: inputType,
       decoration: InputDecoration(
         labelText: labelText,

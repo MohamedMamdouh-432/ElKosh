@@ -60,6 +60,9 @@ class SellerProductItem extends StatelessWidget {
                   onPressed: () {
                     context.push(RouteManager.editProductRoute);
                     context
+                        .read<SellerProductsBloc>()
+                        .add(SellerProductSelectedEvent(product));
+                    context
                         .read<ProductFormBloc>()
                         .add(ProductFormPrepared(product));
                   },

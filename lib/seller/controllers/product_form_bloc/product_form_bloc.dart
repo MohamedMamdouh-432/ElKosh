@@ -26,6 +26,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
     on<ProductEditFormSubmitted>(_onProductFormEditSubmitted);
     on<ProductFormResetRequested>(_onProductFormReset);
     on<ProductFormStatusResetRequested>(_onProductFormStatusReset);
+    on<ProductAddDiscountFormSubmitted>(_onAddDiscountFormSubmitted);
   }
 
   FutureOr<void> _onNameChanged(ProductFormNameChanged event, emit) {
@@ -242,5 +243,19 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
 
   FutureOr<void> _onProductFormStatusReset(event, emit) {
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
+  }
+
+  FutureOr<void> _onAddDiscountFormSubmitted(
+      ProductAddDiscountFormSubmitted event, emit) async {
+    final res =
+        await sl.get<AdminRepository>().addProductDiscount(state.price.value);
+    res.fold(
+        (l) => emit(state.copyWith(
+              errMsg: l.message,
+              submissionStatus: FormzSubmissionStatus.failure,
+            )),
+        (r) => emit(state.copyWith(
+              submissionStatus: FormzSubmissionStatus.success,
+            )));
   }
 }

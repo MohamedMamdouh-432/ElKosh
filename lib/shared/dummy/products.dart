@@ -12,6 +12,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -24,6 +25,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -36,6 +38,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -48,6 +51,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -60,6 +64,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -72,6 +77,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -84,6 +90,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -96,6 +103,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -108,6 +116,7 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
   const Product(
     id: "45690",
@@ -120,5 +129,6 @@ List<Product> products = [
     categoryId: "10250",
     unit: "كيلوجرام",
     unitVal: 1,
+    discount: 0,
   ),
 ];
