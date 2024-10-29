@@ -2,15 +2,6 @@ import 'package:elkosh/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
-import 'package:elkosh/cart/screens/delivery_location_picker_screen.dart';
-import 'package:elkosh/home/screens/home_screen.dart';
-import 'package:elkosh/home/screens/market_details_screen.dart';
-import 'package:elkosh/home/screens/navbar_screen.dart';
-import 'package:elkosh/home/screens/product_details_screen.dart';
-import 'package:elkosh/home/screens/products_screen.dart';
-import 'package:elkosh/orders/screens/order_details_screen.dart';
-import 'package:elkosh/orders/screens/talabty_screen.dart';
-import 'package:elkosh/search/screens/search_screen.dart';
 import 'package:elkosh/seller/forms/add_category.dart';
 import 'package:elkosh/seller/forms/add_market.dart';
 import 'package:elkosh/seller/forms/add_product.dart';
@@ -18,9 +9,19 @@ import 'package:elkosh/seller/forms/edit_market.dart';
 import 'package:elkosh/seller/forms/edit_product.dart';
 import 'package:elkosh/seller/screens/categorys_screen.dart';
 import 'package:elkosh/seller/screens/market_location_picker_screen.dart';
-import 'package:elkosh/seller/screens/markets_screen.dart';
+import 'package:elkosh/seller/screens/markets_page.dart';
 import 'package:elkosh/seller/screens/product_details_screen.dart';
 import 'package:elkosh/seller/screens/products_screen.dart';
+import 'package:elkosh/seller/screens/seller_screen.dart';
+import 'package:elkosh/user/cart/screens/delivery_location_picker_screen.dart';
+import 'package:elkosh/user/home/screens/home_screen.dart';
+import 'package:elkosh/user/home/screens/market_details_screen.dart';
+import 'package:elkosh/user/home/screens/navbar_screen.dart';
+import 'package:elkosh/user/home/screens/product_details_screen.dart';
+import 'package:elkosh/user/home/screens/products_screen.dart';
+import 'package:elkosh/user/orders/screens/order_details_screen.dart';
+import 'package:elkosh/user/orders/screens/talabty_screen.dart';
+import 'package:elkosh/user/search/screens/search_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,6 +37,7 @@ abstract class RouteManager {
   static const String talabatyScreen = '/talabaty';
   static const String deliveryLocationPickerRoute = '/delivery_location_picker';
   static const String orderDetailsRoute = '/order_details';
+  static const String sellerRoute = '/seller';
   static const String sellerMarketsRoute = '/seller_markets';
   static const String addMarketRoute = '/add_market';
   static const String editMarketRoute = '/edit_market';
@@ -100,8 +102,12 @@ abstract class RouteManager {
         builder: (context, state) => const OrderDetailsScreen(),
       ),
       GoRoute(
+        path: sellerRoute,
+        builder: (context, state) => const SellerScreen(),
+      ),
+      GoRoute(
         path: sellerMarketsRoute,
-        builder: (context, state) => const MarketsScreen(),
+        builder: (context, state) => const MarketsPage(),
       ),
       GoRoute(
         path: addMarketRoute,

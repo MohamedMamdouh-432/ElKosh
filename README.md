@@ -93,10 +93,8 @@
 
 	* 18/10 -> 20/10
 		same as seller
-		Notification
-			- Ongoing orders
-			- History Orders (with filteration)
 		register delivery account
+		handle market add request
 		delete or bloc market
 		users summary
 		enable blocing property for user

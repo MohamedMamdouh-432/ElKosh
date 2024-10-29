@@ -1,10 +1,8 @@
 enum OrdersStatus {
   initial,
   onProgress,
-  successInOngoing,
-  successInHistory,
-  failureInOngoing,
-  failureInHistory,
-  success,
-  failure,
+  fetchSuccess,
+  fetchFailure,
+  placingSuccess,
+  placingFailure,
 }

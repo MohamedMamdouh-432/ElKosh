@@ -26,6 +26,7 @@ class DataRepository {
         _price = 0,
         _shopping = {};
 
+  String getUserId() => sharedPref.getString('userId')!;
   Market? getCurMarket() => _selctedMarket;
   Product? getCurProduct() => _selectedProduct;
   void setCurMarket(Market market) => _selctedMarket = market;
@@ -336,61 +337,63 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, List<UserOrder>>> fetchOngoingOrders() async {
+  Future<Either<Failure, Map<String, List<UserOrder>>>> fetchOrders() async {
     try {
-      final orders = await firestore
-          .collection('orders')
-          .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['pending', 'shipped'])
-          .orderBy('createdAt', descending: true)
-          .get();
+      final results = await Future.wait([
+        firestore
+            .collection('orders')
+            .where('userId', isEqualTo: getUserId())
+            .where('status', whereIn: ['pending', 'shipped'])
+            .orderBy('createdAt', descending: true)
+            .get(),
+        firestore
+            .collection('orders')
+            .where('userId', isEqualTo: getUserId())
+            .where('status', whereIn: ['cancelled', 'delivered'])
+            .orderBy('createdAt', descending: true)
+            .get(),
+      ]);
 
-      final List<UserOrder> orderList = [];
-      for (var orderDoc in orders.docs) {
+      final ongoingOrders = results[0];
+      final historyOrders = results[1];
+
+      final List<UserOrder> ongoingOrderList = [];
+      final List<UserOrder> historyOrderList = [];
+
+      for (var orderDoc in ongoingOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
-        orderList.add(UserOrder.fromDoc(
+        ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
         ));
       }
-      log('Final Orders Size: ${orderList.length}');
-      return Right(orderList);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
 
-  Future<Either<Failure, List<UserOrder>>> fetchHistoryOrders() async {
-    try {
-      final orders = await firestore
-          .collection('orders')
-          .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['cancelled', 'delivered'])
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      final List<UserOrder> orderList = [];
-      for (var orderDoc in orders.docs) {
+      for (var orderDoc in historyOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
-        orderList.add(UserOrder.fromDoc(
+        historyOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
         ));
       }
-      return Right(orderList);
+
+      return Right({
+        'ongoing': ongoingOrderList,
+        'history': historyOrderList,
+      });
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }

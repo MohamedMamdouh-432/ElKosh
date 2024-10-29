@@ -150,7 +150,7 @@ class SettingScreen extends StatelessWidget {
                       ),
                       onTap: () {
                         context.read<SellerMarketsBloc>().add(const SellerMarketsLoadingEvent());
-                        context.push(RouteManager.sellerMarketsRoute);
+                        context.push(RouteManager.sellerRoute);
                       }),
                 ),
                 Visibility(

@@ -1,6 +1,6 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/register/widgets/tip_text.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';

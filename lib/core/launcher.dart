@@ -1,8 +1,9 @@
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/seller/controllers/orders_bloc/seller_orders_bloc.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/user/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/user/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/seller/controllers/category_bloc/seller_category_bloc.dart';
 import 'package:elkosh/seller/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
@@ -32,6 +33,7 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<SellerCategoryBloc>(create: (_) => SellerCategoryBloc()),
         BlocProvider<SellerProductsBloc>(create: (_) => SellerProductsBloc()),
         BlocProvider<ProductFormBloc>(create: (_) => ProductFormBloc()),
+        BlocProvider<SellerOrdersBloc>(create: (_) => SellerOrdersBloc()),
       ],
       child: const ElKoshLauncher(),
     );
@@ -44,11 +46,11 @@ class ElKoshLauncher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: ColorManager.secondary,
-        statusBarBrightness: Brightness.dark,
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: const Color(0xffFFF9F6),
+        systemNavigationBarColor: Color(0xffFFF9F6),
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarDividerColor: Colors.transparent,
       ),
