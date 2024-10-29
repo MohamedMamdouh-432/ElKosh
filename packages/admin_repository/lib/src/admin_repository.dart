@@ -115,12 +115,28 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> deleteMarket(String docId) async {
+  Future<Either<Failure, void>> deleteMarket(String marketId) async {
     try {
-      await fireStorage.ref("markets/img-$docId").delete();
-      await firestore.collection('markets').doc(docId).delete();
-      // todo: delete all categories that marketId = docId
-      // todo: delete all products that marketId = docId
+      WriteBatch batch = firestore.batch();
+      QuerySnapshot categorySnapshot = await firestore
+          .collection('categories')
+          .where('marketId', isEqualTo: marketId)
+          .get();
+
+      for (var categoryDoc in categorySnapshot.docs) {
+        QuerySnapshot productSnapshot = await firestore
+            .collection('products')
+            .where('marketId', isEqualTo: marketId)
+            .where('categoryId', isEqualTo: categoryDoc.id)
+            .get();
+
+        for (var productDoc in productSnapshot.docs)
+          batch.delete(productDoc.reference);
+        batch.delete(categoryDoc.reference);
+      }
+      batch.delete(firestore.collection('markets').doc(marketId));
+      await fireStorage.ref("markets/img-$marketId").delete();
+      await batch.commit();
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -171,14 +187,18 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> deleteCategory(String docId) async {
+  Future<Either<Failure, void>> deleteCategory(String categoryId) async {
     try {
-      await firestore.collection('categories').doc(docId).delete();
-      await firestore
+      WriteBatch batch = firestore.batch();
+      QuerySnapshot productSnapshot = await firestore
           .collection('products')
-          .where('categoryId', isEqualTo: docId)
+          .where('categoryId', isEqualTo: categoryId)
           .get();
-      // todo: delete all products that marketId = docId
+
+      for (var productDoc in productSnapshot.docs)
+        batch.delete(productDoc.reference);
+      batch.delete(firestore.collection('categories').doc(categoryId));
+      await batch.commit();
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -234,6 +254,7 @@ class AdminRepository {
         unitVal: unitVal,
         quantity: quantity,
         categoryId: _curCategory!.id,
+        marketId: _curMarket!.id,
       );
       await productDoc.set(product.toDoc());
       return const Right(null);
@@ -270,6 +291,7 @@ class AdminRepository {
         unitVal: unitVal,
         quantity: quantity,
         categoryId: _curCategory!.id,
+        marketId: _curMarket!.id,
       );
       await productDoc.set(product.toDoc());
       return const Right(null);

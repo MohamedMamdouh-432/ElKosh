@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
   final String id;
-  final String categoryId;
   final String name;
   final String desc;
   final String imgUrl;
@@ -11,6 +10,8 @@ class Product extends Equatable {
   final double unitVal;
   final double quantity;
   final double discount;
+  final String marketId;
+  final String categoryId;
 
   const Product({
     required this.id,
@@ -19,10 +20,11 @@ class Product extends Equatable {
     required this.price,
     required this.quantity,
     required this.imgUrl,
-    required this.categoryId,
     this.unit = 'كيلو',
     required this.unitVal,
     required this.discount,
+    required this.categoryId,
+    required this.marketId,
   });
 
   static Product empty = const Product(
@@ -32,9 +34,10 @@ class Product extends Equatable {
     price: 0.0,
     quantity: 0.0,
     imgUrl: '',
-    categoryId: '',
     unitVal: 0,
     discount: 0,
+    categoryId: '',
+    marketId: '',
   );
 
   factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
@@ -43,8 +46,9 @@ class Product extends Equatable {
         name: productDoc['name'],
         desc: productDoc['desc'],
         imgUrl: productDoc['imgUrl'],
-        categoryId: productDoc['categoryId'],
         unit: productDoc['unit'],
+        categoryId: productDoc['categoryId'],
+        marketId: productDoc['marketId'],
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
         unitVal: productDoc['unitVal'].toDouble(),
@@ -58,6 +62,7 @@ class Product extends Equatable {
         'quantity': quantity,
         'imgUrl': imgUrl,
         'categoryId': categoryId,
+        'marketId': marketId,
         'unit': unit,
         'unitVal': unitVal,
         'discount': discount,
@@ -70,6 +75,7 @@ class Product extends Equatable {
     double? price,
     double? quantity,
     String? categoryId,
+    String? marketId,
     String? imgUrl,
     String? unit,
     double? unitVal,
@@ -82,6 +88,7 @@ class Product extends Equatable {
         price: price ?? this.price,
         quantity: quantity ?? this.quantity,
         categoryId: categoryId ?? this.categoryId,
+        marketId: marketId ?? this.marketId,
         imgUrl: imgUrl ?? this.imgUrl,
         unit: unit ?? 'packet',
         unitVal: unitVal ?? this.unitVal,
@@ -103,6 +110,7 @@ class Product extends Equatable {
       quantity,
       imgUrl,
       categoryId,
+      marketId,
       unit,
       unitVal,
       discount,
