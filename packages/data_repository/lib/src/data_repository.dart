@@ -85,6 +85,7 @@ class DataRepository {
 
   Future<String> getMarketName(String id) async {
     try {
+      log(id);
       final marketDoc = await firestore.collection('markets').doc(id).get();
       return marketDoc.data()!['name'];
     } catch (e) {
@@ -155,9 +156,9 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.isEmpty) {
-        _marketId = product.categoryId;
+        _marketId = product.marketId;
         _marketName = await getMarketName(_marketId!);
-      } else if (_marketId != product.categoryId)
+      } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
       _shopping.update(
@@ -208,9 +209,9 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.isEmpty) {
-        _marketId = product.categoryId;
+        _marketId = product.marketId;
         _marketName = await getMarketName(_marketId!);
-      } else if (_marketId != product.categoryId)
+      } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
       _shopping.update(
