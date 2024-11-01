@@ -70,7 +70,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         beginTime: beginTime,
         endTime: endTime,
-        sellerId: getUserId(),
+        adminId: getUserId(),
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
@@ -106,7 +106,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         beginTime: beginTime,
         endTime: endTime,
-        sellerId: getUserId(),
+        adminId: getUserId(),
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
@@ -152,12 +152,12 @@ class AdminRepository {
       final response = limits != null
           ? await firestore
               .collection('markets')
-              .where('sellerId', isEqualTo: getUserId())
+              .where('adminId', isEqualTo: getUserId())
               .limit(limits)
               .get()
           : await firestore
               .collection('markets')
-              .where('sellerId', isEqualTo: getUserId())
+              .where('adminId', isEqualTo: getUserId())
               .get();
       List<Market> marketsList = [];
       for (var marketDoc in response.docs)
@@ -364,13 +364,13 @@ class AdminRepository {
       final results = await Future.wait([
         firestore
             .collection('orders')
-            .where('sellerId', isEqualTo: getUserId())
+            .where('adminId', isEqualTo: getUserId())
             .where('status', whereIn: ['pending', 'shipped'])
             .orderBy('createdAt', descending: true)
             .get(),
         firestore
             .collection('orders')
-            .where('sellerId', isEqualTo: getUserId())
+            .where('adminId', isEqualTo: getUserId())
             .where('status', whereIn: ['cancelled', 'delivered'])
             .orderBy('createdAt', descending: true)
             .get(),

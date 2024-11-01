@@ -6,10 +6,6 @@ UserType getUserType(String userType) {
   switch (userType) {
     case "consumer":
       return UserType.consumer;
-    case "seller":
-      return UserType.seller;
-    case "delivery":
-      return UserType.delivery;
     default:
       return UserType.admin;
   }
@@ -66,7 +62,7 @@ class User extends Equatable {
       userType: userType ?? this.userType,
     );
   }
-  
+
   @override
   String toString() {
     return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\n';

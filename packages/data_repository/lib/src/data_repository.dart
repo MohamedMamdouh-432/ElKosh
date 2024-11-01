@@ -289,7 +289,7 @@ class DataRepository {
       };
       await firestore.collection('orders').add(orderMap);
       await seqIdDoc.set({'seqId': seqIdVal + 1});
-      // add 2 egp one from seller and one from delivery
+      // add 2 egp one from admin and one from delivery
       log('Order Succeesed');
       _price = 0;
       _shopping = {};

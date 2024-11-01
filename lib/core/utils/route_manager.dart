@@ -1,18 +1,18 @@
+import 'package:elkosh/admin/forms/add_category.dart';
+import 'package:elkosh/admin/forms/add_market.dart';
+import 'package:elkosh/admin/forms/add_product.dart';
+import 'package:elkosh/admin/forms/edit_market.dart';
+import 'package:elkosh/admin/forms/edit_product.dart';
+import 'package:elkosh/admin/screens/admin_screen.dart';
+import 'package:elkosh/admin/screens/categorys_screen.dart';
+import 'package:elkosh/admin/screens/market_location_picker_screen.dart';
+import 'package:elkosh/admin/screens/markets_page.dart';
+import 'package:elkosh/admin/screens/product_details_screen.dart';
+import 'package:elkosh/admin/screens/products_screen.dart';
 import 'package:elkosh/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
-import 'package:elkosh/seller/forms/add_category.dart';
-import 'package:elkosh/seller/forms/add_market.dart';
-import 'package:elkosh/seller/forms/add_product.dart';
-import 'package:elkosh/seller/forms/edit_market.dart';
-import 'package:elkosh/seller/forms/edit_product.dart';
-import 'package:elkosh/seller/screens/categorys_screen.dart';
-import 'package:elkosh/seller/screens/market_location_picker_screen.dart';
-import 'package:elkosh/seller/screens/markets_page.dart';
-import 'package:elkosh/seller/screens/product_details_screen.dart';
-import 'package:elkosh/seller/screens/products_screen.dart';
-import 'package:elkosh/seller/screens/seller_screen.dart';
 import 'package:elkosh/user/cart/screens/delivery_location_picker_screen.dart';
 import 'package:elkosh/user/home/screens/home_screen.dart';
 import 'package:elkosh/user/home/screens/market_details_screen.dart';
@@ -37,17 +37,17 @@ abstract class RouteManager {
   static const String talabatyScreen = '/talabaty';
   static const String deliveryLocationPickerRoute = '/delivery_location_picker';
   static const String orderDetailsRoute = '/order_details';
-  static const String sellerRoute = '/seller';
-  static const String sellerMarketsRoute = '/seller_markets';
+  static const String adminRoute = '/admin';
+  static const String adminMarketsRoute = '/admin_markets';
   static const String addMarketRoute = '/add_market';
   static const String editMarketRoute = '/edit_market';
   static const String marketLocationPickerRoute = '/market_location_picker';
-  static const String sellerCategorysRoute = '/seller_categories';
+  static const String adminCategorysRoute = '/admin_categories';
   static const String addCategoryRoute = '/add_category';
-  static const String sellerProductsRoute = '/seller_products';
+  static const String adminProductsRoute = '/admin_products';
   static const String addProductRoute = '/add_product';
   static const String editProductRoute = '/edit_product';
-  static const String sellerProductDetailsRoute = '/seller_product_details';
+  static const String adminProductDetailsRoute = '/admin_product_details';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -102,11 +102,11 @@ abstract class RouteManager {
         builder: (context, state) => const OrderDetailsScreen(),
       ),
       GoRoute(
-        path: sellerRoute,
-        builder: (context, state) => const SellerScreen(),
+        path: adminRoute,
+        builder: (context, state) => const AdminScreen(),
       ),
       GoRoute(
-        path: sellerMarketsRoute,
+        path: adminMarketsRoute,
         builder: (context, state) => const MarketsPage(),
       ),
       GoRoute(
@@ -122,7 +122,7 @@ abstract class RouteManager {
         builder: (context, state) => const MarketLocationPickerScreen(),
       ),
       GoRoute(
-        path: sellerCategorysRoute,
+        path: adminCategorysRoute,
         builder: (context, state) => const CategorysScreen(),
       ),
       GoRoute(
@@ -130,8 +130,8 @@ abstract class RouteManager {
         builder: (context, state) => const AddCategoryForm(),
       ),
       GoRoute(
-        path: sellerProductsRoute,
-        builder: (context, state) => const SellerProductsScreen(),
+        path: adminProductsRoute,
+        builder: (context, state) => const AdminProductsScreen(),
       ),
       GoRoute(
         path: addProductRoute,
@@ -142,8 +142,8 @@ abstract class RouteManager {
         builder: (context, state) => const EditProductForm(),
       ),
       GoRoute(
-        path: sellerProductDetailsRoute,
-        builder: (context, state) => const SellerProductDetailsScreen(),
+        path: adminProductDetailsRoute,
+        builder: (context, state) => const AdminProductDetailsScreen(),
       ),
     ],
   );
