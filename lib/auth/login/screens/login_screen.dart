@@ -1,6 +1,6 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/auth/login/bloc/login_bloc.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';

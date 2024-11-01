@@ -4,7 +4,7 @@ import 'package:models_repository/models_repository.dart';
 
 class Market extends Equatable {
   final String id;
-  final String sellerId;
+  final String adminId;
   final String name;
   final String desc;
   final String hotline;
@@ -15,7 +15,7 @@ class Market extends Equatable {
 
   const Market({
     required this.id,
-    required this.sellerId,
+    required this.adminId,
     required this.name,
     required this.desc,
     required this.hotline,
@@ -27,7 +27,7 @@ class Market extends Equatable {
 
   static Market empty = const Market(
     id: '',
-    sellerId: '',
+    adminId: '',
     name: '',
     desc: '',
     imgUrl: '',
@@ -39,7 +39,7 @@ class Market extends Equatable {
 
   Market copyWith({
     String? id,
-    String? sellerId,
+    String? adminId,
     String? name,
     String? desc,
     String? hotline,
@@ -50,7 +50,7 @@ class Market extends Equatable {
   }) =>
       Market(
         id: id ?? this.id,
-        sellerId: sellerId ?? this.sellerId,
+        adminId: adminId ?? this.adminId,
         name: name ?? this.name,
         desc: desc ?? this.desc,
         hotline: hotline ?? this.hotline,
@@ -63,7 +63,7 @@ class Market extends Equatable {
   factory Market.fromDoc(String marketId, Map<String, dynamic> marketDoc) =>
       Market(
         id: marketId,
-        sellerId: marketDoc['sellerId'],
+        adminId: marketDoc['adminId'],
         name: marketDoc['name'],
         desc: marketDoc['desc'],
         hotline: marketDoc['hotline'],
@@ -79,7 +79,7 @@ class Market extends Equatable {
 
   Map<String, dynamic> toDoc() => {
         'name': name,
-        'sellerId': sellerId,
+        'adminId': adminId,
         'desc': desc,
         'hotline': hotline,
         'imgUrl': imgUrl,
@@ -103,7 +103,7 @@ class Market extends Equatable {
   List<Object> get props {
     return [
       id,
-      sellerId,
+      adminId,
       name,
       desc,
       hotline,

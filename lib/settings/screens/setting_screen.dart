@@ -1,5 +1,5 @@
+import 'package:elkosh/admin/controllers/markets_bloc/admin_markets_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/seller/controllers/markets_bloc/seller_markets_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -149,8 +149,10 @@ class SettingScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 20),
                       ),
                       onTap: () {
-                        context.read<SellerMarketsBloc>().add(const SellerMarketsLoadingEvent());
-                        context.push(RouteManager.sellerMarketsRoute);
+                        context
+                            .read<AdminMarketsBloc>()
+                            .add(const AdminMarketsLoadingEvent());
+                        context.push(RouteManager.adminRoute);
                       }),
                 ),
                 Visibility(

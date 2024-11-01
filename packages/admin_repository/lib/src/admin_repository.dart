@@ -30,10 +30,10 @@ class AdminRepository {
   void setCurCategory(Category category) => _curCategory = category;
   void setCurProduct(Product product) => _curProduct = product;
 
-  Future<String> uploadImage(File image, String docId) async {
+  Future<String> uploadImage(File image, String docId, String prefix) async {
     try {
       final fileRef =
-          await fireStorage.ref("markets/img-$docId").putFile(image);
+          await fireStorage.ref("$prefix/img-$docId").putFile(image);
       final url = await fileRef.ref.getDownloadURL();
       return url;
     } catch (e) {
@@ -60,7 +60,7 @@ class AdminRepository {
       if (sameMarkets.docs.isNotEmpty)
         return const Left(Failure("المتجر موجود بالفعل"));
       final marketDoc = firestore.collection('markets').doc();
-      final imgUrl = await uploadImage(imageFile, marketDoc.id);
+      final imgUrl = await uploadImage(imageFile, marketDoc.id, "markets");
       final market = Market(
         id: marketDoc.id,
         name: name,
@@ -70,7 +70,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         beginTime: beginTime,
         endTime: endTime,
-        sellerId: getUserId(),
+        adminId: getUserId(),
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
@@ -95,7 +95,8 @@ class AdminRepository {
     try {
       final marketDoc = firestore.collection('markets').doc(id);
       String imgUrl = originalImgUrl;
-      if (isImgChanged) imgUrl = await uploadImage(imageFile, marketDoc.id);
+      if (isImgChanged)
+        imgUrl = await uploadImage(imageFile, marketDoc.id, "markets");
       final market = Market(
         id: marketDoc.id,
         name: name,
@@ -105,7 +106,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         beginTime: beginTime,
         endTime: endTime,
-        sellerId: getUserId(),
+        adminId: getUserId(),
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
@@ -130,8 +131,10 @@ class AdminRepository {
             .where('categoryId', isEqualTo: categoryDoc.id)
             .get();
 
-        for (var productDoc in productSnapshot.docs)
+        for (var productDoc in productSnapshot.docs) {
           batch.delete(productDoc.reference);
+          await fireStorage.ref("products/img-${productDoc.id}").delete();
+        }
         batch.delete(categoryDoc.reference);
       }
       batch.delete(firestore.collection('markets').doc(marketId));
@@ -149,12 +152,12 @@ class AdminRepository {
       final response = limits != null
           ? await firestore
               .collection('markets')
-              .where('sellerId', isEqualTo: getUserId())
+              .where('adminId', isEqualTo: getUserId())
               .limit(limits)
               .get()
           : await firestore
               .collection('markets')
-              .where('sellerId', isEqualTo: getUserId())
+              .where('adminId', isEqualTo: getUserId())
               .get();
       List<Market> marketsList = [];
       for (var marketDoc in response.docs)
@@ -195,8 +198,10 @@ class AdminRepository {
           .where('categoryId', isEqualTo: categoryId)
           .get();
 
-      for (var productDoc in productSnapshot.docs)
+      for (var productDoc in productSnapshot.docs) {
         batch.delete(productDoc.reference);
+        await fireStorage.ref("products/img-${productDoc.id}").delete();
+      }
       batch.delete(firestore.collection('categories').doc(categoryId));
       await batch.commit();
       return const Right(null);
@@ -242,7 +247,7 @@ class AdminRepository {
       if (sameProducts.docs.isNotEmpty)
         return const Left(Failure("المنتج موجود بالفعل"));
       final productDoc = firestore.collection('products').doc();
-      final imgUrl = await uploadImage(imageFile, productDoc.id);
+      final imgUrl = await uploadImage(imageFile, productDoc.id, "products");
       final product = Product(
         id: productDoc.id,
         name: name,
@@ -279,7 +284,8 @@ class AdminRepository {
     try {
       final productDoc = firestore.collection('products').doc(id);
       String imgUrl = originalImgUrl;
-      if (isImgChanged) imgUrl = await uploadImage(imageFile, productDoc.id);
+      if (isImgChanged)
+        imgUrl = await uploadImage(imageFile, productDoc.id, "products");
       final product = Product(
         id: productDoc.id,
         name: name,
@@ -353,60 +359,61 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, List<UserOrder>>> fetchOngoingOrders() async {
+  Future<Either<Failure, Map<String, List<UserOrder>>>> fetchOrders() async {
     try {
-      final orders = await firestore
-          .collection('orders')
-          .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['pending', 'shipped'])
-          .orderBy('createdAt', descending: true)
-          .get();
+      final results = await Future.wait([
+        firestore
+            .collection('orders')
+            .where('adminId', isEqualTo: getUserId())
+            .where('status', whereIn: ['pending', 'shipped'])
+            .orderBy('createdAt', descending: true)
+            .get(),
+        firestore
+            .collection('orders')
+            .where('adminId', isEqualTo: getUserId())
+            .where('status', whereIn: ['cancelled', 'delivered'])
+            .orderBy('createdAt', descending: true)
+            .get(),
+      ]);
 
-      final List<UserOrder> orderList = [];
-      for (var orderDoc in orders.docs) {
+      final ongoingOrders = results[0];
+      final historyOrders = results[1];
+
+      final List<UserOrder> ongoingOrderList = [];
+      final List<UserOrder> historyOrderList = [];
+
+      for (var orderDoc in ongoingOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
-        orderList.add(UserOrder.fromDoc(
+        ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
         ));
       }
-      return Right(orderList);
-    } catch (e) {
-      log(e.toString());
-      return Left(Failure(e.toString()));
-    }
-  }
 
-  Future<Either<Failure, List<UserOrder>>> fetchHistoryOrders() async {
-    try {
-      final orders = await firestore
-          .collection('orders')
-          .where('userId', isEqualTo: sharedPref.getString('userId'))
-          .where('status', whereIn: ['cancelled', 'delivered'])
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      final List<UserOrder> orderList = [];
-      for (var orderDoc in orders.docs) {
+      for (var orderDoc in historyOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
           final mappedProduct = await fetchProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
-        orderList.add(UserOrder.fromDoc(
+        historyOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
         ));
       }
-      return Right(orderList);
+
+      return Right({
+        'ongoing': ongoingOrderList,
+        'history': historyOrderList,
+      });
     } catch (e) {
       log(e.toString());
       return Left(Failure(e.toString()));
