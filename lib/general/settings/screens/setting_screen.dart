@@ -153,7 +153,7 @@ class SettingScreen extends StatelessWidget {
                           onTap: () {
                             context
                                 .read<AdminMarketsBloc>()
-                                .add(const AdminMarketsLoadingEvent());
+                                .add(AdminMarketsLoadingEvent());
                             context.push(RouteManager.adminRoute);
                           }),
                     ],

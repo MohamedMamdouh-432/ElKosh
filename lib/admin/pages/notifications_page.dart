@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
 import 'package:elkosh/admin/widgets/admin_order_list_tile.dart';
 import 'package:elkosh/general/core/utils/color_manager.dart';
@@ -25,7 +23,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
       body: BlocConsumer<AdminOrdersBloc, AdminOrdersState>(
         listener: (context, state) {},
         builder: (context, state) {
-          log(state.ongoingOrders.length.toString());
           return ModalProgressHUD(
             inAsyncCall: state.status == OrdersStatus.onProgress,
             child: ListView.builder(

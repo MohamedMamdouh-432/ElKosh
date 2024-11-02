@@ -6,7 +6,8 @@ import 'package:elkosh/admin/forms/edit_product.dart';
 import 'package:elkosh/admin/screens/admin_screen.dart';
 import 'package:elkosh/admin/screens/categorys_screen.dart';
 import 'package:elkosh/admin/screens/market_location_picker_screen.dart';
-import 'package:elkosh/admin/screens/markets_page.dart';
+import 'package:elkosh/admin/pages/markets_page.dart';
+import 'package:elkosh/admin/screens/order_detail_screen.dart';
 import 'package:elkosh/admin/screens/product_details_screen.dart';
 import 'package:elkosh/admin/screens/products_screen.dart';
 import 'package:elkosh/general/auth/login/bloc/login_bloc.dart';
@@ -48,6 +49,7 @@ abstract class RouteManager {
   static const String addProductRoute = '/add_product';
   static const String editProductRoute = '/edit_product';
   static const String adminProductDetailsRoute = '/admin_product_details';
+  static const String adminOrderDetailsRoute = '/admin_order_details';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -144,6 +146,10 @@ abstract class RouteManager {
       GoRoute(
         path: adminProductDetailsRoute,
         builder: (context, state) => const AdminProductDetailsScreen(),
+      ),
+      GoRoute(
+        path: adminOrderDetailsRoute,
+        builder: (context, state) => const AdminOrderDetailsScreen(),
       ),
     ],
   );

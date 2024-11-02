@@ -38,8 +38,10 @@ class DataRepository {
           ? await firestore.collection('markets').limit(limits).get()
           : await firestore.collection('markets').get();
       List<Market> marketsList = [];
-      for (var marketDoc in response.docs)
+      for (var marketDoc in response.docs) {
+        if (marketDoc.data()['active'] == false) continue;
         marketsList.add(Market.fromDoc(marketDoc.id, marketDoc.data()));
+      }
       return Right(marketsList);
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -86,7 +88,6 @@ class DataRepository {
 
   Future<String> getMarketName(String id) async {
     try {
-      log(id);
       final marketDoc = await firestore.collection('markets').doc(id).get();
       return marketDoc.data()!['name'];
     } catch (e) {
@@ -288,8 +289,6 @@ class DataRepository {
       };
       await firestore.collection('orders').add(orderMap);
       await seqIdDoc.set({'seqId': seqIdVal + 1});
-      // add 2 egp one from admin and one from delivery
-      log('Order Succeesed');
       _price = 0;
       _shopping = {};
       _marketId = _marketName = '';

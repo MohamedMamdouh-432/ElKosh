@@ -119,7 +119,7 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> blocMarket(String marketId) async {
+  Future<Either<Failure, void>> blockMarket(String marketId) async {
     try {
       await firestore
           .collection('markets')
@@ -132,7 +132,7 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> unBlocMarket(String marketId) async {
+  Future<Either<Failure, void>> unBlockMarket(String marketId) async {
     try {
       await firestore
           .collection('markets')
@@ -176,18 +176,9 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, List<Market>>> fetchMarkets(int? limits) async {
+  Future<Either<Failure, List<Market>>> fetchMarkets() async {
     try {
-      final response = limits != null
-          ? await firestore
-              .collection('markets')
-              .where('adminId', isEqualTo: getUserId())
-              .limit(limits)
-              .get()
-          : await firestore
-              .collection('markets')
-              .where('adminId', isEqualTo: getUserId())
-              .get();
+      final response = await firestore.collection('markets').get();
       List<Market> marketsList = [];
       for (var marketDoc in response.docs)
         marketsList.add(Market.fromDoc(marketDoc.id, marketDoc.data()));
@@ -447,9 +438,9 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> blocUser(String userId) async {
+  Future<Either<Failure, void>> blockUser(String userId) async {
     try {
-      await firestore.collection('user').doc(userId).update({'active': false});
+      await firestore.collection('users').doc(userId).update({'active': false});
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -457,7 +448,7 @@ class AdminRepository {
     }
   }
 
-  Future<Either<Failure, void>> unBlocUser(String userId) async {
+  Future<Either<Failure, void>> unBlockUser(String userId) async {
     try {
       await firestore.collection('users').doc(userId).update({'active': true});
       return const Right(null);

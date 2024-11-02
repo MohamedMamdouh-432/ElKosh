@@ -90,6 +90,7 @@
 			
 		# Users
 			Bloc User
+			user login (if blocked => don't login)
 
     	# Notification
     		- Ongoing orders

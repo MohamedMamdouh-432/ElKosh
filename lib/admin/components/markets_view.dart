@@ -19,15 +19,13 @@ class AdminMarketsView extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
           itemCount: markets.length,
           itemBuilder: (_, i) => AdminMarketItem(market: markets[i]),
           separatorBuilder: (_, __) => const Divider(
             thickness: 0.5,
             color: Colors.black38,
           ),
-          padding: const EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.only(right: 16, bottom: 80),
         ),
         Positioned(
           bottom: 20,

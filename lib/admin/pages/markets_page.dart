@@ -29,7 +29,7 @@ class MarketsPage extends StatelessWidget {
               context.pop();
               context
                   .read<AdminMarketsBloc>()
-                  .add(const AdminMarketsLoadingEvent());
+                  .add(AdminMarketsLoadingEvent());
             },
           );
         }

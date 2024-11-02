@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
@@ -30,14 +29,10 @@ class UserRepository {
   Future<Either<Failure, User>> getUser() async {
     try {
       _userId = _sharedPref.getString('userId');
-      log("userId : $_userId  ");
       if (_userId == null || _userId!.isEmpty)
         return const Left(Failure("لم تقم بتسجيل الدخول"));
       final userDoc = await _firestore.collection('users').doc(_userId).get();
-      if (userDoc.exists)
-        _user = User.fromDoc(userDoc.id, userDoc.data()!);
-      else
-        log("User does't exist according to the database inside getUser() in user_repository.dart ");
+      if (userDoc.exists) _user = User.fromDoc(userDoc.id, userDoc.data()!);
       await _sharedPref.setString('userId', _userId!);
       return _user != null
           ? Right(_user!)

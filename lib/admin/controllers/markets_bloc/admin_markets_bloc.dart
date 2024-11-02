@@ -13,13 +13,15 @@ class AdminMarketsBloc extends Bloc<AdminMarketsEvent, AdminMarketsState> {
   AdminMarketsBloc() : super(AdminMarketsState.initial) {
     on<AdminMarketsLoadingEvent>(_onMarketsLoading);
     on<AdminMarketSelectedEvent>(_onMarketSelected);
+    on<AdminMarketBlockingEvent>(_onMarketBlocked);
+    on<AdminMarketUnBlockingEvent>(_onMarketUnBlocked);
     on<AdminMarketDeletingEvent>(_onMarketDeleting);
   }
 
   FutureOr<void> _onMarketsLoading(AdminMarketsLoadingEvent event, emit) async {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
-      final results = await sl.get<AdminRepository>().fetchMarkets(event.limit);
+      final results = await sl.get<AdminRepository>().fetchMarkets();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -52,6 +54,39 @@ class AdminMarketsBloc extends Bloc<AdminMarketsEvent, AdminMarketsState> {
       emit(state.copyWith(
         errMsg: e.toString(),
         status: LoadingStatus.failure,
+      ));
+    }
+  }
+
+  FutureOr<void> _onMarketBlocked(AdminMarketBlockingEvent event, emit) async {
+    try {
+      await sl.get<AdminRepository>().blockMarket(event.marketId);
+      final updatedMarkets = List<Market>.from(state.markets).map((market) {
+        if (market.id == event.marketId) return market.copyWith(active: false);
+        return market;
+      }).toList();
+      emit(state.copyWith(markets: updatedMarkets));
+    } catch (e) {
+      emit(state.copyWith(
+        status: LoadingStatus.failure,
+        errMsg: e.toString(),
+      ));
+    }
+  }
+
+  FutureOr<void> _onMarketUnBlocked(
+      AdminMarketUnBlockingEvent event, emit) async {
+    try {
+      await sl.get<AdminRepository>().unBlockMarket(event.marketId);
+      final updatedMarkets = List<Market>.from(state.markets).map((market) {
+        if (market.id == event.marketId) return market.copyWith(active: true);
+        return market;
+      }).toList();
+      emit(state.copyWith(markets: updatedMarkets));
+    } catch (e) {
+      emit(state.copyWith(
+        status: LoadingStatus.failure,
+        errMsg: e.toString(),
       ));
     }
   }

@@ -7,13 +7,7 @@ sealed class AdminMarketsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AdminMarketsLoadingEvent extends AdminMarketsEvent {
-  final int? limit;
-  const AdminMarketsLoadingEvent([this.limit]);
-
-  @override
-  List<Object> get props => [limit ?? 0];
-}
+class AdminMarketsLoadingEvent extends AdminMarketsEvent {}
 
 class AdminMarketSelectedEvent extends AdminMarketsEvent {
   final Market market;
@@ -28,6 +22,14 @@ class AdminMarketAddingEvent extends AdminMarketsEvent {}
 class AdminMarketBlockingEvent extends AdminMarketsEvent {
   final String marketId;
   const AdminMarketBlockingEvent(this.marketId);
+
+  @override
+  List<Object> get props => [marketId];
+}
+
+class AdminMarketUnBlockingEvent extends AdminMarketsEvent {
+  final String marketId;
+  const AdminMarketUnBlockingEvent(this.marketId);
 
   @override
   List<Object> get props => [marketId];
