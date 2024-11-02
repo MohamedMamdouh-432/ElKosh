@@ -45,7 +45,7 @@
 
     * 1/10 -> 3/10
     	- Profile Bloc
-    	4. Order Bloc
+    	- Order Bloc
 
     * 28/9 -> 2/10
     	@Dooha
@@ -56,7 +56,6 @@
     		- place order (need location picker)
     			- open bottom sheet (price, market)
     			- confirm => open map, then send order
-				- ? apply quantity change & notification
     		- after reset (cart not working well)
     		- Order Bloc
     	@Mohaned
@@ -90,7 +89,6 @@
 			
 		# Users
 			Bloc User
-			user login (if blocked => don't login)
 
     	# Notification
     		- Ongoing orders
@@ -100,3 +98,12 @@
     		- policy
     		- safety
     		- order cancelling
+			
+		@Dooha
+			# user login (if blocked => don't login)
+			# apply quantity change & notification
+			# offers feature
+			
+		@Mohaned
+			# Search Feature
+			# About App
