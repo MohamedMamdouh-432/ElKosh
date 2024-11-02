@@ -46,9 +46,7 @@ class EditMarketForm extends StatelessWidget {
           );
           context.pop();
           context.read<MarketFormBloc>().add(MarketFormResetRequested());
-          context
-              .read<AdminMarketsBloc>()
-              .add(const AdminMarketsLoadingEvent());
+          context.read<AdminMarketsBloc>().add(AdminMarketsLoadingEvent());
           context.pop();
         }
       },

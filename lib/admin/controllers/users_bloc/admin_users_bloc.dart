@@ -39,7 +39,35 @@ class AdminUsersBloc extends Bloc<AdminUsersEvent, AdminUsersState> {
     }
   }
 
-  FutureOr<void> _onUserBlocking(AdminUserBlockingEvent event, emit) {}
+  FutureOr<void> _onUserBlocking(AdminUserBlockingEvent event, emit) async {
+    try {
+      await sl.get<AdminRepository>().blockUser(event.userId);
+      final updatedUsers = List<User>.from(state.users).map((user) {
+        if (user.id == event.userId) return user.copyWith(active: false);
+        return user;
+      }).toList();
+      emit(state.copyWith(users: updatedUsers));
+    } catch (e) {
+      emit(state.copyWith(
+        status: LoadingStatus.failure,
+        errMsg: e.toString(),
+      ));
+    }
+  }
 
-  FutureOr<void> _onUserUnBlocking(AdminUserUnBlockingEvent event, emit) {}
+  FutureOr<void> _onUserUnBlocking(AdminUserUnBlockingEvent event, emit) async {
+    try {
+      await sl.get<AdminRepository>().unBlockUser(event.userId);
+      final updatedUsers = List<User>.from(state.users).map((user) {
+        if (user.id == event.userId) return user.copyWith(active: true);
+        return user;
+      }).toList();
+      emit(state.copyWith(users: updatedUsers));
+    } catch (e) {
+      emit(state.copyWith(
+        status: LoadingStatus.failure,
+        errMsg: e.toString(),
+      ));
+    }
+  }
 }

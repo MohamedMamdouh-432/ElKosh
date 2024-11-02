@@ -48,7 +48,7 @@ class AddMarketForm extends StatelessWidget {
           context.read<MarketFormBloc>().add(MarketFormResetRequested());
           context
               .read<AdminMarketsBloc>()
-              .add(const AdminMarketsLoadingEvent());
+              .add(AdminMarketsLoadingEvent());
           context.pop();
         }
       },

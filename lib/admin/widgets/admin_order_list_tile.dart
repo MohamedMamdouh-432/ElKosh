@@ -17,7 +17,7 @@ class AdminOrderListTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         context.read<AdminOrdersBloc>().add(AdminOrderSelectedEvent(order));
-        context.push(RouteManager.orderDetailsRoute);
+        context.push(RouteManager.adminOrderDetailsRoute);
       },
       leading: CircleAvatar(
         child: Padding(

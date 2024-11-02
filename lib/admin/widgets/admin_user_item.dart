@@ -98,7 +98,7 @@ class AdminUserItem extends StatelessWidget {
                     ),
               icon: Icon(
                 user.active ? Icons.lock : Icons.lock_open,
-                size: 25.sp,
+                size: 30.sp,
                 color: Colors.deepPurple.shade600,
               ),
             ),

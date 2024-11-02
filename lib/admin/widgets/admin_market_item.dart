@@ -28,128 +28,150 @@ class AdminMarketItem extends StatelessWidget {
         context.read<AdminCategoryBloc>().add(AdminCategorysLoadingEvent());
         context.push(RouteManager.adminCategorysRoute);
       },
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: context.height * 0.12,
-              width: context.width * 0.25,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.black38),
-                image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: CachedNetworkImageProvider(market.imgUrl),
+      child: Opacity(
+        opacity: market.active ? 1 : 0.45,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: context.height * 0.12,
+                width: context.width * 0.25,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.black38),
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: CachedNetworkImageProvider(market.imgUrl),
+                  ),
                 ),
               ),
-            ),
-            const Gap(20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  market.name,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  market.hotline,
-                  style: const TextStyle(fontSize: 16),
-                ),
-                SizedBox(
-                  width: context.width * 0.5,
-                  height: context.height * 0.03,
-                  child: Text(
-                    market.desc,
-                    softWrap: true,
+              const Gap(20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    market.name,
                     style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.black38,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    market.hotline,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(
+                    width: context.width * 0.5,
+                    height: context.height * 0.03,
+                    child: Text(
+                      market.desc,
+                      softWrap: true,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black38,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    context
-                        .read<MarketFormBloc>()
-                        .add(MarketFormPrepared(market));
-                    context.push(RouteManager.editMarketRoute);
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.green,
-                    size: 25.sp,
+                ],
+              ),
+              const Spacer(),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      context
+                          .read<MarketFormBloc>()
+                          .add(MarketFormPrepared(market));
+                      context.push(RouteManager.editMarketRoute);
+                    },
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.green,
+                      size: 25.sp,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.confirm,
-                      title: 'هل تريد توقيف هذا المتجر ؟',
-                      borderRadius: 25,
-                      barrierDismissible: false,
-                      showConfirmBtn: true,
-                      showCancelBtn: true,
-                      confirmBtnText: 'توقيف',
-                      onConfirmBtnTap: () {
-                        context.pop();
-                        // context
-                        //     .read<AdminMarketsBloc>()
-                        //     .add(AdminMarketDeletingEvent(market.id));
-                      },
-                      confirmBtnColor: Colors.deepPurple,
-                      cancelBtnText: 'رجوع',
-                      onCancelBtnTap: () => context.pop(),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.lock,
-                    size: 25.sp,
-                    color: Colors.deepPurple.shade600,
+                  InkWell(
+                    onTap: () => market.active
+                        ? QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.confirm,
+                            title: 'هل تريد توقيف هذا المتجر ؟',
+                            borderRadius: 25,
+                            barrierDismissible: false,
+                            showConfirmBtn: true,
+                            showCancelBtn: true,
+                            confirmBtnText: 'توقيف',
+                            onConfirmBtnTap: () {
+                              context.pop();
+                              context
+                                  .read<AdminMarketsBloc>()
+                                  .add(AdminMarketBlockingEvent(market.id));
+                            },
+                            confirmBtnColor: Colors.deepPurple,
+                            cancelBtnText: 'رجوع',
+                            onCancelBtnTap: () => context.pop(),
+                          )
+                        : QuickAlert.show(
+                            context: context,
+                            type: QuickAlertType.confirm,
+                            title: 'هل تريد إالغاء توقيف هذا المتجر ؟',
+                            borderRadius: 25,
+                            barrierDismissible: false,
+                            showConfirmBtn: true,
+                            showCancelBtn: true,
+                            confirmBtnText: 'إالغاء',
+                            onConfirmBtnTap: () {
+                              context.pop();
+                              context
+                                  .read<AdminMarketsBloc>()
+                                  .add(AdminMarketUnBlockingEvent(market.id));
+                            },
+                            confirmBtnColor: Colors.deepPurple,
+                            cancelBtnText: 'رجوع',
+                            onCancelBtnTap: () => context.pop(),
+                          ),
+                    child: Icon(
+                      market.active ? Icons.lock : Icons.lock_open,
+                      color: Colors.deepPurple.shade600,
+                      size: 25.sp,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.confirm,
-                      title: 'هل تريد حذف هذا المتجر ؟',
-                      borderRadius: 25,
-                      barrierDismissible: false,
-                      showConfirmBtn: true,
-                      showCancelBtn: true,
-                      confirmBtnText: 'حذف',
-                      onConfirmBtnTap: () {
-                        context.pop();
-                        context
-                            .read<AdminMarketsBloc>()
-                            .add(AdminMarketDeletingEvent(market.id));
-                      },
-                      confirmBtnColor: Colors.red,
-                      cancelBtnText: 'رجوع',
-                      onCancelBtnTap: () => context.pop(),
-                    );
-                  },
-                  icon: Icon(
-                    Icons.delete_forever,
-                    size: 25.sp,
-                    color: Colors.red.shade600,
+                  InkWell(
+                    onTap: () {
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.confirm,
+                        title: 'هل تريد حذف هذا المتجر ؟',
+                        borderRadius: 25,
+                        barrierDismissible: false,
+                        showConfirmBtn: true,
+                        showCancelBtn: true,
+                        confirmBtnText: 'حذف',
+                        onConfirmBtnTap: () {
+                          context.pop();
+                          context
+                              .read<AdminMarketsBloc>()
+                              .add(AdminMarketDeletingEvent(market.id));
+                        },
+                        confirmBtnColor: Colors.red,
+                        cancelBtnText: 'رجوع',
+                        onCancelBtnTap: () => context.pop(),
+                      );
+                    },
+                    child: Icon(
+                      Icons.delete_forever,
+                      color: Colors.red.shade600,
+                      size: 25.sp,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

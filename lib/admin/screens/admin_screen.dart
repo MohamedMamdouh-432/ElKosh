@@ -1,6 +1,6 @@
-import 'package:elkosh/admin/screens/markets_page.dart';
-import 'package:elkosh/admin/screens/notifications_page.dart';
-import 'package:elkosh/admin/screens/users_page.dart';
+import 'package:elkosh/admin/pages/markets_page.dart';
+import 'package:elkosh/admin/pages/notifications_page.dart';
+import 'package:elkosh/admin/pages/users_page.dart';
 import 'package:flutter/material.dart';
 
 class AdminScreen extends StatelessWidget {
