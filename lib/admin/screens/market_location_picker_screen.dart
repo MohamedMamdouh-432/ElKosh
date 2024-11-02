@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/admin/controllers/market_form_bloc/market_form_bloc.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/functions.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:elkosh/shared/dummy/products.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/dummy/products.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 
 class ProductsSlider extends StatelessWidget {

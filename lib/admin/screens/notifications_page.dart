@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
 import 'package:elkosh/admin/widgets/admin_order_list_tile.dart';
-import 'package:elkosh/core/utils/color_manager.dart';
+import 'package:elkosh/general/core/utils/color_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,7 +1,7 @@
 import 'package:elkosh/admin/controllers/product_form_bloc/product_form_bloc.dart';
 import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart';
-import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

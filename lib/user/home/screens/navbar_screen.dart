@@ -1,7 +1,7 @@
 import 'package:elkosh/user/cart/screens/cart_screen.dart';
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/user/home/screens/home_screen.dart';
-import 'package:elkosh/settings/screens/setting_screen.dart';
+import 'package:elkosh/general/settings/screens/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';

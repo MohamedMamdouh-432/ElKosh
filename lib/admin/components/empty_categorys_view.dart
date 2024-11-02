@@ -1,4 +1,4 @@
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';

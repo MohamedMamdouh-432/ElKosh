@@ -1,4 +1,4 @@
-import 'package:elkosh/core/utils/color_manager.dart';
+import 'package:elkosh/general/core/utils/color_manager.dart';
 import 'package:elkosh/user/home/components/custom_app_bar.dart';
 import 'package:elkosh/user/home/components/markets_view.dart';
 import 'package:elkosh/user/home/components/products_grid.dart';

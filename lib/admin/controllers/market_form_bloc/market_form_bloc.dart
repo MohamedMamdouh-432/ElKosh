@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:admin_repository/admin_repository.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/general/shared/functions.dart';
+import 'package:elkosh/general/shared/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
