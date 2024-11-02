@@ -13,6 +13,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -25,6 +26,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -37,6 +39,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -49,6 +52,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -61,6 +65,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -73,6 +78,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -85,6 +91,7 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
   Market(
     id: "10250",
@@ -97,5 +104,6 @@ List<Market> markets = [
     location: const Location(latitude: 0, longitude: 0, address: ''),
     beginTime: TimeOfDay.now(),
     endTime: TimeOfDay.now(),
+    active: true,
   ),
 ];

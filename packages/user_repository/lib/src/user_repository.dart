@@ -34,7 +34,8 @@ class UserRepository {
       if (_userId == null || _userId!.isEmpty)
         return const Left(Failure("لم تقم بتسجيل الدخول"));
       final userDoc = await _firestore.collection('users').doc(_userId).get();
-      if (userDoc.exists) _user = User.fromDoc(userDoc);
+      if (userDoc.exists)
+        _user = User.fromDoc(userDoc.id, userDoc.data()!);
       else
         log("User does't exist according to the database inside getUser() in user_repository.dart ");
       await _sharedPref.setString('userId', _userId!);

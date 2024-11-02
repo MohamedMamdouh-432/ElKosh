@@ -29,18 +29,16 @@ class AdminMarketItem extends StatelessWidget {
         context.push(RouteManager.adminCategorysRoute);
       },
       child: Container(
-        padding: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+        padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.11,
-              width: MediaQuery.of(context).size.width * 0.22,
+              height: context.height * 0.12,
+              width: context.width * 0.25,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.black38,
-                ),
+                border: Border.all(color: Colors.black38),
                 image: DecorationImage(
                   fit: BoxFit.fill,
                   image: CachedNetworkImageProvider(market.imgUrl),
@@ -91,6 +89,34 @@ class AdminMarketItem extends StatelessWidget {
                     Icons.edit,
                     color: Colors.green,
                     size: 25.sp,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.confirm,
+                      title: 'هل تريد توقيف هذا المتجر ؟',
+                      borderRadius: 25,
+                      barrierDismissible: false,
+                      showConfirmBtn: true,
+                      showCancelBtn: true,
+                      confirmBtnText: 'توقيف',
+                      onConfirmBtnTap: () {
+                        context.pop();
+                        // context
+                        //     .read<AdminMarketsBloc>()
+                        //     .add(AdminMarketDeletingEvent(market.id));
+                      },
+                      confirmBtnColor: Colors.deepPurple,
+                      cancelBtnText: 'رجوع',
+                      onCancelBtnTap: () => context.pop(),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.lock,
+                    size: 25.sp,
+                    color: Colors.deepPurple.shade600,
                   ),
                 ),
                 IconButton(

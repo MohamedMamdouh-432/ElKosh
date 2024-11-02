@@ -164,6 +164,7 @@ class MarketFormBloc extends Bloc<MarketFormEvent, MarketFormState> {
         imgUrl: event.market.imgUrl,
         inputStatus: FormInputStatus.initial,
         location: event.market.location,
+        active: event.market.active,
       ));
     } catch (e) {
       emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
@@ -206,6 +207,7 @@ class MarketFormBloc extends Bloc<MarketFormEvent, MarketFormState> {
             beginTime: state.beginTime,
             endTime: state.endTime,
             location: state.location,
+            active: state.active,
           );
       res.fold((left) {
         emit(state.copyWith(

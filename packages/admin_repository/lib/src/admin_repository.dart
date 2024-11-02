@@ -71,6 +71,7 @@ class AdminRepository {
         beginTime: beginTime,
         endTime: endTime,
         adminId: getUserId(),
+        active: true,
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
@@ -91,6 +92,7 @@ class AdminRepository {
     required TimeOfDay beginTime,
     required TimeOfDay endTime,
     required Location location,
+    required bool active,
   }) async {
     try {
       final marketDoc = firestore.collection('markets').doc(id);
@@ -107,12 +109,39 @@ class AdminRepository {
         beginTime: beginTime,
         endTime: endTime,
         adminId: getUserId(),
+        active: active,
       );
       await marketDoc.set(market.toDoc());
       return const Right(null);
     } catch (e) {
       log(e.toString());
       return const Left(Failure("حدث خطأ أثناء تعديل بيانات المتجر"));
+    }
+  }
+
+  Future<Either<Failure, void>> blocMarket(String marketId) async {
+    try {
+      await firestore
+          .collection('markets')
+          .doc(marketId)
+          .update({'active': false});
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء توقيف المتجر");
+    }
+  }
+
+  Future<Either<Failure, void>> unBlocMarket(String marketId) async {
+    try {
+      await firestore
+          .collection('markets')
+          .doc(marketId)
+          .update({'active': true});
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء الغاء توقيف المتجر");
     }
   }
 
@@ -364,13 +393,11 @@ class AdminRepository {
       final results = await Future.wait([
         firestore
             .collection('orders')
-            .where('adminId', isEqualTo: getUserId())
             .where('status', whereIn: ['pending', 'shipped'])
             .orderBy('createdAt', descending: true)
             .get(),
         firestore
             .collection('orders')
-            .where('adminId', isEqualTo: getUserId())
             .where('status', whereIn: ['cancelled', 'delivered'])
             .orderBy('createdAt', descending: true)
             .get(),
@@ -414,6 +441,41 @@ class AdminRepository {
         'ongoing': ongoingOrderList,
         'history': historyOrderList,
       });
+    } catch (e) {
+      log(e.toString());
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, void>> blocUser(String userId) async {
+    try {
+      await firestore.collection('user').doc(userId).update({'active': false});
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء توقيف المستخدم");
+    }
+  }
+
+  Future<Either<Failure, void>> unBlocUser(String userId) async {
+    try {
+      await firestore.collection('users').doc(userId).update({'active': true});
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء الغاء توقيف المستخدم");
+    }
+  }
+
+  Future<Either<Failure, List<User>>> fetchUsers() async {
+    try {
+      final results = await firestore.collection('users').get();
+      final List<User> usersList = [];
+      for (var userDoc in results.docs) {
+        if (userDoc.data()['userType'] == 'admin') continue;
+        usersList.add(User.fromDoc(userDoc.id, userDoc.data()));
+      }
+      return Right(usersList);
     } catch (e) {
       log(e.toString());
       return Left(Failure(e.toString()));

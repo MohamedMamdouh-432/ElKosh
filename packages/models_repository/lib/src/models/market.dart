@@ -9,6 +9,7 @@ class Market extends Equatable {
   final String desc;
   final String hotline;
   final String imgUrl;
+  final bool active;
   final TimeOfDay beginTime;
   final TimeOfDay endTime;
   final Location location;
@@ -20,6 +21,7 @@ class Market extends Equatable {
     required this.desc,
     required this.hotline,
     required this.imgUrl,
+    required this.active,
     required this.location,
     required this.beginTime,
     required this.endTime,
@@ -32,6 +34,7 @@ class Market extends Equatable {
     desc: '',
     imgUrl: '',
     hotline: '',
+    active: true,
     location: Location.empty,
     beginTime: TimeOfDay(hour: 0, minute: 0),
     endTime: TimeOfDay(hour: 0, minute: 0),
@@ -44,6 +47,7 @@ class Market extends Equatable {
     String? desc,
     String? hotline,
     String? imgUrl,
+    bool? active,
     Location? location,
     TimeOfDay? beginTime,
     TimeOfDay? endTime,
@@ -55,6 +59,7 @@ class Market extends Equatable {
         desc: desc ?? this.desc,
         hotline: hotline ?? this.hotline,
         imgUrl: imgUrl ?? this.imgUrl,
+        active: active ?? this.active,
         location: location ?? this.location,
         beginTime: beginTime ?? this.beginTime,
         endTime: endTime ?? this.endTime,
@@ -68,6 +73,7 @@ class Market extends Equatable {
         desc: marketDoc['desc'],
         hotline: marketDoc['hotline'],
         imgUrl: marketDoc['imgUrl'],
+        active: marketDoc['active'],
         location: Location.fromJson(marketDoc['location']),
         beginTime: TimeOfDay(
             hour: marketDoc['beginTime']['hour'],
@@ -83,6 +89,7 @@ class Market extends Equatable {
         'desc': desc,
         'hotline': hotline,
         'imgUrl': imgUrl,
+        'active': active,
         'location': location.toJson(),
         'beginTime': {
           'hour': beginTime.hour,
@@ -96,7 +103,7 @@ class Market extends Equatable {
 
   @override
   String toString() {
-    return '\n\tName: $name ::\n\tHotline: $hotline\n\tDescription: $desc\n\tImage Url: $imgUrl\n\tBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\n\tEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\n\tAddress: ${location.latitude}, ${location.longitude}';
+    return '\n\tName: $name ::\n\tHotline: $hotline\n\tDescription: $desc\n\tImage Url: $imgUrl\n\tBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\n\tEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\n\tAddress: ${location.latitude}, ${location.longitude}\nActive: $active';
   }
 
   @override
@@ -108,6 +115,7 @@ class Market extends Equatable {
       desc,
       hotline,
       imgUrl,
+      active,
       location,
       beginTime,
       endTime,

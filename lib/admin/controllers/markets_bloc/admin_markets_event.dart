@@ -25,6 +25,14 @@ class AdminMarketSelectedEvent extends AdminMarketsEvent {
 
 class AdminMarketAddingEvent extends AdminMarketsEvent {}
 
+class AdminMarketBlockingEvent extends AdminMarketsEvent {
+  final String marketId;
+  const AdminMarketBlockingEvent(this.marketId);
+
+  @override
+  List<Object> get props => [marketId];
+}
+
 class AdminMarketDeletingEvent extends AdminMarketsEvent {
   final String marketId;
   const AdminMarketDeletingEvent(this.marketId);
