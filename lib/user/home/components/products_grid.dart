@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/user/home/widgets/product_card.dart';
 import 'package:flutter/cupertino.dart';

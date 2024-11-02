@@ -1,9 +1,9 @@
-import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/general/core/utils/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../settings/bloc/profile_bloc.dart';
+import '../../../general/settings/bloc/profile_bloc.dart';
 
 class CustomAppBar extends StatelessWidget {
   const CustomAppBar({super.key});

@@ -1,6 +1,6 @@
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/shared/widgets/product_item_card.dart';
+import 'package:elkosh/general/shared/functions.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:elkosh/user/home/widgets/title_text.dart';
 import 'package:elkosh/user/orders/bloc/orders_bloc.dart';
 import 'package:flutter/material.dart';

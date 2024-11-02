@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/admin/controllers/category_bloc/admin_category_bloc.dart';
 import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart';
-import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/general/core/utils/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

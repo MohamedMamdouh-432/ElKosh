@@ -1,6 +1,6 @@
 import 'package:elkosh/admin/controllers/markets_bloc/admin_markets_bloc.dart';
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
+import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';

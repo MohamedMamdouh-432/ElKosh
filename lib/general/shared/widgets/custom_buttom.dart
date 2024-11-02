@@ -1,4 +1,4 @@
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class CustomButtom extends StatelessWidget {

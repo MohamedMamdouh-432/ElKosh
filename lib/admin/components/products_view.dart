@@ -1,5 +1,5 @@
 import 'package:elkosh/admin/widgets/admin_product_item.dart';
-import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/general/core/utils/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';

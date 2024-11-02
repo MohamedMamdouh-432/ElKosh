@@ -1,10 +1,10 @@
-import 'package:elkosh/auth/register/bloc/register_bloc.dart';
-import 'package:elkosh/auth/register/widgets/tip_text.dart';
+import 'package:elkosh/general/auth/register/bloc/register_bloc.dart';
+import 'package:elkosh/general/auth/register/widgets/tip_text.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
-import 'package:elkosh/shared/widgets/auth_form_field.dart';
-import 'package:elkosh/shared/widgets/custom_buttom.dart';
+import 'package:elkosh/general/core/utils/utils.dart';
+import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/general/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';

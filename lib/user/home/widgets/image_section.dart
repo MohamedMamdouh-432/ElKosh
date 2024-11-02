@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 
 class SliverImageSection extends StatelessWidget {
