@@ -1,5 +1,6 @@
 import 'package:elkosh/admin/screens/markets_page.dart';
 import 'package:elkosh/admin/screens/notifications_page.dart';
+import 'package:elkosh/admin/screens/users_page.dart';
 import 'package:flutter/material.dart';
 
 class AdminScreen extends StatelessWidget {
@@ -7,7 +8,7 @@ class AdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -21,6 +22,10 @@ class AdminScreen extends StatelessWidget {
                   child: Text("المتاجر", textScaler: TextScaler.linear(1.4)),
                 ),
                 Tab(
+                  icon: Icon(Icons.person_outlined, size: 26),
+                  child: Text("المستخدمين", textScaler: TextScaler.linear(1.4)),
+                ),
+                Tab(
                   icon: Icon(Icons.notifications_outlined, size: 26),
                   child: Text("الإشعارات", textScaler: TextScaler.linear(1.4)),
                 ),
@@ -30,6 +35,7 @@ class AdminScreen extends StatelessWidget {
           body: const TabBarView(
             children: [
               MarketsPage(),
+              UsersPage(),
               NotificationsPage(),
             ],
           ),

@@ -271,7 +271,6 @@ class DataRepository {
     required Location location,
   }) async {
     try {
-      // get current val in order doc field "seqId"
       final seqIdDoc =
           firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()!['seqId'];

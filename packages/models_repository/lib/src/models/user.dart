@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:models_repository/models_repository.dart';
 
@@ -16,6 +15,7 @@ class User extends Equatable {
   final String name;
   final String email;
   final String phone;
+  final bool active;
   final UserType userType;
 
   const User({
@@ -24,6 +24,7 @@ class User extends Equatable {
     required this.name,
     required this.phone,
     required this.userType,
+    required this.active,
   });
 
   static const empty = User(
@@ -31,18 +32,20 @@ class User extends Equatable {
     email: '',
     name: '',
     phone: '',
+    active: true,
     userType: UserType.consumer,
   );
 
   bool get isEmpty => this == User.empty;
   bool get isNotEmpty => this != User.empty;
 
-  static User fromDoc(DocumentSnapshot userDoc) {
+  static User fromDoc(userId, Map<String, dynamic> userDoc) {
     return User(
-      id: userDoc.id,
+      id: userId,
       email: userDoc['email'],
       name: userDoc['name'],
       phone: userDoc['phone'],
+      active: userDoc['active'],
       userType: getUserType(userDoc['userType'] ?? 'consumer'),
     );
   }
@@ -52,6 +55,7 @@ class User extends Equatable {
     String? email,
     String? name,
     String? phone,
+    bool? active,
     UserType? userType,
   }) {
     return User(
@@ -59,13 +63,14 @@ class User extends Equatable {
       email: email ?? this.email,
       name: name ?? this.name,
       phone: phone ?? this.phone,
+      active: active ?? this.active,
       userType: userType ?? this.userType,
     );
   }
 
   @override
   String toString() {
-    return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\n';
+    return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\nActive: $active';
   }
 
   @override
@@ -74,6 +79,7 @@ class User extends Equatable {
         id,
         name,
         phone,
+        active,
         userType,
       ];
 }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 
 class AdminImageItem extends StatelessWidget {
@@ -13,7 +14,7 @@ class AdminImageItem extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         width: double.infinity,
-        height: MediaQuery.sizeOf(context).height * 0.4,
+        height: context.height * 0.4,
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.all(30),
         clipBehavior: Clip.hardEdge,
@@ -32,7 +33,7 @@ class AdminImageItem extends StatelessWidget {
             fit: BoxFit.cover,
             filterQuality: FilterQuality.high,
             width: double.infinity,
-            height: MediaQuery.sizeOf(context).height * 0.4,
+            height: context.height * 0.4,
           ),
         ),
       ),

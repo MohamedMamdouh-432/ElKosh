@@ -21,8 +21,6 @@ class UserOrder extends Equatable {
   final String marketId;
   final String marketName;
   final String userId;
-  final String deliveryId;
-  final String adminId;
   final OrderStatus status;
   final DateTime createdAt;
   final Location location;
@@ -35,8 +33,6 @@ class UserOrder extends Equatable {
     required this.shopping,
     required this.marketId,
     required this.userId,
-    required this.deliveryId,
-    required this.adminId,
     required this.status,
     required this.marketName,
     required this.createdAt,
@@ -50,8 +46,6 @@ class UserOrder extends Equatable {
     shopping: const {},
     total: 0,
     createdAt: DateTime(0),
-    deliveryId: '',
-    adminId: '',
     marketId: '',
     userId: '',
     marketName: "",
@@ -72,8 +66,6 @@ class UserOrder extends Equatable {
         createdAt: map['createdAt'].toDate(),
         marketId: map['marketId'],
         userId: map['userId'],
-        deliveryId: map['deliveryId'],
-        adminId: map['adminId'],
         marketName: map['marketName'],
         location: Location.fromJson(map['location']),
       );
@@ -84,8 +76,6 @@ class UserOrder extends Equatable {
         'createdAt': createdAt,
         'marketId': marketId,
         'userId': userId,
-        'deliveryId': deliveryId,
-        'adminId': adminId,
         'shoppings': shoppingMap,
         'marketName': marketName,
         'location': location.toJson(),
@@ -98,8 +88,6 @@ class UserOrder extends Equatable {
     Map<Product, int>? shopping,
     String? marketId,
     String? userId,
-    String? deliveryId,
-    String? adminId,
     OrderStatus? status,
     DateTime? createdAt,
     String? marketName,
@@ -112,8 +100,6 @@ class UserOrder extends Equatable {
       shopping: shopping ?? this.shopping,
       marketId: marketId ?? this.marketId,
       userId: userId ?? this.userId,
-      deliveryId: deliveryId ?? this.deliveryId,
-      adminId: adminId ?? this.adminId,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       marketName: marketName ?? this.marketName,
@@ -130,8 +116,6 @@ class UserOrder extends Equatable {
       shopping,
       marketId,
       userId,
-      deliveryId,
-      adminId,
       status,
       createdAt,
       marketName,

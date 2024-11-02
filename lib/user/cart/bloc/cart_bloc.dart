@@ -196,6 +196,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             location: event.location,
           );
       // todo: notify admin for that order
+      // todo: decrease each product quantity
       result.fold(
           (l) => emit(state.copyWith(
                 status: CartStatus.placingfailure,

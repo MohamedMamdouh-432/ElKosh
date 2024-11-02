@@ -135,42 +135,31 @@ class SettingScreen extends StatelessWidget {
                     // Handle "talabat pay" tap
                   },
                 ),
-                const Divider(height: 5, indent: 100, endIndent: 100),
-                Visibility(
-                  visible: state.user.userType != UserType.admin,
-                  child: ListTile(
-                      leading: Icon(
-                        Icons.store,
-                        size: 35,
-                        color: ColorManager.primary,
-                      ),
-                      title: const Text(
-                        'إدارة متاجرى',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      onTap: () {
-                        context
-                            .read<AdminMarketsBloc>()
-                            .add(const AdminMarketsLoadingEvent());
-                        context.push(RouteManager.adminRoute);
-                      }),
-                ),
                 Visibility(
                   visible: state.user.userType == UserType.admin,
-                  child: ListTile(
-                    leading: const Icon(
-                      Icons.settings,
-                      size: 35,
-                      color: Colors.cyan,
-                    ),
-                    title: const Text(
-                      'إدارة التطبيق',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onTap: () {},
+                  child: Column(
+                    children: [
+                      const Divider(height: 5, indent: 80, endIndent: 80),
+                      ListTile(
+                          leading: Icon(
+                            Icons.store,
+                            size: 35,
+                            color: ColorManager.primary,
+                          ),
+                          title: const Text(
+                            'إدارة التطبيق',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          onTap: () {
+                            context
+                                .read<AdminMarketsBloc>()
+                                .add(const AdminMarketsLoadingEvent());
+                            context.push(RouteManager.adminRoute);
+                          }),
+                    ],
                   ),
                 ),
-                const Divider(height: 5, indent: 100, endIndent: 100),
+                const Divider(height: 5, indent: 80, endIndent: 80),
                 ListTile(
                   leading: const Icon(
                     Icons.info_outline,

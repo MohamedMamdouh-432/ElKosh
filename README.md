@@ -1,6 +1,6 @@
 # elkosh
 
-### Consumer Part App
+### User Part App
 
     * 11/9/2024
     	splash screen
@@ -56,6 +56,7 @@
     		- place order (need location picker)
     			- open bottom sheet (price, market)
     			- confirm => open map, then send order
+				- ? apply quantity change & notification
     		- after reset (cart not working well)
     		- Order Bloc
     	@Mohaned
@@ -66,10 +67,12 @@
     				1.2 history orders
     			2. order details
     		- image slider
+			
+	* ? search feature
 
 ### Admin Part App
 
-    * 15/10 -> 17/10 @dooha
+    * 15/10 -> 17/10
 		# Markets
 			Add Market
 			Edit Market
@@ -86,9 +89,7 @@
 			add discount
 			
 		# Users
-			Delete User
 			Bloc User
-			User Summary
 
     	# Notification
     		- Ongoing orders
@@ -98,9 +99,3 @@
     		- policy
     		- safety
     		- order cancelling
-
-### Later Addons
-
-    1. new google maps
-    2. view map after signup
-    3. login by phone OPT
