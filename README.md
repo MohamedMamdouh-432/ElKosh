@@ -99,11 +99,6 @@
     		- safety
     		- order cancelling
 			
-		@Dooha
-			# user login (if blocked => don't login)
-			# apply quantity change & notification
-			# offers feature
-			
 		@Mohaned
 			# Search Feature
 			# About App

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProductsScreen extends StatelessWidget {
   const ProductsScreen({super.key});
@@ -33,19 +34,22 @@ class ProductsScreen extends StatelessWidget {
         return SafeArea(
           child: Scaffold(
             appBar: AppBar(title: const Text("تصفح المنتجات")),
-            body: GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 20,
+            body: Skeletonizer(
+              enabled: state.status == LoadingStatus.inProgress,
+              child: GridView.builder(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 20,
+                ),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  crossAxisSpacing: 5,
+                  maxCrossAxisExtent: 110,
+                  childAspectRatio: 2 / 2.3,
+                ),
+                itemCount: state.products.length,
+                itemBuilder: (context, index) =>
+                    ProductCard(product: state.products[index]),
               ),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                crossAxisSpacing: 5,
-                maxCrossAxisExtent: 110,
-                childAspectRatio: 2 / 2.3,
-              ),
-              itemCount: state.products.length,
-              itemBuilder: (context, index) =>
-                  ProductCard(product: state.products[index]),
             ),
           ),
         );

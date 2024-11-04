@@ -5,3 +5,4 @@ export 'product.dart';
 export 'user.dart';
 export 'location.dart';
 export 'category.dart';
+export 'offer.dart';

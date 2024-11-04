@@ -136,12 +136,14 @@ class AuthRepository {
         password: password,
       );
       _userId = userCredentials.user!.uid;
+      final userDoc = await _firestore.collection('users').doc(_userId).get();
+      if (userDoc.data()!['active'] == false) throw "الحساب موقوف";
       await _sharedPref.setString('userId', _userId!);
       return _userId!;
     } on FirebaseAuthException catch (e) {
       throw Exception(CodeErrorGetter.epLoginError(e.code));
-    } catch (_) {
-      throw Exception("حدث خطأ اثناء تسجيل الدخول");
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
@@ -157,7 +159,7 @@ class AuthRepository {
       throw Exception("حدث خطأ اثناء تسجيل الخروج");
     }
   }
-  
+
   Future<void> deleteAccount() async {
     try {
       _userId = null;

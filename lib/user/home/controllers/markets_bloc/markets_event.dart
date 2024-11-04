@@ -7,13 +7,7 @@ sealed class MarketsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MarketsLoadingEvent extends MarketsEvent {
-  final int? limit;
-  const MarketsLoadingEvent([this.limit]);
-
-  @override
-  List<Object> get props => [limit ?? 0];
-}
+class MarketsLoadingEvent extends MarketsEvent {}
 
 class MarketSelectedEvent extends MarketsEvent {
   final Market market;

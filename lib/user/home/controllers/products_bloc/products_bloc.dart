@@ -12,6 +12,7 @@ part 'products_state.dart';
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc() : super(ProductsState.initial) {
     on<ProductsLoadingEvent>(_onProductLoading);
+    on<ProductsRelatedLoadingEvent>(_onProductRelatedLoading);
     on<ProductSelectedEvent>(_onProductSelected);
     add(const ProductsLoadingEvent(7));
   }
@@ -20,6 +21,28 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchProducts(event.limit);
+      results.fold(
+        (l) => emit(state.copyWith(
+          errMsg: l.message,
+          status: LoadingStatus.failure,
+        )),
+        (r) => emit(state.copyWith(
+          products: r,
+          status: LoadingStatus.success,
+        )),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadingStatus.failure,
+      ));
+    }
+  }
+  
+  FutureOr<void> _onProductRelatedLoading(event, emit) async {
+    try {
+      emit(state.copyWith(status: LoadingStatus.inProgress));
+      final results = await sl.get<DataRepository>().fetchCategoryRelatedProducts();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
