@@ -13,13 +13,13 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
   MarketsBloc() : super(MarketsState.initial) {
     on<MarketsLoadingEvent>(_onMarketsLoading);
     on<MarketSelectedEvent>(_onMarketSelected);
-    add(const MarketsLoadingEvent());
+    add(MarketsLoadingEvent());
   }
 
-  FutureOr<void> _onMarketsLoading(MarketsLoadingEvent event, emit) async {
+  FutureOr<void> _onMarketsLoading(event, emit) async {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
-      final results = await sl.get<DataRepository>().fetchMarkets(event.limit);
+      final results = await sl.get<DataRepository>().fetchMarkets();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -40,22 +40,11 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
 
   FutureOr<void> _onMarketSelected(MarketSelectedEvent event, emit) async {
     try {
+      sl.get<DataRepository>().setCurMarket(event.market);
       emit(state.copyWith(
         curMarket: event.market,
-        status: LoadingStatus.inProgress,
+        status: LoadingStatus.success,
       ));
-      sl.get<DataRepository>().setCurMarket(event.market);
-      final results = await sl.get<DataRepository>().fetchRelatedProducts();
-      results.fold(
-        (l) => emit(state.copyWith(
-          errMsg: l.message,
-          status: LoadingStatus.failure,
-        )),
-        (r) => emit(state.copyWith(
-          relProducts: r,
-          status: LoadingStatus.success,
-        )),
-      );
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),

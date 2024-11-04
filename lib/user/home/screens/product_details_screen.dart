@@ -1,13 +1,16 @@
-import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/user/home/widgets/image_section.dart';
-import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quickalert/models/quickalert_animtype.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key});
@@ -100,11 +103,24 @@ class ProductDetailsScreen extends StatelessWidget {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () => context
-                                          .read<CartBloc>()
-                                          .add(
+                                      onPressed: () => productState
+                                                  .curProduct.quantity
+                                                  .toInt() >=
+                                              state.shopping[
+                                                  productState.curProduct]! + 1
+                                          ? context.read<CartBloc>().add(
                                               CartIncreasingProductQuantityEvent(
-                                                  productState.curProduct)),
+                                                  productState.curProduct))
+                                          : QuickAlert.show(
+                                              context: context,
+                                              type: QuickAlertType.warning,
+                                              title: 'تحذير',
+                                              text:
+                                                  "الكمية الموجوده من المنتج حاليا لا تكفى",
+                                              borderRadius: 20,
+                                              animType:
+                                                  QuickAlertAnimType.scale,
+                                            ),
                                       icon: Icon(
                                         Icons.add,
                                         size: 35,

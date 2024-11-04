@@ -15,6 +15,8 @@ class ProductsLoadingEvent extends ProductsEvent {
   List<Object> get props => [limit ?? 0];
 }
 
+class ProductsRelatedLoadingEvent extends ProductsEvent {}
+
 class ProductSelectedEvent extends ProductsEvent {
   final Product product;
   const ProductSelectedEvent(this.product);

@@ -27,7 +27,7 @@ class MarketsView extends StatelessWidget {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              context.read<MarketsBloc>().add(const MarketsLoadingEvent());
+              context.read<MarketsBloc>().add(MarketsLoadingEvent());
             },
           );
         }

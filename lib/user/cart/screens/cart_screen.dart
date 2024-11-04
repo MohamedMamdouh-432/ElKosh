@@ -1,9 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:elkosh/general/shared/services/context_media.dart';
+import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/user/cart/screens/empty_bag_screen.dart';
-import 'package:elkosh/general/shared/services/context_media.dart';
-import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, state) {
-        if (state.status == CartStatus.placingfailure) {
+        if (state.status == CartStatus.placingfailure)
           QuickAlert.show(
             context: context,
             type: QuickAlertType.warning,
@@ -27,7 +27,7 @@ class CartScreen extends StatelessWidget {
             borderRadius: 20,
             animType: QuickAlertAnimType.scale,
           );
-        } else if (state.status == CartStatus.placingSuccess) {
+        else if (state.status == CartStatus.placingSuccess) {
           QuickAlert.show(
             context: context,
             type: QuickAlertType.success,
@@ -39,6 +39,15 @@ class CartScreen extends StatelessWidget {
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           context.read<CartBloc>().add(CartResetEvent());
         }
+        else if (state.status == CartStatus.failure)
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.warning,
+            title: 'خطأ',
+            text: state.errorMessage,
+            borderRadius: 20,
+            animType: QuickAlertAnimType.scale,
+          );
       },
       builder: (context, state) {
         return SafeArea(
@@ -70,15 +79,13 @@ class CartScreen extends StatelessWidget {
                   ConditionalBuilder(
                     condition: state.shopping.isEmpty,
                     builder: (context) => const EmptyBageWidgetScreen(),
-                    fallback: (context) => Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.only(bottom: 60),
-                        itemCount: state.shopping.length,
-                        itemBuilder: (context, index) => ProductItemCard(
-                          product: state.shopping.keys.elementAt(index),
-                          quantity: state.shopping.values.elementAt(index),
-                        ),
+                    fallback: (context) => ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.only(bottom: 60),
+                      itemCount: state.shopping.length,
+                      itemBuilder: (context, index) => ProductItemCard(
+                        product: state.shopping.keys.elementAt(index),
+                        quantity: state.shopping.values.elementAt(index),
                       ),
                     ),
                   ),
