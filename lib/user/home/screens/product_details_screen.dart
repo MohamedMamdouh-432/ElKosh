@@ -106,8 +106,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                       onPressed: () => productState
                                                   .curProduct.quantity
                                                   .toInt() >=
-                                              state.shopping[
-                                                  productState.curProduct]! + 1
+                                              state.shopping[productState
+                                                      .curProduct]! +
+                                                  1
                                           ? context.read<CartBloc>().add(
                                               CartIncreasingProductQuantityEvent(
                                                   productState.curProduct))
