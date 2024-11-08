@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -19,7 +20,17 @@ class ProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: BlocConsumer<CartBloc, CartState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.status == CartStatus.failure) {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.warning,
+              title: 'خطأ',
+              text: state.errorMessage,
+              borderRadius: 25,
+            );
+          }
+        },
         builder: (context, state) {
           return BlocBuilder<ProductsBloc, ProductsState>(
             builder: (context, productState) {
@@ -92,8 +103,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                       ),
                                       child: Text(
                                         isInCart
-                                            ? state.shopping[
-                                                    productState.curProduct]!
+                                            ? (state.shopping[
+                                                    productState.curProduct] ?? 0)
                                                 .toString()
                                             : "0",
                                         style: const TextStyle(
@@ -106,8 +117,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                       onPressed: () => productState
                                                   .curProduct.quantity
                                                   .toInt() >=
-                                              state.shopping[productState
-                                                      .curProduct]! +
+                                              (state.shopping[productState
+                                                          .curProduct] ??
+                                                      0) +
                                                   1
                                           ? context.read<CartBloc>().add(
                                               CartIncreasingProductQuantityEvent(

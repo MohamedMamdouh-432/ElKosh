@@ -13,7 +13,7 @@ class Email extends FormzInput<String, EmailValidationError> {
   EmailValidationError? validator(String? value) {
     if (value?.isEmpty == true) return EmailValidationError.empty;
     final RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(value!)
+    return emailRegex.hasMatch(value ?? '')
         ? null
         : EmailValidationError.invalidFormat;
   }

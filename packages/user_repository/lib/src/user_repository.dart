@@ -23,19 +23,20 @@ class UserRepository {
 
   Future<void> setUserID(String userId) async {
     _userId = userId;
-    await _sharedPref.setString('userId', _userId!);
+    await _sharedPref.setString('userId', _userId ?? '');
   }
 
   Future<Either<Failure, User>> getUser() async {
     try {
       _userId = _sharedPref.getString('userId');
-      if (_userId == null || _userId!.isEmpty)
+      if (_userId == null || _userId?.isEmpty == true)
         return const Left(Failure("لم تقم بتسجيل الدخول"));
       final userDoc = await _firestore.collection('users').doc(_userId).get();
-      if (userDoc.exists) _user = User.fromDoc(userDoc.id, userDoc.data()!);
-      await _sharedPref.setString('userId', _userId!);
+      if (userDoc.exists)
+        _user = User.fromDoc(userDoc.id, userDoc.data() ?? {});
+      await _sharedPref.setString('userId', _userId ?? '');
       return _user != null
-          ? Right(_user!)
+          ? Right(_user ?? User.empty)
           : const Left(Failure("المستخدم غير موجود"));
     } catch (e) {
       return Left(Failure(e.toString()));
@@ -49,8 +50,8 @@ class UserRepository {
   }
 
   Future<void> deleteAccount() async {
-    _storage.ref().child('users').child(_userId!).delete();
-    await _firestore.collection('users').doc(_userId!).delete();
+    _storage.ref().child('users').child(_userId ?? '').delete();
+    await _firestore.collection('users').doc(_userId ?? '').delete();
     _user = null;
     _userId = null;
     await _sharedPref.remove('userId');

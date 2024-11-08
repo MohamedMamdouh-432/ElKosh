@@ -10,6 +10,7 @@ import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/user/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/user/search/bloc/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,7 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<AdminProductsBloc>(create: (_) => AdminProductsBloc()),
         BlocProvider<ProductFormBloc>(create: (_) => ProductFormBloc()),
         BlocProvider<AdminOrdersBloc>(create: (_) => AdminOrdersBloc()),
+        BlocProvider<SearchBloc>(create: (context) => SearchBloc()),
       ],
       child: const ElKoshLauncher(),
     );

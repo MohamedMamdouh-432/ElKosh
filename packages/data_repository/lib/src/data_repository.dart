@@ -28,7 +28,7 @@ class DataRepository {
         _price = 0,
         _shopping = {};
 
-  String getUserId() => sharedPref.getString('userId')!;
+  String getUserId() => sharedPref.getString('userId') ?? '';
   Market? getCurMarket() => _selctedMarket;
   Category? getCurCategory() => _selectedCategory;
   Product? getCurProduct() => _selectedProduct;
@@ -107,7 +107,7 @@ class DataRepository {
   Future<Product> fetchProductById(String id) async {
     try {
       final productDoc = await firestore.collection('products').doc(id).get();
-      return Product.fromDoc(productDoc.id, productDoc.data()!);
+      return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
@@ -116,7 +116,7 @@ class DataRepository {
   Future<MapEntry<String, bool>> getMarketInfo(String id) async {
     try {
       final marketDoc = await firestore.collection('markets').doc(id).get();
-      return MapEntry(marketDoc.data()!['name'], marketDoc.data()!['active']);
+      return MapEntry(marketDoc.data()?['name'], marketDoc.data()?['active']);
     } catch (e) {
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
@@ -139,7 +139,7 @@ class DataRepository {
           'marketName': '',
         });
       }
-      _price = sharedPref.getDouble('price')!;
+      _price = sharedPref.getDouble('price') ?? 0;
       _marketId = sharedPref.getString('marketId');
       _marketName = sharedPref.getString('marketName');
       Map<String, dynamic> decShopping = json.decode(cartMap);
@@ -186,7 +186,7 @@ class DataRepository {
     try {
       if (_shopping.isEmpty) {
         _marketId = product.marketId;
-        _marketName = (await getMarketInfo(_marketId!)).key;
+        _marketName = (await getMarketInfo(_marketId ?? '')).key;
       } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
@@ -197,11 +197,11 @@ class DataRepository {
       );
       await sharedPref.setDouble('price', _price);
       await sharedPref.setString('shopping', json.encode(_shopping));
-      await sharedPref.setString('marketId', _marketId!);
-      await sharedPref.setString('marketName', _marketName!);
+      await sharedPref.setString('marketId', _marketId ?? '');
+      await sharedPref.setString('marketName', _marketName ?? '');
       return Right({
-        'marketId': _marketId!,
-        'marketName': _marketName!,
+        'marketId': _marketId ?? '',
+        'marketName': _marketName ?? '',
       });
     } catch (e) {
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
@@ -213,7 +213,7 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.containsKey(product.id)) {
-        _price -= product.price * _shopping[product.id]!;
+        _price -= product.price * (_shopping[product.id] ?? 0);
         _shopping.remove(product.id);
         if (_shopping.isEmpty) {
           _marketId = '';
@@ -221,12 +221,12 @@ class DataRepository {
         }
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-        await sharedPref.setString('marketId', _marketId!);
-        await sharedPref.setString('marketName', _marketName!);
+        await sharedPref.setString('marketId', _marketId ?? '');
+        await sharedPref.setString('marketName', _marketName ?? '');
       }
       return Right({
-        'marketId': _marketId!,
-        'marketName': _marketName!,
+        'marketId': _marketId ?? '',
+        'marketName': _marketName ?? '',
       });
     } catch (e) {
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
@@ -239,7 +239,7 @@ class DataRepository {
     try {
       if (_shopping.isEmpty) {
         _marketId = product.marketId;
-        _marketName = (await getMarketInfo(_marketId!)).key;
+        _marketName = (await getMarketInfo(_marketId ?? '')).key;
       } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price += product.price;
@@ -250,11 +250,11 @@ class DataRepository {
       );
       await sharedPref.setDouble('price', _price);
       await sharedPref.setString('shopping', json.encode(_shopping));
-      await sharedPref.setString('marketId', _marketId!);
-      await sharedPref.setString('marketName', _marketName!);
+      await sharedPref.setString('marketId', _marketId ?? '');
+      await sharedPref.setString('marketName', _marketName ?? '');
       return Right({
-        'marketId': _marketId!,
-        'marketName': _marketName!,
+        'marketId': _marketId ?? '',
+        'marketName': _marketName ?? '',
       });
     } catch (e) {
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
@@ -281,12 +281,12 @@ class DataRepository {
         }
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-        await sharedPref.setString('marketId', _marketId!);
-        await sharedPref.setString('marketName', _marketName!);
+        await sharedPref.setString('marketId', _marketId ?? '');
+        await sharedPref.setString('marketName', _marketName ?? '');
       }
       return Right({
-        'marketId': _marketId!,
-        'marketName': _marketName!,
+        'marketId': _marketId ?? '',
+        'marketName': _marketName ?? '',
       });
     } catch (e) {
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
@@ -301,15 +301,15 @@ class DataRepository {
     try {
       final seqIdDoc =
           firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
-      int seqIdVal = (await seqIdDoc.get()).data()!['seqId'];
+      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       final orderMap = {
         'total': _price + ((_price / 100).ceil()),
         'code': seqIdVal,
         'shopping': _shopping,
         'userId': userId,
-        'marketId': _marketId!,
+        'marketId': _marketId ?? '',
         'deliveryId': "",
-        'marketName': _marketName!,
+        'marketName': _marketName ?? '',
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
         'location': location.toJson(),
@@ -331,7 +331,7 @@ class DataRepository {
   Future<Either<Failure, Null>> cancelOrder(String orderId) async {
     try {
       final orderData =
-          (await firestore.collection('orders').doc(orderId).get()).data()!;
+          (await firestore.collection('orders').doc(orderId).get()).data() ?? {};
       if (orderData['status'] == OrderStatus.shipped.name)
         return const Left(Failure('تم شحن الطلب بالفعل'));
       await firestore
@@ -345,23 +345,6 @@ class DataRepository {
             .update({'quantity': FieldValue.increment(taken)});
       });
       return const Right(null);
-    } catch (e) {
-      return Left(Failure(e.toString()));
-    }
-  }
-
-  Future<Either<Failure, List<Product>>> searchForProductByName(
-      String productName) async {
-    try {
-      final searchResults = await firestore
-          .collection('products')
-          .where('name', isEqualTo: productName)
-          .get();
-
-      final List<Product> searchProductList = [];
-      for (var result in searchResults.docs)
-        searchProductList.add(Product.fromDoc(result.id, result.data()));
-      return Right(searchProductList);
     } catch (e) {
       return Left(Failure(e.toString()));
     }
@@ -437,6 +420,28 @@ class DataRepository {
       return Right(offersList);
     } catch (e) {
       return const Left(Failure('حدث خطأ أثناء جلب العروض'));
+    }
+  }
+
+  Future<Either<Failure, List<Product>>> searchForProductByName(
+    String productName,
+  ) async {
+    try {
+      final searchResults = await firestore
+          .collection('products')
+          .where(
+            'name',
+            isGreaterThanOrEqualTo: productName,
+            isLessThanOrEqualTo: '$productName\uf8ff',
+          )
+          .get();
+
+      final List<Product> searchProductList = [];
+      for (var result in searchResults.docs)
+        searchProductList.add(Product.fromDoc(result.id, result.data()));
+      return Right(searchProductList);
+    } catch (e) {
+      return Left(Failure(e.toString()));
     }
   }
 }

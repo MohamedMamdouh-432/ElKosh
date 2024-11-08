@@ -130,7 +130,7 @@ class AddProductForm extends StatelessWidget {
                           ),
                           onChanged: (unit) => context
                               .read<ProductFormBloc>()
-                              .add(ProductFormUnitChanged(unit!)),
+                              .add(ProductFormUnitChanged(unit ?? 'kg')),
                           items: units
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(

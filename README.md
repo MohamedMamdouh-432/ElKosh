@@ -102,3 +102,8 @@
 		@Mohaned
 			# Search Feature
 			# About App
+			
+		@Dooha
+			# Forms
+				1. error text
+				2. render errors

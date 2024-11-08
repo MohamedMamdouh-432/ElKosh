@@ -46,9 +46,7 @@ class AddMarketForm extends StatelessWidget {
           );
           context.pop();
           context.read<MarketFormBloc>().add(MarketFormResetRequested());
-          context
-              .read<AdminMarketsBloc>()
-              .add(AdminMarketsLoadingEvent());
+          context.read<AdminMarketsBloc>().add(AdminMarketsLoadingEvent());
           context.pop();
         }
       },
@@ -73,9 +71,18 @@ class AddMarketForm extends StatelessWidget {
                     labelText: 'ألاسم',
                     errorText: state.name.isPure
                         ? null
-                        : state.name.isNotValid
-                            ? state.name.error?.toString()
-                            : null,
+                        : state.name.error == NameValidationError.empty
+                            ? "اسم المتجر مطلوب"
+                            : state.name.error == NameValidationError.tooShort
+                                ? "اسم المتجر قصير جدا"
+                                : state.name.error ==
+                                        NameValidationError.tooLong
+                                    ? "اسم المتجر طويل جدا"
+                                    : state.name.error ==
+                                            NameValidationError
+                                                .invalidCharacters
+                                        ? "اسم المتجر يجب ان يحتوي على حروف فقط"
+                                        : null,
                     onChange: (name) => context
                         .read<MarketFormBloc>()
                         .add(MarketFormNameChanged(name)),

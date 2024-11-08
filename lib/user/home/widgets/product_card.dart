@@ -8,6 +8,7 @@ import 'package:models_repository/models_repository.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  
   const ProductCard({
     super.key,
     required this.product,
@@ -25,7 +26,7 @@ class ProductCard extends StatelessWidget {
         children: [
           CachedNetworkImage(
             imageUrl: product.imgUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
             width: 70,
             height: 70,
           ),

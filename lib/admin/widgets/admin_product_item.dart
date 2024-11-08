@@ -43,7 +43,7 @@ class AdminProductItem extends StatelessWidget {
               children: [
                 CachedNetworkImage(
                   imageUrl: product.imgUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   width: 80,
                   height: 80,
                 ),

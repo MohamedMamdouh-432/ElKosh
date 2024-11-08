@@ -104,7 +104,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       )),
       (right) {
         final updatedShopping = Map<Product, int>.of(state.shopping);
-        int count = updatedShopping[event.product]!;
+        int count = updatedShopping[event.product] ?? 0;
         updatedShopping.remove(event.product);
         emit(state.copyWith(
           errorMessage: '',

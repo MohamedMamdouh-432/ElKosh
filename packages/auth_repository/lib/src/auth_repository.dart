@@ -79,7 +79,7 @@ class AuthRepository {
 
   Future<String?> get userId async {
     _userId = _sharedPref.getString('userId');
-    if (_userId == null || _userId == '' || _userId!.isEmpty) return null;
+    if (_userId == null || _userId == '' || _userId?.isEmpty == true) return null;
     return _userId;
   }
 
@@ -95,13 +95,13 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      _firestore.collection('users').doc(userCredentials.user!.uid).set({
+      _firestore.collection('users').doc(userCredentials.user?.uid).set({
         'name': name,
         'phone': phone,
         'email': email,
         'userType': "consumer",
       });
-      await _sharedPref.setString('userId', userCredentials.user!.uid);
+      await _sharedPref.setString('userId', userCredentials.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
       throw Exception(CodeErrorGetter.epRegisterError(e.code));
     } catch (_) {
@@ -112,10 +112,10 @@ class AuthRepository {
   Future<void> logInWithGoogle() async {
     try {
       final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser!.authentication;
+      final googleAuth = await googleUser?.authentication;
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
       );
       await _fireAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
@@ -135,11 +135,11 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      _userId = userCredentials.user!.uid;
+      _userId = userCredentials.user?.uid;
       final userDoc = await _firestore.collection('users').doc(_userId).get();
-      if (userDoc.data()!['active'] == false) throw "الحساب موقوف";
-      await _sharedPref.setString('userId', _userId!);
-      return _userId!;
+      if (userDoc.data()?['active'] == false) throw "الحساب موقوف";
+      await _sharedPref.setString('userId', _userId ?? '');
+      return _userId ?? '';
     } on FirebaseAuthException catch (e) {
       throw Exception(CodeErrorGetter.epLoginError(e.code));
     } catch (e) {
