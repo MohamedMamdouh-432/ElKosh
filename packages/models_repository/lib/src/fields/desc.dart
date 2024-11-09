@@ -1,7 +1,6 @@
 import 'package:formz/formz.dart';
 
 enum DescValidationError {
-  invalid,
   tooShort,
   empty,
 }

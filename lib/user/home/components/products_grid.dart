@@ -43,9 +43,10 @@ class ProductsGrid extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                margin: const EdgeInsets.only(top: 20),
+                child: const Text(
                   "المنتجات",
                   style: TextStyle(
                     fontSize: 20,

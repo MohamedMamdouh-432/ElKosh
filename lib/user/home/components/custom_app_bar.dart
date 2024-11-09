@@ -12,8 +12,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(
     BuildContext context,
   ) {
-    return BlocConsumer<ProfileBloc, ProfileState>(
-      listener: (context, state) {},
+    return BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         return Container(
           width: double.infinity,

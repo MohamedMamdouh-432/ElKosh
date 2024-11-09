@@ -9,10 +9,10 @@ class Phone extends FormzInput<String, PhoneValidationError> {
   @override
   PhoneValidationError? validator(String? value) {
     if (value?.isEmpty == true) return PhoneValidationError.empty;
-    if (!RegExp(r'^[\u0660-\u0669]+$').hasMatch(value!) &&
-        !RegExp(r'^[0-9]+$').hasMatch(value))
+    if (!RegExp(r'^[\u0660-\u0669]+$').hasMatch(value ?? '') &&
+        !RegExp(r'^[0-9]+$').hasMatch(value ?? ''))
       return PhoneValidationError.notaNumber;
-    else if (value.length != 11) return PhoneValidationError.invalid;
+    else if (value?.length != 11) return PhoneValidationError.invalid;
     return null;
   }
 }

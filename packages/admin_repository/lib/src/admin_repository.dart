@@ -22,7 +22,7 @@ class AdminRepository {
     required this.sharedPref,
   });
 
-  String getUserId() => sharedPref.getString('userId')!;
+  String getUserId() => sharedPref.getString('userId') ?? '';
   Market? getCurMarket() => _curMarket;
   Category? getCurCategory() => _curCategory;
   Product? getCurProduct() => _curProduct;
@@ -278,8 +278,8 @@ class AdminRepository {
         unit: unit,
         unitVal: unitVal,
         quantity: quantity,
-        categoryId: _curCategory!.id,
-        marketId: _curMarket!.id,
+        categoryId: _curCategory?.id ?? '',
+        marketId: _curMarket?.id ?? '',
       );
       await productDoc.set(product.toDoc());
       return const Right(null);
@@ -313,11 +313,11 @@ class AdminRepository {
         imgUrl: imgUrl,
         price: price,
         unit: unit,
-        discount: _curProduct!.discount,
+        discount: _curProduct?.discount ?? 0,
         unitVal: unitVal,
         quantity: quantity,
-        categoryId: _curCategory!.id,
-        marketId: _curMarket!.id,
+        categoryId: _curCategory?.id ?? '',
+        marketId: _curMarket?.id ?? '',
       );
       await productDoc.set(product.toDoc());
       return const Right(null);
@@ -330,10 +330,10 @@ class AdminRepository {
   Future<Either<Failure, void>> addProductDiscount(double newPrice) async {
     try {
       final discount =
-          ((_curProduct!.price - newPrice) / _curProduct!.price) * 100;
+          ((_curProduct?.price ?? 0 - newPrice) / (_curProduct?.price ?? 0)) * 100;
       await firestore
           .collection('products')
-          .doc(_curProduct!.id)
+          .doc(_curProduct?.id)
           .update({'discount': discount});
       return const Right(null);
     } catch (e) {
@@ -355,7 +355,7 @@ class AdminRepository {
   Future<Product> fetchProductById(String id) async {
     try {
       final productDoc = await firestore.collection('products').doc(id).get();
-      return Product.fromDoc(productDoc.id, productDoc.data()!);
+      return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
       log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
@@ -364,7 +364,7 @@ class AdminRepository {
 
   Future<Either<Failure, List<Product>>> fetchProducts() async {
     try {
-      log(_curCategory!.id);
+      log(_curCategory?.id ?? '');
       final response = await firestore
           .collection('products')
           .where('categoryId', isEqualTo: _curCategory?.id)

@@ -28,16 +28,16 @@ class ProductItemCard extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 120.h,
-          margin: const EdgeInsets.all(10),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          height: 100.h,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.6),
-                spreadRadius: 2,
+                color: Colors.grey.withOpacity(0.8),
+                spreadRadius: 5,
                 blurRadius: 5,
               ),
             ],
@@ -50,34 +50,32 @@ class ProductItemCard extends StatelessWidget {
                   imageUrl: product.imgUrl,
                   width: 80,
                   height: 80,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
-              MaxGap(40.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      product.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
+              MaxGap(15.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    product.name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
-                    const Gap(8),
-                    Text(
-                      '${product.price} جنيه',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
+                  ),
+                  Text(
+                    '${product.price} جنيه',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              const Spacer(),
               ConditionalBuilder(
                 condition: canEdit,
                 builder: (_) => Column(
@@ -92,55 +90,50 @@ class ProductItemCard extends StatelessWidget {
                         size: 30.sp,
                       ),
                     ),
-                    Flexible(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Flexible(
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: quantity <= 1
-                                    ? null
-                                    : () => context.read<CartBloc>().add(
-                                        CartDecreasingProductQuantityEvent(
-                                            product)),
-                                icon: const Icon(
-                                  Icons.remove,
-                                  color: Colors.black,
-                                  size: 28,
-                                ),
-                              ),
-                              Text(
-                                '$quantity',
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                              IconButton(
-                                onPressed: () =>
-                                    product.quantity.toInt() >= quantity + 1
-                                        ? context.read<CartBloc>().add(
-                                            CartIncreasingProductQuantityEvent(
-                                                product))
-                                        : QuickAlert.show(
-                                            context: context,
-                                            type: QuickAlertType.warning,
-                                            title: 'تحذير',
-                                            text:
-                                                "الكمية الموجوده من المنتج حاليا لا تكفى",
-                                            borderRadius: 20,
-                                            animType: QuickAlertAnimType.scale,
-                                          ),
-                                icon: const Icon(
-                                  Icons.add,
-                                  color: Colors.black,
-                                  size: 28,
-                                ),
-                              ),
-                            ],
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: quantity <= 1
+                                ? null
+                                : () => context.read<CartBloc>().add(
+                                    CartDecreasingProductQuantityEvent(
+                                        product)),
+                            icon: const Icon(
+                              Icons.remove,
+                              color: Colors.black,
+                              size: 28,
+                            ),
                           ),
-                        ),
+                          Text(
+                            '$quantity',
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          IconButton(
+                            onPressed: () => product.quantity.toInt() >=
+                                    quantity + 1
+                                ? context.read<CartBloc>().add(
+                                    CartIncreasingProductQuantityEvent(product))
+                                : QuickAlert.show(
+                                    context: context,
+                                    type: QuickAlertType.warning,
+                                    title: 'تحذير',
+                                    text:
+                                        "الكمية الموجوده من المنتج حاليا لا تكفى",
+                                    borderRadius: 20,
+                                    animType: QuickAlertAnimType.scale,
+                                  ),
+                            icon: const Icon(
+                              Icons.add,
+                              color: Colors.black,
+                              size: 28,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

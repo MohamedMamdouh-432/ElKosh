@@ -29,23 +29,27 @@ class AdminProductItem extends StatelessWidget {
           Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Colors.white60,
-              borderRadius: BorderRadius.circular(20),
+              color: Colors.white70,
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.6),
-                  spreadRadius: 2,
+                  spreadRadius: 5,
                   blurRadius: 5,
                 ),
               ],
             ),
             child: Column(
               children: [
-                CachedNetworkImage(
-                  imageUrl: product.imgUrl,
-                  fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
+                const Gap(5),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: product.imgUrl,
+                    fit: BoxFit.fill,
+                    width: 100,
+                    height: 90,
+                  ),
                 ),
                 Text(product.name),
               ],
@@ -56,7 +60,7 @@ class AdminProductItem extends StatelessWidget {
             children: [
               Expanded(
                 child: FloatingActionButton.small(
-                  heroTag: 'editTag',
+                  heroTag: 'editTag@${product.id}',
                   onPressed: () {
                     context.push(RouteManager.editProductRoute);
                     context
@@ -76,7 +80,7 @@ class AdminProductItem extends StatelessWidget {
               ),
               Expanded(
                 child: FloatingActionButton.small(
-                  heroTag: 'deleteTag',
+                  heroTag: 'deleteTag@${product.id}',
                   onPressed: () {
                     QuickAlert.show(
                       context: context,

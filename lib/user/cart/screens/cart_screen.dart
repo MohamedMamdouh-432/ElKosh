@@ -3,7 +3,7 @@ import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/cart/components/place_order_bottom_sheet.dart';
-import 'package:elkosh/user/cart/screens/empty_bag_screen.dart';
+import 'package:elkosh/user/cart/screens/empty_cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,8 +38,7 @@ class CartScreen extends StatelessWidget {
           );
           SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           context.read<CartBloc>().add(CartResetEvent());
-        }
-        else if (state.status == CartStatus.failure)
+        } else if (state.status == CartStatus.failure)
           QuickAlert.show(
             context: context,
             type: QuickAlertType.warning,
@@ -58,10 +57,7 @@ class CartScreen extends StatelessWidget {
                 children: [
                   AppBar(
                     title: const Text("سلة التسوق"),
-                    leading: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.shopping_bag_outlined, size: 35),
-                    ),
+                    leading: const Icon(Icons.shopping_bag_outlined, size: 35),
                     actions: [
                       IconButton(
                         padding: const EdgeInsets.only(left: 20),
@@ -76,16 +72,17 @@ class CartScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  ConditionalBuilder(
-                    condition: state.shopping.isEmpty,
-                    builder: (context) => const EmptyBageWidgetScreen(),
-                    fallback: (context) => ListView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(bottom: 60),
-                      itemCount: state.shopping.length,
-                      itemBuilder: (context, index) => ProductItemCard(
-                        product: state.shopping.keys.elementAt(index),
-                        quantity: state.shopping.values.elementAt(index),
+                  Expanded(
+                    child: ConditionalBuilder(
+                      condition: state.shopping.isEmpty,
+                      builder: (context) => const EmptyCartView(),
+                      fallback: (context) => ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 60),
+                        itemCount: state.shopping.length,
+                        itemBuilder: (context, index) => ProductItemCard(
+                          product: state.shopping.keys.elementAt(index),
+                          quantity: state.shopping.values.elementAt(index),
+                        ),
                       ),
                     ),
                   ),

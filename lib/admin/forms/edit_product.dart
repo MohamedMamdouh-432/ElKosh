@@ -71,9 +71,18 @@ class EditProductForm extends StatelessWidget {
                     initialValue: state.name.value,
                     errorText: state.name.isPure
                         ? null
-                        : state.name.isNotValid
-                            ? state.name.error?.toString()
-                            : null,
+                        : state.name.error == NameValidationError.empty
+                            ? "اسم المنتج مطلوب"
+                            : state.name.error == NameValidationError.tooShort
+                                ? "اسم المنتج قصير جدا"
+                                : state.name.error ==
+                                        NameValidationError.tooLong
+                                    ? "اسم المنتج طويل جدا"
+                                    : state.name.error ==
+                                            NameValidationError
+                                                .invalidCharacters
+                                        ? "اسم المنتج يجب ان يحتوي على حروف فقط"
+                                        : null,
                     onChange: (name) => context
                         .read<ProductFormBloc>()
                         .add(ProductFormNameChanged(name)),
@@ -84,9 +93,11 @@ class EditProductForm extends StatelessWidget {
                     initialValue: state.desc.value,
                     errorText: state.desc.isPure
                         ? null
-                        : state.desc.isNotValid
-                            ? state.desc.error?.toString()
-                            : null,
+                        : state.desc.error == DescValidationError.empty
+                            ? "معلومات المنتج مطلوبه"
+                            : state.desc.error == DescValidationError.tooShort
+                                ? "معلومات المنتج قليله جدا"
+                                : null,
                     onChange: (desc) => context
                         .read<ProductFormBloc>()
                         .add(ProductFormDescChanged(desc)),
@@ -102,15 +113,18 @@ class EditProductForm extends StatelessWidget {
                             labelText: 'قيمة الوحدة',
                             inputType: TextInputType.number,
                             initialValue: state.unitVal.value.toString(),
-                            errorText: state.unitVal.isPure
+                            errorText: state.unit.isPure
                                 ? null
-                                : state.unitVal.isNotValid
-                                    ? state.unitVal.error?.toString()
-                                    : null,
+                                : state.unit.error == UnitValidationError.empty
+                                    ? "قيمة الوحدة مطلوبه"
+                                    : state.unit.error ==
+                                            UnitValidationError.inValidUnit
+                                        ? "قيمة الوحدة غير صالحة"
+                                        : null,
                             onChange: (unitVal) => context
                                 .read<ProductFormBloc>()
-                                .add(ProductFormUnitValChanged(
-                                    double.parse(unitVal))),
+                                .add(ProductFormUnitValChanged(double.parse(
+                                    unitVal.isEmpty ? '1' : unitVal))),
                           ),
                         ),
                       ),
@@ -133,7 +147,7 @@ class EditProductForm extends StatelessWidget {
                           ),
                           onChanged: (unit) => context
                               .read<ProductFormBloc>()
-                              .add(ProductFormUnitChanged(unit!)),
+                              .add(ProductFormUnitChanged(unit ?? 'kg')),
                           items: units
                               .map<DropdownMenuItem<String>>(
                                   (String value) => DropdownMenuItem<String>(
@@ -151,12 +165,21 @@ class EditProductForm extends StatelessWidget {
                     initialValue: state.price.value.toString(),
                     errorText: state.price.isPure
                         ? null
-                        : state.price.isNotValid
-                            ? state.price.error?.toString()
-                            : null,
+                        : state.price.error == PriceValidationError.empty
+                            ? "سعر المنتج مطلوب"
+                            : state.price.error == PriceValidationError.tooShort
+                                ? "سعر المنتج يجب ان يكون اكبر من 1"
+                                : state.price.error ==
+                                        PriceValidationError.tooLong
+                                    ? "سعر المنتج يجب ان يكون اقل من 999999"
+                                    : state.price.error ==
+                                            PriceValidationError
+                                                .invalidCharacters
+                                        ? "سعر المنتج يجب ان يحتوي على ارقام فقط"
+                                        : null,
                     onChange: (price) => context
                         .read<ProductFormBloc>()
-                        .add(ProductFormPriceChanged(double.parse(price))),
+                        .add(ProductFormPriceChanged(double.parse(price.isEmpty ? '0' : price))),
                   ),
                   const Gap(10),
                   InputFormField(
@@ -165,13 +188,24 @@ class EditProductForm extends StatelessWidget {
                       initialValue: state.quantity.value.toString(),
                       errorText: state.quantity.isPure
                           ? null
-                          : state.quantity.isNotValid
-                              ? state.quantity.error?.toString()
-                              : null,
+                          : state.quantity.error ==
+                                  QuantityValidationError.empty
+                              ? "كمية المنتج مطلوبه"
+                              : state.quantity.error ==
+                                      QuantityValidationError.tooShort
+                                  ? "كمية المنتج يجب ان يكون اكبر من 1"
+                                  : state.quantity.error ==
+                                          QuantityValidationError.tooLong
+                                      ? "كمية المنتج يجب ان يكون اقل من 999999"
+                                      : state.quantity.error ==
+                                              QuantityValidationError
+                                                  .invalidCharacters
+                                          ? "كمية المنتج يجب ان يحتوي على ارقام فقط"
+                                          : null,
                       onChange: (quantity) => context
                           .read<ProductFormBloc>()
                           .add(ProductFormQuantityChanged(
-                              double.parse(quantity)))),
+                              double.parse(quantity.isEmpty ? '0' : quantity)))),
                   const Gap(30),
                   SizedBox(
                     width: context.width * 0.8,

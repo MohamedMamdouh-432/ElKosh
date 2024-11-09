@@ -46,9 +46,7 @@ class AddMarketForm extends StatelessWidget {
           );
           context.pop();
           context.read<MarketFormBloc>().add(MarketFormResetRequested());
-          context
-              .read<AdminMarketsBloc>()
-              .add(AdminMarketsLoadingEvent());
+          context.read<AdminMarketsBloc>().add(AdminMarketsLoadingEvent());
           context.pop();
         }
       },
@@ -73,9 +71,18 @@ class AddMarketForm extends StatelessWidget {
                     labelText: 'ألاسم',
                     errorText: state.name.isPure
                         ? null
-                        : state.name.isNotValid
-                            ? state.name.error?.toString()
-                            : null,
+                        : state.name.error == NameValidationError.empty
+                            ? "اسم المتجر مطلوب"
+                            : state.name.error == NameValidationError.tooShort
+                                ? "اسم المتجر قصير جدا"
+                                : state.name.error ==
+                                        NameValidationError.tooLong
+                                    ? "اسم المتجر طويل جدا"
+                                    : state.name.error ==
+                                            NameValidationError
+                                                .invalidCharacters
+                                        ? "اسم المتجر يجب ان يحتوي على حروف فقط"
+                                        : null,
                     onChange: (name) => context
                         .read<MarketFormBloc>()
                         .add(MarketFormNameChanged(name)),
@@ -86,9 +93,15 @@ class AddMarketForm extends StatelessWidget {
                     inputType: TextInputType.number,
                     errorText: state.hotline.isPure
                         ? null
-                        : state.hotline.isNotValid
-                            ? state.hotline.error?.toString()
-                            : null,
+                        : state.hotline.error == HotlineValidationError.empty
+                            ? "الخط الساخن مطلوب"
+                            : state.hotline.error ==
+                                    HotlineValidationError.invalid
+                                ? "الخط الساخن يجب ان يحتوي على ارقام فقط"
+                                : state.hotline.error ==
+                                        HotlineValidationError.tooShort
+                                    ? "الخط الساخن قصير جدا"
+                                    : null,
                     onChange: (hotline) => context
                         .read<MarketFormBloc>()
                         .add(MarketFormHotlineChanged(hotline)),
@@ -98,9 +111,11 @@ class AddMarketForm extends StatelessWidget {
                     labelText: 'عن المتجر',
                     errorText: state.desc.isPure
                         ? null
-                        : state.desc.isNotValid
-                            ? state.desc.error?.toString()
-                            : null,
+                        : state.desc.error == DescValidationError.empty
+                            ? "معلومات المتجر مطلوبه"
+                            : state.desc.error == DescValidationError.tooShort
+                                ? "معلومات المتجر قصيره جدا"
+                                : null,
                     onChange: (desc) => context
                         .read<MarketFormBloc>()
                         .add(MarketFormDescChanged(desc)),

@@ -4,6 +4,7 @@ import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart'
 import 'package:elkosh/general/core/utils/route_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -56,14 +57,11 @@ class AdminCategoryItem extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-                    child: Text(
-                      category is Category ? category.name : category.key,
-                      textAlign: TextAlign.center,
-                      textScaler: const TextScaler.linear(1.2),
-                    ),
+                  const Gap(5),
+                  Text(
+                    category is Category ? category.name : category.key,
+                    textAlign: TextAlign.center,
+                    textScaler: const TextScaler.linear(1.2),
                   ),
                   const Spacer(),
                   CachedNetworkImage(
