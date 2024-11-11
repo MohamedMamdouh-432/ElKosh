@@ -10,7 +10,6 @@ class UserRepository {
   User? _user;
   String? _userId;
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
   final SharedPreferences _sharedPref;
 
   UserRepository({
@@ -18,7 +17,6 @@ class UserRepository {
     required FirebaseStorage storage,
     required SharedPreferences sharedPreferences,
   })  : _firestore = firestore,
-        _storage = storage,
         _sharedPref = sharedPreferences;
 
   Future<void> setUserID(String userId) async {
@@ -50,10 +48,8 @@ class UserRepository {
   }
 
   Future<void> deleteAccount() async {
-    _storage.ref().child('users').child(_userId ?? '').delete();
     await _firestore.collection('users').doc(_userId ?? '').delete();
-    _user = null;
-    _userId = null;
+    _user = _userId = null;
     await _sharedPref.remove('userId');
   }
 }

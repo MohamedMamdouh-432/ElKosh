@@ -14,32 +14,32 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
-      child: BlocConsumer<ProfileBloc, ProfileState>(
-        listener: (context, state) {
-          if (state.status == ProfileStatus.userNotFound) {
-            String msg = state.errMsg;
-            if (msg.startsWith("Exception:"))
-              msg = msg.substring(msg.indexOf(":") + 1);
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-              title: 'حدث خطأ ما',
-              text: msg,
-              borderRadius: 25,
-              barrierDismissible: false,
-              confirmBtnText: "تسجيل الدخول",
-              onConfirmBtnTap: () {
-                context.pop();
-                context.go(RouteManager.loginRoute);
-              },
-            );
-          }
-        },
-        builder: (context, state) {
-          return Skeletonizer(
-            enabled: state.status == ProfileStatus.loading,
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state.status == ProfileStatus.userNotFound) {
+          String msg = state.errMsg;
+          if (msg.startsWith("Exception:"))
+            msg = msg.substring(msg.indexOf(":") + 1);
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            title: 'حدث خطأ ما',
+            text: msg,
+            borderRadius: 25,
+            barrierDismissible: false,
+            confirmBtnText: "تسجيل الدخول",
+            onConfirmBtnTap: () {
+              context.pop();
+              context.go(RouteManager.loginRoute);
+            },
+          );
+        }
+      },
+      builder: (context, state) {
+        return Skeletonizer(
+          enabled: state.status == ProfileStatus.loading,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
             child: Column(
               children: [
                 Padding(
@@ -204,9 +204,9 @@ class SettingScreen extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

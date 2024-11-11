@@ -14,6 +14,7 @@ class AdminProductsBloc extends Bloc<AdminProductsEvent, AdminProductsState> {
     on<AdminProductsLoadingEvent>(_onProductsLoading);
     on<AdminProductSelectedEvent>(_onProductSelected);
     on<AdminProductDeletingEvent>(_onProductDeleting);
+    on<AdminProductUpdatingEvent>(_onProductUpdating);
   }
 
   FutureOr<void> _onProductsLoading(
@@ -70,5 +71,10 @@ class AdminProductsBloc extends Bloc<AdminProductsEvent, AdminProductsState> {
         errMsg: e.toString(),
       ));
     }
+  }
+
+  FutureOr<void> _onProductUpdating(AdminProductUpdatingEvent event, emit) {
+    emit(state.copyWith(
+        curProduct: state.curProduct.copyWith(updatedPrice: event.price)));
   }
 }

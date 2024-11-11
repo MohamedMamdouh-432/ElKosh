@@ -242,7 +242,7 @@ class EditProductForm extends StatelessWidget {
                   : () {
                       context
                           .read<ProductFormBloc>()
-                          .add(ProductAddFormSubmitted());
+                          .add(ProductEditFormSubmitted());
                     },
               child: state.submissionStatus.isInProgress
                   ? const LinearProgressIndicator()

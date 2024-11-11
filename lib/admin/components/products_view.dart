@@ -26,7 +26,7 @@ class AdminProductsView extends StatelessWidget {
             maxCrossAxisExtent: 130,
             crossAxisSpacing: 5,
             mainAxisSpacing: 5,
-            childAspectRatio: 6 / 13,
+            childAspectRatio: 6 / 9,
           ),
           itemBuilder: (_, i) => AdminProductItem(products[i]),
         ),

@@ -9,7 +9,7 @@ class Product extends Equatable {
   final String unit;
   final double unitVal;
   final double quantity;
-  final double discount;
+  final double updatedPrice;
   final String marketId;
   final String categoryId;
 
@@ -22,7 +22,7 @@ class Product extends Equatable {
     required this.imgUrl,
     this.unit = 'كيلو',
     required this.unitVal,
-    required this.discount,
+    required this.updatedPrice,
     required this.categoryId,
     required this.marketId,
   });
@@ -35,7 +35,7 @@ class Product extends Equatable {
     quantity: 0.0,
     imgUrl: '',
     unitVal: 0,
-    discount: 0,
+    updatedPrice: 0,
     categoryId: '',
     marketId: '',
   );
@@ -52,7 +52,7 @@ class Product extends Equatable {
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
         unitVal: productDoc['unitVal'].toDouble(),
-        discount: productDoc['discount'].toDouble(),
+        updatedPrice: (productDoc['updatedPrice'] ?? 0).toDouble(),
       );
 
   Map<String, dynamic> toDoc() => {
@@ -65,7 +65,7 @@ class Product extends Equatable {
         'marketId': marketId,
         'unit': unit,
         'unitVal': unitVal,
-        'discount': discount,
+        'updatedPrice': updatedPrice,
       };
 
   Product copyWith({
@@ -79,7 +79,7 @@ class Product extends Equatable {
     String? imgUrl,
     String? unit,
     double? unitVal,
-    double? discount,
+    double? updatedPrice,
   }) =>
       Product(
         id: id ?? this.id,
@@ -92,12 +92,12 @@ class Product extends Equatable {
         imgUrl: imgUrl ?? this.imgUrl,
         unit: unit ?? 'packet',
         unitVal: unitVal ?? this.unitVal,
-        discount: discount ?? this.discount,
+        updatedPrice: updatedPrice ?? this.updatedPrice,
       );
 
   @override
   String toString() {
-    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal\nDiscount; $discount';
+    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal\nUpdatedPrice; $updatedPrice';
   }
 
   @override
@@ -113,7 +113,7 @@ class Product extends Equatable {
       marketId,
       unit,
       unitVal,
-      discount,
+      updatedPrice,
     ];
   }
 }

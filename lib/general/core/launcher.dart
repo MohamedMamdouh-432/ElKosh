@@ -8,6 +8,7 @@ import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/user/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/user/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/user/search/bloc/search_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class ElKoshApp extends StatelessWidget {
   const ElKoshApp({super.key});
@@ -37,7 +39,10 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider<AdminOrdersBloc>(create: (_) => AdminOrdersBloc()),
         BlocProvider<SearchBloc>(create: (context) => SearchBloc()),
       ],
-      child: const ElKoshLauncher(),
+      child: ChangeNotifierProvider(
+        create: (context) => NavProvider(),
+        child: const ElKoshLauncher(),
+      ),
     );
   }
 }

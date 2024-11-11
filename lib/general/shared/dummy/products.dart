@@ -13,7 +13,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -27,7 +27,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -41,7 +41,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -55,7 +55,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -69,7 +69,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -83,7 +83,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -97,7 +97,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -111,7 +111,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -125,7 +125,7 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
   const Product(
     id: "45690",
@@ -139,6 +139,6 @@ List<Product> products = [
     marketId: '63xc89',
     unit: "كيلوجرام",
     unitVal: 1,
-    discount: 0,
+    updatedPrice: 0,
   ),
 ];

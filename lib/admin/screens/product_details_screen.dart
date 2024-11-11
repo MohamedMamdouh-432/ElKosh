@@ -18,8 +18,9 @@ class AdminProductDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminProductsBloc, AdminProductsState>(
       builder: (context, state) {
-        final curPrice = state.curProduct.price -
-            (state.curProduct.price * (state.curProduct.discount / 100));
+        final curPrice = state.curProduct.updatedPrice == 0
+            ? state.curProduct.price
+            : state.curProduct.updatedPrice;
         return SafeArea(
           child: Scaffold(
             body: Skeletonizer(
@@ -151,6 +152,9 @@ class AdminProductDetailsScreen extends StatelessWidget {
                                       .read<ProductFormBloc>()
                                       .add(ProductAddDiscountFormSubmitted());
                                   context.pop();
+                                  context.read<AdminProductsBloc>().add(
+                                      AdminProductUpdatingEvent(
+                                          formState.price.value));
                                 },
                                 icon: const Icon(Icons.add_task_rounded),
                                 label: const Text(

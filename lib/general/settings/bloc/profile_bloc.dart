@@ -40,8 +40,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   FutureOr<void> _onProfileDeleting(event, emit) async {
-    await sl.get<AuthRepository>().deleteAccount();
-    await sl.get<UserRepository>().deleteAccount();
-    emit(ProfileState.initial);
+    try {
+      await sl.get<AuthRepository>().deleteAccount();
+      await sl.get<UserRepository>().deleteAccount();
+      emit(ProfileState.initial);
+    } catch (e) {
+      emit(state.copyWith(
+        status: ProfileStatus.unknown,
+        errMsg: e.toString(),
+      ));
+    }
   }
 }

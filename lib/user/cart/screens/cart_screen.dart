@@ -1,5 +1,4 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/user/cart/components/place_order_bottom_sheet.dart';
@@ -49,11 +48,12 @@ class CartScreen extends StatelessWidget {
           );
       },
       builder: (context, state) {
-        return SafeArea(
-          child: ModalProgressHUD(
-            inAsyncCall: state.status == CartStatus.onProgress,
-            child: Scaffold(
-              body: Column(
+        return ModalProgressHUD(
+          inAsyncCall: state.status == CartStatus.onProgress,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Column(
                 children: [
                   AppBar(
                     title: const Text("سلة التسوق"),
@@ -88,10 +88,10 @@ class CartScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: SizedBox(
-                width: context.width * 0.8,
+              Positioned(
+                bottom: 20,
+                left: 20,
+                right: 20,
                 child: ElevatedButton(
                   onPressed: state.shopping.isEmpty
                       ? null
@@ -112,8 +112,8 @@ class CartScreen extends StatelessWidget {
                     textScaler: TextScaler.linear(1.8),
                   ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
         );
       },

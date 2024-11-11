@@ -274,7 +274,7 @@ class AdminRepository {
         desc: desc,
         imgUrl: imgUrl,
         price: price,
-        discount: 0,
+        updatedPrice: 0,
         unit: unit,
         unitVal: unitVal,
         quantity: quantity,
@@ -313,7 +313,7 @@ class AdminRepository {
         imgUrl: imgUrl,
         price: price,
         unit: unit,
-        discount: _curProduct?.discount ?? 0,
+        updatedPrice: _curProduct?.updatedPrice ?? 0,
         unitVal: unitVal,
         quantity: quantity,
         categoryId: _curCategory?.id ?? '',
@@ -329,12 +329,10 @@ class AdminRepository {
 
   Future<Either<Failure, void>> addProductDiscount(double newPrice) async {
     try {
-      final discount =
-          ((_curProduct?.price ?? 0 - newPrice) / (_curProduct?.price ?? 0)) * 100;
       await firestore
           .collection('products')
           .doc(_curProduct?.id)
-          .update({'discount': discount});
+          .update({'updatedPrice': newPrice});
       return const Right(null);
     } catch (e) {
       return Left(Failure(e.toString()));

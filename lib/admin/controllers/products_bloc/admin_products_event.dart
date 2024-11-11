@@ -26,3 +26,11 @@ class AdminProductDeletingEvent extends AdminProductsEvent {
   @override
   List<Object> get props => [productId];
 }
+
+class AdminProductUpdatingEvent extends AdminProductsEvent {
+  final double price;
+  const AdminProductUpdatingEvent(this.price);
+
+  @override
+  List<Object> get props => [price];
+}

@@ -172,6 +172,7 @@ class ProductFormBloc extends Bloc<ProductFormEvent, ProductFormState> {
         name: Name.dirty(event.product.name),
         desc: Desc.dirty(event.product.desc),
         imgName: 'product_img.png',
+        productImg: File('product_img.png'),
         imgUrl: event.product.imgUrl,
         inputStatus: FormInputStatus.initial,
         price: Price.dirty(event.product.price),
