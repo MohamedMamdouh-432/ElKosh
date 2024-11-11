@@ -1,6 +1,7 @@
 import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/user/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/user/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
@@ -103,8 +104,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                       ),
                                       child: Text(
                                         isInCart
-                                            ? (state.shopping[
-                                                    productState.curProduct] ?? 0)
+                                            ? (state.shopping[productState
+                                                        .curProduct] ??
+                                                    0)
                                                 .toString()
                                             : "0",
                                         style: const TextStyle(
@@ -182,12 +184,12 @@ class ProductDetailsScreen extends StatelessWidget {
                 floatingActionButton: SizedBox(
                   width: context.width * 0.8,
                   child: ElevatedButton(
-                    onPressed: isInCart
-                        ? null
-                        : () => context.read<CartBloc>().add(
-                            CartAddingProductEvent(productState.curProduct)),
+                    onPressed: () {
+                      context.pop();
+                      context.read<NavProvider>().navToPage(1);
+                    },
                     child: const Text(
-                      "أضف الى السلة",
+                      "انتقل الى السلة",
                       textScaler: TextScaler.linear(1.6),
                     ),
                   ),

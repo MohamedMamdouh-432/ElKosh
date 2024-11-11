@@ -1,50 +1,32 @@
-import 'package:elkosh/user/cart/screens/cart_screen.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
-import 'package:elkosh/user/home/screens/home_screen.dart';
-import 'package:elkosh/general/settings/screens/setting_screen.dart';
+import 'package:elkosh/user/home/controllers/nav_provider/nav_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:provider/provider.dart';
 
-class NavBarScreen extends StatefulWidget {
+class NavBarScreen extends StatelessWidget {
   const NavBarScreen({super.key});
-
-  @override
-  State<NavBarScreen> createState() => _NavBarScreenState();
-}
-
-class _NavBarScreenState extends State<NavBarScreen> {
-  int currentIndex = 0;
-  final PageController pageController = PageController(initialPage: 0);
-  final List<Widget> pages = [
-    const HomeScreen(),
-    const CartScreen(),
-    const SettingScreen()
-  ];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: PageView(
-          controller: pageController,
-          onPageChanged: (value) => setState(() => currentIndex = value),
-          children: pages,
+          controller: context.read<NavProvider>().pageController,
+          onPageChanged: context.read<NavProvider>().animateToPage,
+          children: context.read<NavProvider>().pages,
         ),
         bottomNavigationBar: GNav(
-          selectedIndex: currentIndex,
+          selectedIndex: context.read<NavProvider>().curIdx,
           activeColor: ColorManager.primary,
           color: Colors.blueGrey,
           backgroundColor: ColorManager.primary.withOpacity(0.07),
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-          onTabChange: (index) {
-            pageController.animateToPage(
-              index,
-              curve: Curves.easeInOut,
-              duration: const Duration(milliseconds: 500),
-            );
-            setState(() => currentIndex = index);
-          },
+          padding: const EdgeInsets.symmetric(
+            horizontal: 25,
+            vertical: 15,
+          ),
+          onTabChange: context.read<NavProvider>().navToPage,
           tabs: const [
             GButton(
               text: "الرئيسية",

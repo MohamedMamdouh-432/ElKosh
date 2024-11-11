@@ -100,6 +100,7 @@ class RegisterScreen extends StatelessWidget {
                                           : null,
                     ),
                     const Gap(15),
+                    // todo: add opt confirmation
                     InputFormField(
                       labelText: 'رقم الهاتف',
                       onChange: (data) => context

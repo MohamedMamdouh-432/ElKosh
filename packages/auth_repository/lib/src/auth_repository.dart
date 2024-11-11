@@ -100,6 +100,7 @@ class AuthRepository {
         'phone': phone,
         'email': email,
         'userType': "consumer",
+        'active': true,
       });
       await _sharedPref.setString('userId', userCredentials.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
@@ -165,8 +166,7 @@ class AuthRepository {
       _userId = null;
       await _sharedPref.remove('userId');
       await Future.wait([
-        _fireAuth.signOut(),
-        _googleSignIn.signOut(),
+        _fireAuth.currentUser!.delete(),
       ]);
     } catch (e) {
       throw Exception("حدث خطأ اثناء حذف حسابك");

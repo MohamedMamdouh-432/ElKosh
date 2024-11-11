@@ -30,7 +30,7 @@ class AdminImageItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: CachedNetworkImage(
             imageUrl: imageUrl,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
             filterQuality: FilterQuality.high,
             width: double.infinity,
             height: context.height * 0.4,
