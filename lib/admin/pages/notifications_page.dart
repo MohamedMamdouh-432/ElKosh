@@ -1,12 +1,12 @@
-import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
+import 'package:elkosh/admin/controllers/notifications_bloc/admin_notifications_bloc.dart';
 import 'package:elkosh/admin/widgets/admin_order_list_tile.dart';
 import 'package:elkosh/general/core/utils/color_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -20,11 +20,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AdminOrdersBloc, AdminOrdersState>(
-        listener: (context, state) {},
+      body: BlocBuilder<AdminNotificationsBloc, AdminNotificationsState>(
         builder: (context, state) {
-          return ModalProgressHUD(
-            inAsyncCall: state.status == OrdersStatus.onProgress,
+          return Skeletonizer(
+            enabled: state.status == OrdersStatus.onProgress,
             child: ListView.builder(
               itemCount: idx == 0
                   ? state.ongoingOrders.length

@@ -63,10 +63,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onAddProductToCart(
-    CartAddingProductEvent event,
-    emit,
-  ) async {
+  Future<void> _onAddProductToCart(CartAddingProductEvent event, emit) async {
     final result =
         await sl.get<DataRepository>().addProductToCart(event.product);
     result.fold(
@@ -85,7 +82,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           shopping: updatedShopping,
           errorMessage: '',
           status: CartStatus.success,
-          price: state.price + event.product.price,
+          price: state.price +
+              (event.product.updatedPrice == 0
+                  ? event.product.price
+                  : event.product.updatedPrice),
           marketId: right['marketId'],
           marketName: right['marketName'],
         ));
@@ -138,7 +138,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(state.copyWith(
           shopping: updatedShopping,
           errorMessage: '',
-          price: state.price + event.product.price,
+          price: state.price +
+              (event.product.updatedPrice == 0
+                  ? event.product.price
+                  : event.product.updatedPrice),
           status: CartStatus.success,
           marketId: right['marketId'],
           marketName: right['marketName'],
@@ -191,12 +194,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result = await sl.get<DataRepository>().placeOrder(
-            userId: event.user.id,
-            userName: event.user.name,
+            user: event.user,
             location: event.location,
           );
-      // todo: check orders bloc
-      // todo: add user name and phone
       // todo: send notification to admin (later when notifications feature is ready)
       result.fold(
           (l) => emit(state.copyWith(

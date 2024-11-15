@@ -17,6 +17,8 @@ class OrderSelectedEvent extends OrdersEvent {
   List<Object> get props => [order];
 }
 
+class CurOrderLoadingEvent extends OrdersEvent {}
+
 class OrderCancellingEvent extends OrdersEvent {
   final String orderId;
   const OrderCancellingEvent(this.orderId);

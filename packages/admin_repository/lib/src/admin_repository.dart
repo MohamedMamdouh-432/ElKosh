@@ -38,6 +38,7 @@ class AdminRepository {
       return url;
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       throw Exception('حدث خطأ أثناء تحميل الصورة');
     }
   }
@@ -77,6 +78,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء اضافة المتجر"));
     }
   }
@@ -115,6 +117,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء تعديل بيانات المتجر"));
     }
   }
@@ -128,6 +131,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء توقيف المتجر");
     }
   }
@@ -140,6 +144,7 @@ class AdminRepository {
           .update({'active': true});
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       throw const Failure("حدث خطأ أثناء الغاء توقيف المتجر");
     }
@@ -172,6 +177,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء حذف المتجر");
     }
   }
@@ -184,6 +190,7 @@ class AdminRepository {
         marketsList.add(Market.fromDoc(marketDoc.id, marketDoc.data()));
       return Right(marketsList);
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       return Left(Failure(e.toString()));
     }
@@ -206,6 +213,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء اضافة هذا الصنف'));
     }
   }
@@ -227,6 +235,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء حذف هذا الصنف"));
     }
   }
@@ -243,6 +252,7 @@ class AdminRepository {
             .add(Category.fromDoc(categoryDoc.id, categoryDoc.data()));
       return Right(categoriesList);
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       return Left(Failure(e.toString()));
     }
@@ -285,6 +295,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء اضافة المنتج"));
     }
   }
@@ -323,6 +334,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return const Left(Failure("حدث خطأ أثناء تعديل بيانات المنتج"));
     }
   }
@@ -335,6 +347,7 @@ class AdminRepository {
           .update({'updatedPrice': newPrice});
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -346,6 +359,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء حذف المنتج");
     }
   }
@@ -355,6 +369,7 @@ class AdminRepository {
       final productDoc = await firestore.collection('products').doc(id).get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
@@ -373,11 +388,12 @@ class AdminRepository {
       return Right(productsList);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
 
-  Future<Either<Failure, Map<String, List<UserOrder>>>> fetchOrders() async {
+  Future<Either<Failure, Map<String, List<UserOrder>>>> fetchNotifications() async {
     try {
       final results = await Future.wait([
         firestore
@@ -432,6 +448,7 @@ class AdminRepository {
       });
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -442,6 +459,7 @@ class AdminRepository {
       return const Right(null);
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء توقيف المستخدم");
     }
   }
@@ -451,6 +469,7 @@ class AdminRepository {
       await firestore.collection('users').doc(userId).update({'active': true});
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       throw const Failure("حدث خطأ أثناء الغاء توقيف المستخدم");
     }
@@ -466,6 +485,7 @@ class AdminRepository {
       }
       return Right(usersList);
     } catch (e) {
+      log(e.toString());
       log(e.toString());
       return Left(Failure(e.toString()));
     }

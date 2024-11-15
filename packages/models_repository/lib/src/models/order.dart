@@ -20,6 +20,8 @@ class UserOrder extends Equatable {
   final double total;
   final String marketId;
   final String marketName;
+  final String userPhone;
+  final String userName;
   final String userId;
   final OrderStatus status;
   final DateTime createdAt;
@@ -32,11 +34,13 @@ class UserOrder extends Equatable {
     required this.total,
     required this.shopping,
     required this.marketId,
+    required this.userPhone,
     required this.userId,
     required this.status,
     required this.marketName,
     required this.createdAt,
     required this.location,
+    required this.userName,
   });
 
   static UserOrder empty = UserOrder(
@@ -47,6 +51,8 @@ class UserOrder extends Equatable {
     total: 0,
     createdAt: DateTime(0),
     marketId: '',
+    userName: '',
+    userPhone: '',
     userId: '',
     marketName: "",
     location: Location.empty,
@@ -65,21 +71,12 @@ class UserOrder extends Equatable {
         status: getOrderStatus(map['status']),
         createdAt: map['createdAt'].toDate(),
         marketId: map['marketId'],
+        userName: map['userName'],
         userId: map['userId'],
+        userPhone: map['userPhone'],
         marketName: map['marketName'],
         location: Location.fromJson(map['location']),
       );
-
-  Map<String, dynamic> toDoc(shoppingMap) => {
-        'price': total,
-        'status': status.name,
-        'createdAt': createdAt,
-        'marketId': marketId,
-        'userId': userId,
-        'shoppings': shoppingMap,
-        'marketName': marketName,
-        'location': location.toJson(),
-      };
 
   UserOrder copyWith({
     String? id,
@@ -87,7 +84,9 @@ class UserOrder extends Equatable {
     double? total,
     Map<Product, int>? shopping,
     String? marketId,
+    String? userName,
     String? userId,
+    String? userPhone,
     OrderStatus? status,
     DateTime? createdAt,
     String? marketName,
@@ -99,7 +98,9 @@ class UserOrder extends Equatable {
       total: total ?? this.total,
       shopping: shopping ?? this.shopping,
       marketId: marketId ?? this.marketId,
+      userPhone: userPhone ?? this.userPhone,
       userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       marketName: marketName ?? this.marketName,
@@ -115,6 +116,8 @@ class UserOrder extends Equatable {
       total,
       shopping,
       marketId,
+      userPhone,
+      userName,
       userId,
       status,
       createdAt,

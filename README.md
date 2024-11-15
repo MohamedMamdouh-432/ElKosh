@@ -66,40 +66,35 @@
     				1.2 history orders
     			2. order details
     		- image slider
-			
-	* ? search feature
+
+    * ? search feature
 
 ### Admin Part App
 
     * 15/10 -> 17/10
-		# Markets
-			Add Market
-			Edit Market
-			Delete Market
-			Bloc Market
-			
-			Add Category
-			Delete Category
-			
-			Add Product
-			Edit Product
-			Delete Product
-			
-			add discount
-			
-		# Users
-			Bloc User
+    	# Markets
+    		Add Market
+    		Edit Market
+    		Delete Market
+    		Bloc Market
+
+    		Add Category
+    		Delete Category
+
+    		Add Product
+    		Edit Product
+    		Delete Product
+
+    		add discount
+
+    	# Users
+    		Bloc User
 
     	# Notification
     		- Ongoing orders
     		- History Orders
-			
+
     	# about app
     		- policy
     		- safety
     		- order cancelling
-			
-		@Mohaned
-			# Search Feature
-			# About App
-			

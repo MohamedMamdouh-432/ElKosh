@@ -15,6 +15,7 @@ class DataRepository {
   Category? _selectedCategory;
   Product? _selectedProduct;
   Offer? _selectedOffer;
+  UserOrder? _selectedOrder;
   double _price;
   String? _marketId, _marketName;
   Map<String, int> _shopping;
@@ -33,10 +34,12 @@ class DataRepository {
   Category? getCurCategory() => _selectedCategory;
   Product? getCurProduct() => _selectedProduct;
   Offer? getCurOffer() => _selectedOffer;
+  UserOrder? getCurOrder() => _selectedOrder;
   void setCurMarket(Market market) => _selctedMarket = market;
   void setCurCategory(Category category) => _selectedCategory = category;
   void setCurProduct(Product product) => _selectedProduct = product;
   void setCurOffer(Offer offer) => _selectedOffer = offer;
+  void setCurOrder(UserOrder order) => _selectedOrder = order;
 
   Future<Either<Failure, List<Market>>> fetchMarkets() async {
     try {
@@ -48,6 +51,7 @@ class DataRepository {
       }
       return Right(marketsList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -66,6 +70,7 @@ class DataRepository {
       }
       return Right(categoriesList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -85,6 +90,7 @@ class DataRepository {
       }
       return Right(productsList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -100,6 +106,7 @@ class DataRepository {
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       return Right(productsList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -109,6 +116,7 @@ class DataRepository {
       final productDoc = await firestore.collection('products').doc(id).get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -118,6 +126,7 @@ class DataRepository {
       final marketDoc = await firestore.collection('markets').doc(id).get();
       return MapEntry(marketDoc.data()?['name'], marketDoc.data()?['active']);
     } catch (e) {
+      log(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
@@ -156,6 +165,7 @@ class DataRepository {
         'marketName': _marketName,
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء تحميل السله'));
     }
   }
@@ -176,6 +186,7 @@ class DataRepository {
         'marketName': _marketName,
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء اعادة السله'));
     }
   }
@@ -189,7 +200,8 @@ class DataRepository {
         _marketName = (await getMarketInfo(_marketId ?? '')).key;
       } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
-      _price += product.price;
+      _price +=
+          product.updatedPrice == 0 ? product.price : product.updatedPrice;
       _shopping.update(
         product.id,
         (value) => value + 1,
@@ -204,6 +216,7 @@ class DataRepository {
         'marketName': _marketName ?? '',
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
     }
   }
@@ -213,7 +226,9 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.containsKey(product.id)) {
-        _price -= product.price * (_shopping[product.id] ?? 0);
+        _price -=
+            (product.updatedPrice == 0 ? product.price : product.updatedPrice) *
+                (_shopping[product.id] ?? 0);
         _shopping.remove(product.id);
         if (_shopping.isEmpty) {
           _marketId = '';
@@ -229,6 +244,7 @@ class DataRepository {
         'marketName': _marketName ?? '',
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
     }
   }
@@ -242,7 +258,8 @@ class DataRepository {
         _marketName = (await getMarketInfo(_marketId ?? '')).key;
       } else if (_marketId != product.marketId)
         return const Left(Failure("يجب ان تشترى من نفس المتجر"));
-      _price += product.price;
+      _price +=
+          product.updatedPrice == 0 ? product.price : product.updatedPrice;
       _shopping.update(
         product.id,
         (value) => value + 1,
@@ -257,6 +274,7 @@ class DataRepository {
         'marketName': _marketName ?? '',
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
     }
   }
@@ -266,7 +284,8 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.containsKey(product.id)) {
-        _price -= product.price;
+        _price -=
+            product.updatedPrice == 0 ? product.price : product.updatedPrice;
         _shopping.update(
           product.id,
           (value) => value - 1,
@@ -289,13 +308,13 @@ class DataRepository {
         'marketName': _marketName ?? '',
       });
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
     }
   }
 
   Future<Either<Failure, Null>> placeOrder({
-    required String userId,
-    required String userName,
+    required User user,
     required Location location,
   }) async {
     try {
@@ -303,12 +322,13 @@ class DataRepository {
           firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       final orderMap = {
-        'total': _price + ((_price / 100).ceil()),
+        'total': _price + 10,
         'code': seqIdVal,
         'shopping': _shopping,
-        'userId': userId,
+        'userName': user.name,
+        'userPhone': user.phone,
+        'userId': user.id,
         'marketId': _marketId ?? '',
-        'deliveryId': "",
         'marketName': _marketName ?? '',
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
@@ -324,6 +344,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -331,7 +352,8 @@ class DataRepository {
   Future<Either<Failure, Null>> cancelOrder(String orderId) async {
     try {
       final orderData =
-          (await firestore.collection('orders').doc(orderId).get()).data() ?? {};
+          (await firestore.collection('orders').doc(orderId).get()).data() ??
+              {};
       if (orderData['status'] == OrderStatus.shipped.name)
         return const Left(Failure('تم شحن الطلب بالفعل'));
       await firestore
@@ -346,6 +368,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -407,6 +430,7 @@ class DataRepository {
       });
     } catch (e) {
       log(e.toString());
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -419,6 +443,7 @@ class DataRepository {
         offersList.add(Offer.fromDoc(offerDoc.id, offerDoc.data()));
       return Right(offersList);
     } catch (e) {
+      log(e.toString());
       return const Left(Failure('حدث خطأ أثناء جلب العروض'));
     }
   }
@@ -441,6 +466,7 @@ class DataRepository {
         searchProductList.add(Product.fromDoc(result.id, result.data()));
       return Right(searchProductList);
     } catch (e) {
+      log(e.toString());
       return Left(Failure(e.toString()));
     }
   }

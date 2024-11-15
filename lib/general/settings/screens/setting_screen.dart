@@ -139,7 +139,7 @@ class SettingScreen extends StatelessWidget {
                   visible: state.user.userType == UserType.admin,
                   child: Column(
                     children: [
-                      const Divider(height: 5, indent: 80, endIndent: 80),
+                      const Divider(height: 5, indent: 40, endIndent: 40),
                       ListTile(
                           leading: Icon(
                             Icons.store,
@@ -156,10 +156,10 @@ class SettingScreen extends StatelessWidget {
                                 .add(AdminMarketsLoadingEvent());
                             context.push(RouteManager.adminRoute);
                           }),
+                      const Divider(height: 5, indent: 40, endIndent: 40),
                     ],
                   ),
                 ),
-                const Divider(height: 5, indent: 80, endIndent: 80),
                 ListTile(
                   leading: const Icon(
                     Icons.info_outline,
@@ -179,7 +179,7 @@ class SettingScreen extends StatelessWidget {
                     color: Colors.red,
                   ),
                   title: const Text(
-                    'الـخروج',
+                    'تسجيل الخروج',
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () async {

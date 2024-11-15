@@ -1,13 +1,13 @@
-part of 'admin_orders_bloc.dart';
+part of 'admin_notifications_bloc.dart';
 
-class AdminOrdersState extends Equatable {
+class AdminNotificationsState extends Equatable {
   final List<UserOrder> ongoingOrders;
   final List<UserOrder> historyOrders;
   final UserOrder curOrder;
   final String errMsg;
   final OrdersStatus status;
 
-  const AdminOrdersState({
+  const AdminNotificationsState({
     required this.ongoingOrders,
     required this.historyOrders,
     required this.errMsg,
@@ -15,7 +15,7 @@ class AdminOrdersState extends Equatable {
     required this.curOrder,
   });
 
-  static AdminOrdersState initial = AdminOrdersState(
+  static AdminNotificationsState initial = AdminNotificationsState(
     ongoingOrders: const [],
     historyOrders: const [],
     errMsg: '',
@@ -23,14 +23,14 @@ class AdminOrdersState extends Equatable {
     status: OrdersStatus.initial,
   );
 
-  AdminOrdersState copyWith({
+  AdminNotificationsState copyWith({
     List<UserOrder>? ongoingOrders,
     List<UserOrder>? historyOrders,
     String? errMsg,
     OrdersStatus? status,
     UserOrder? curOrder,
   }) {
-    return AdminOrdersState(
+    return AdminNotificationsState(
       ongoingOrders: ongoingOrders ?? this.ongoingOrders,
       historyOrders: historyOrders ?? this.historyOrders,
       errMsg: errMsg ?? this.errMsg,

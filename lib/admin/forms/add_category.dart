@@ -1,5 +1,6 @@
 import 'package:elkosh/admin/controllers/category_bloc/admin_category_bloc.dart';
 import 'package:elkosh/admin/widgets/admin_category_item.dart';
+import 'package:elkosh/user/home/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,7 @@ class AddCategoryForm extends StatelessWidget {
           );
           context.pop();
           context.read<AdminCategoryBloc>().add(AdminCategoryResetEvent());
+          context.read<CategorysBloc>().add(const CategorysLoadingEvent());
           context.read<AdminCategoryBloc>().add(AdminCategorysLoadingEvent());
           context.pop();
         }

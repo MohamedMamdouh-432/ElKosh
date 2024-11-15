@@ -2,6 +2,7 @@ import 'package:elkosh/admin/controllers/product_form_bloc/product_form_bloc.dar
 import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart';
 import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,6 +46,7 @@ class EditProductForm extends StatelessWidget {
           );
           context.pop();
           context.read<ProductFormBloc>().add(ProductFormResetRequested());
+          context.read<ProductsBloc>().add(const ProductsLoadingEvent());
           context.read<AdminProductsBloc>().add(AdminProductsLoadingEvent());
           context.pop();
         }

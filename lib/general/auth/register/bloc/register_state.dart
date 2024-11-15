@@ -8,6 +8,8 @@ class RegisterState extends Equatable {
   final String errMsg;
   final FormInputStatus inputStatus;
   final FormzSubmissionStatus submissionStatus;
+  final String verifyCode;
+  final VerificationStatus verificationStatus;
 
   const RegisterState({
     required this.name,
@@ -17,6 +19,8 @@ class RegisterState extends Equatable {
     required this.errMsg,
     required this.inputStatus,
     required this.submissionStatus,
+    required this.verifyCode,
+    required this.verificationStatus,
   });
 
   static RegisterState initial = const RegisterState(
@@ -27,6 +31,8 @@ class RegisterState extends Equatable {
     password: Password.pure(),
     inputStatus: FormInputStatus.initial,
     submissionStatus: FormzSubmissionStatus.initial,
+    verifyCode: '',
+    verificationStatus: VerificationStatus.notVerified,
   );
 
   RegisterState copyWith({
@@ -37,6 +43,8 @@ class RegisterState extends Equatable {
     String? errMsg,
     FormInputStatus? inputStatus,
     FormzSubmissionStatus? submissionStatus,
+    String? verifyCode,
+    VerificationStatus? verificationStatus,
   }) {
     return RegisterState(
       name: name ?? this.name,
@@ -46,6 +54,8 @@ class RegisterState extends Equatable {
       errMsg: errMsg ?? this.errMsg,
       inputStatus: inputStatus ?? this.inputStatus,
       submissionStatus: submissionStatus ?? this.submissionStatus,
+      verifyCode: verifyCode ?? this.verifyCode,
+      verificationStatus: verificationStatus ?? this.verificationStatus,
     );
   }
 
@@ -64,6 +74,8 @@ class RegisterState extends Equatable {
       errMsg,
       inputStatus,
       submissionStatus,
+      verifyCode,
+      verificationStatus,
     ];
   }
 }

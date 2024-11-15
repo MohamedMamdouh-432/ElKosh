@@ -19,6 +19,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<RegisterPasswordChanged>(_onPsswordChanged);
     on<FormRegisterRequested>(_onRegisterWithEmailAndPassword);
     on<RegisterStateReset>(_onRegisterStateReset);
+    on<RegisterSendVerificationCode>(_onRegisterSendVerificationCode);
   }
 
   FutureOr<void> _onNameChanged(RegisterNameChanged event, emit) {
@@ -102,5 +103,18 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   FutureOr<void> _onRegisterStateReset(event, emit) {
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
+  }
+
+  FutureOr<void> _onRegisterSendVerificationCode(event, emit) async {
+    try {
+      final code =
+          await sl.get<AuthRepository>().sendVerifyCode(state.phone.value);
+      emit(state.copyWith(verifyCode: code));
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        submissionStatus: FormzSubmissionStatus.failure,
+      ));
+    }
   }
 }

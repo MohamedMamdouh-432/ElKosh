@@ -1,5 +1,5 @@
-import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/general/core/utils/route_manager.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,16 +35,16 @@ class PlaceOrderBottomSheet extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(
-                "مصاريف إضافيه: \t\t\t${(state.price / 100).ceil()}",
-                style: const TextStyle(
+              const Text(
+                "مصاريف إضافيه: \t\t\t10",
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Text("-------------------------------------------"),
               Text(
-                "الإجمالى: \t\t\t${state.price + ((state.price / 100).ceil())}",
+                "الإجمالى: \t\t\t${state.price + 10}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
