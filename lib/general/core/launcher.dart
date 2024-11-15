@@ -1,9 +1,10 @@
 import 'package:elkosh/admin/controllers/category_bloc/admin_category_bloc.dart';
 import 'package:elkosh/admin/controllers/market_form_bloc/market_form_bloc.dart';
 import 'package:elkosh/admin/controllers/markets_bloc/admin_markets_bloc.dart';
-import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
+import 'package:elkosh/admin/controllers/notifications_bloc/admin_notifications_bloc.dart';
 import 'package:elkosh/admin/controllers/product_form_bloc/product_form_bloc.dart';
 import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart';
+import 'package:elkosh/general/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
@@ -26,18 +27,19 @@ class ElKoshApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MarketsBloc>(create: (_) => MarketsBloc()),
-        BlocProvider<ProductsBloc>(create: (_) => ProductsBloc()),
-        BlocProvider<ProfileBloc>(create: (_) => ProfileBloc()),
-        BlocProvider<CartBloc>(create: (_) => CartBloc()),
-        BlocProvider<OrdersBloc>(create: (_) => OrdersBloc()),
-        BlocProvider<AdminMarketsBloc>(create: (_) => AdminMarketsBloc()),
-        BlocProvider<MarketFormBloc>(create: (_) => MarketFormBloc()),
-        BlocProvider<AdminCategoryBloc>(create: (_) => AdminCategoryBloc()),
-        BlocProvider<AdminProductsBloc>(create: (_) => AdminProductsBloc()),
-        BlocProvider<ProductFormBloc>(create: (_) => ProductFormBloc()),
-        BlocProvider<AdminOrdersBloc>(create: (_) => AdminOrdersBloc()),
-        BlocProvider<SearchBloc>(create: (context) => SearchBloc()),
+        BlocProvider(create: (_) => RegisterBloc()),
+        BlocProvider(create: (_) => MarketsBloc()),
+        BlocProvider(create: (_) => ProductsBloc()),
+        BlocProvider(create: (_) => ProfileBloc()),
+        BlocProvider(create: (_) => CartBloc()),
+        BlocProvider(create: (_) => OrdersBloc()),
+        BlocProvider(create: (_) => AdminMarketsBloc()),
+        BlocProvider(create: (_) => MarketFormBloc()),
+        BlocProvider(create: (_) => AdminCategoryBloc()),
+        BlocProvider(create: (_) => AdminProductsBloc()),
+        BlocProvider(create: (_) => ProductFormBloc()),
+        BlocProvider(create: (_) => AdminNotificationsBloc()),
+        BlocProvider(create: (_) => SearchBloc()),
       ],
       child: ChangeNotifierProvider(
         create: (context) => NavProvider(),

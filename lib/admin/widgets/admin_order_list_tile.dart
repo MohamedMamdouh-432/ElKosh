@@ -1,4 +1,4 @@
-import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
+import 'package:elkosh/admin/controllers/notifications_bloc/admin_notifications_bloc.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +16,7 @@ class AdminOrderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        context.read<AdminOrdersBloc>().add(AdminOrderSelectedEvent(order));
+        context.read<AdminNotificationsBloc>().add(AdminOrderSelectedEvent(order));
         context.push(RouteManager.adminOrderDetailsRoute);
       },
       leading: CircleAvatar(

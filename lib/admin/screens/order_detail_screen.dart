@@ -1,4 +1,4 @@
-import 'package:elkosh/admin/controllers/orders_bloc/admin_orders_bloc.dart';
+import 'package:elkosh/admin/controllers/notifications_bloc/admin_notifications_bloc.dart';
 import 'package:elkosh/general/shared/functions.dart';
 import 'package:elkosh/general/shared/widgets/product_item_card.dart';
 import 'package:elkosh/user/home/widgets/title_text.dart';
@@ -14,8 +14,7 @@ class AdminOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<AdminOrdersBloc, AdminOrdersState>(
-      listener: (context, state) {},
+    return BlocBuilder<AdminNotificationsBloc, AdminNotificationsState>(
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
         return Scaffold(
@@ -41,6 +40,16 @@ class AdminOrderDetailsScreen extends StatelessWidget {
                     textScaler: const TextScaler.linear(1.5),
                   ),
                   const Gap(10),
+                  Text(
+                    'الاسم : ${state.curOrder.userName}',
+                    textScaler: const TextScaler.linear(1.5),
+                  ),
+                  const Gap(5),
+                  Text(
+                    'رقم الهاتف: ${state.curOrder.userPhone}',
+                    textScaler: const TextScaler.linear(1.5),
+                  ),
+                  const Gap(5),
                   Text(
                     ' التكلفة الكليه: ${state.curOrder.total.toStringAsFixed(2)} جنيه',
                     textScaler: const TextScaler.linear(1.5),

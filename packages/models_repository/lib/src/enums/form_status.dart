@@ -17,3 +17,8 @@ enum LoadingStatus {
   success,
   failure,
 }
+
+enum VerificationStatus {
+  verified,
+  notVerified,
+}

@@ -4,6 +4,7 @@ import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/shared/functions.dart';
 import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/user/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +47,7 @@ class EditMarketForm extends StatelessWidget {
           );
           context.pop();
           context.read<MarketFormBloc>().add(MarketFormResetRequested());
+          context.read<MarketsBloc>().add(MarketsLoadingEvent());
           context.read<AdminMarketsBloc>().add(AdminMarketsLoadingEvent());
           context.pop();
         }

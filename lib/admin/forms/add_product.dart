@@ -4,6 +4,7 @@ import 'package:elkosh/admin/controllers/product_form_bloc/product_form_bloc.dar
 import 'package:elkosh/admin/controllers/products_bloc/admin_products_bloc.dart';
 import 'package:elkosh/general/shared/services/context_media.dart';
 import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
+import 'package:elkosh/user/home/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +48,7 @@ class AddProductForm extends StatelessWidget {
           );
           context.pop();
           context.read<ProductFormBloc>().add(ProductFormResetRequested());
+          context.read<ProductsBloc>().add(const ProductsLoadingEvent());
           context.read<AdminProductsBloc>().add(AdminProductsLoadingEvent());
           context.pop();
         }
@@ -122,8 +124,8 @@ class AddProductForm extends StatelessWidget {
                                         : null,
                             onChange: (unitVal) => context
                                 .read<ProductFormBloc>()
-                                .add(ProductFormUnitValChanged(
-                                    double.parse(unitVal.isEmpty ? '1' : unitVal))),
+                                .add(ProductFormUnitValChanged(double.parse(
+                                    unitVal.isEmpty ? '1' : unitVal))),
                           ),
                         ),
                       ),

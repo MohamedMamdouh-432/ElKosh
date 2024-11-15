@@ -1,10 +1,10 @@
 import 'package:elkosh/general/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/general/auth/register/widgets/tip_text.dart';
-import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
 import 'package:elkosh/general/shared/widgets/custom_buttom.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -46,6 +46,7 @@ class RegisterScreen extends StatelessWidget {
                 animType: QuickAlertAnimType.scale,
               );
               context.read<ProfileBloc>().add(ProfileLoadingEvent());
+              context.read<RegisterBloc>().add(RegisterStateReset());
               context.read<CartBloc>().add(CartFetchingEvent());
               Future.delayed(
                 const Duration(seconds: 2),
@@ -100,9 +101,9 @@ class RegisterScreen extends StatelessWidget {
                                           : null,
                     ),
                     const Gap(15),
-                    // todo: add opt confirmation
                     InputFormField(
                       labelText: 'رقم الهاتف',
+                      inputType: TextInputType.phone,
                       onChange: (data) => context
                           .read<RegisterBloc>()
                           .add(RegisterPhoneChanged(data)),
@@ -175,9 +176,12 @@ class RegisterScreen extends StatelessWidget {
                     CustomButtom(
                       text: 'تسجيل الحساب',
                       ontap: state.inputStatus == FormInputStatus.valid
-                          ? () => context
-                              .read<RegisterBloc>()
-                              .add(FormRegisterRequested())
+                          ? () {
+                              context
+                                  .read<RegisterBloc>()
+                                  .add(RegisterSendVerificationCode());
+                              context.push(RouteManager.optRoute);
+                            }
                           : null,
                     ),
                     const Gap(10),

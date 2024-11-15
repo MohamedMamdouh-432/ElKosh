@@ -16,8 +16,7 @@ class OrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OrdersBloc, OrdersState>(
-      listener: (context, state) {},
+    return BlocBuilder<OrdersBloc, OrdersState>(
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
         return Scaffold(

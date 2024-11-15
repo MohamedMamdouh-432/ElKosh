@@ -1,10 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/general/auth/login/bloc/login_bloc.dart';
-import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/general/core/utils/utils.dart';
 import 'package:elkosh/general/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/general/shared/widgets/auth_form_field.dart';
 import 'package:elkosh/general/shared/widgets/custom_buttom.dart';
+import 'package:elkosh/user/cart/bloc/cart_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -47,12 +47,14 @@ class LoginScreen extends StatelessWidget {
               );
               context.read<ProfileBloc>().add(ProfileLoadingEvent());
               context.read<CartBloc>().add(CartFetchingEvent());
+              context.read<LoginBloc>().add(LoginStateReset());
               Future.delayed(
                 const Duration(seconds: 2),
                 () => context.go(RouteManager.navbarRoute),
               );
             } else if (state.submissionStatus.isCanceled) {
               context.read<ProfileBloc>().add(ProfileLoadingEvent());
+              context.read<LoginBloc>().add(LoginStateReset());
               context.read<CartBloc>().add(CartFetchingEvent());
               context.go(RouteManager.navbarRoute);
             }

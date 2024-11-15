@@ -6,20 +6,20 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-part 'admin_orders_event.dart';
-part 'admin_orders_state.dart';
+part 'admin_notifications_event.dart';
+part 'admin_notifications_state.dart';
 
-class AdminOrdersBloc extends Bloc<AdminOrdersEvent, AdminOrdersState> {
-  AdminOrdersBloc() : super(AdminOrdersState.initial) {
-    on<AdminOrdersFetchedEvent>(_onOrdersFetched);
+class AdminNotificationsBloc extends Bloc<AdminNotificationsEvent, AdminNotificationsState> {
+  AdminNotificationsBloc() : super(AdminNotificationsState.initial) {
+    on<AdminNotificationsFetchingEvent>(_onNotificationsFetched);
     on<AdminOrderSelectedEvent>(_onOrderSelected);
-    add(AdminOrdersFetchedEvent());
+    add(AdminNotificationsFetchingEvent());
   }
 
-  Future<void> _onOrdersFetched(event, emit) async {
+  Future<void> _onNotificationsFetched(event, emit) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final orders = await sl.get<AdminRepository>().fetchOrders();
+      final orders = await sl.get<AdminRepository>().fetchNotifications();
       orders.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,

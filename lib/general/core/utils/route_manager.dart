@@ -12,7 +12,7 @@ import 'package:elkosh/admin/screens/product_details_screen.dart';
 import 'package:elkosh/admin/screens/products_screen.dart';
 import 'package:elkosh/general/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/general/auth/login/screens/login_screen.dart';
-import 'package:elkosh/general/auth/register/bloc/register_bloc.dart';
+import 'package:elkosh/general/auth/register/screens/opt_screen.dart';
 import 'package:elkosh/general/auth/register/screens/register_screen.dart';
 import 'package:elkosh/user/cart/screens/delivery_location_picker_screen.dart';
 import 'package:elkosh/user/home/screens/home_screen.dart';
@@ -29,6 +29,7 @@ import 'package:go_router/go_router.dart';
 abstract class RouteManager {
   static const String loginRoute = '/';
   static const String registerRoute = '/register';
+  static const String optRoute = '/opt';
   static const String navbarRoute = '/navbar';
   static const String homeRoute = '/home';
   static const String searchRoute = '/search';
@@ -59,15 +60,16 @@ abstract class RouteManager {
       ),
       GoRoute(
         path: registerRoute,
-        builder: (context, state) => BlocProvider(
-          create: (context) => RegisterBloc(),
-          child: const RegisterScreen(),
-        ),
+        builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: optRoute,
+        builder: (context, state) => const OptScreen(),
       ),
       GoRoute(
         path: loginRoute,
         builder: (context, state) => BlocProvider(
-          create: (context) => LoginBloc(),
+          create: (context) => LoginBloc()..add(LoginRecognizeRequested()),
           child: const LoginScreen(),
         ),
       ),
