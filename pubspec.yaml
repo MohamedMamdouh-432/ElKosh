@@ -18,8 +18,6 @@ dependencies:
     path: packages/user_repository
   models_repository: 
     path: packages/models_repository
-  admin_repository:
-    path: packages/admin_repository
   cupertino_icons: ^1.0.8
   dartz: ^0.10.1
   flutter_screenutil: ^5.9.3

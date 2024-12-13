@@ -1,6 +1,4 @@
-# elkosh
-
-### User Part App
+# User App
 
     * 11/9/2024
     	splash screen
@@ -69,32 +67,9 @@
 
     * ? search feature
 
-### Admin Part App
 
-    * 15/10 -> 17/10
-    	# Markets
-    		Add Market
-    		Edit Market
-    		Delete Market
-    		Bloc Market
 
-    		Add Category
-    		Delete Category
-
-    		Add Product
-    		Edit Product
-    		Delete Product
-
-    		add discount
-
-    	# Users
-    		Bloc User
-
-    	# Notification
-    		- Ongoing orders
-    		- History Orders
-
-    	# about app
-    		- policy
-    		- safety
-    		- order cancelling
+    # discount => user
+    # orders
+    # user data in order
+    # user can confirm order
