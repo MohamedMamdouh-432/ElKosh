@@ -6,9 +6,9 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:models_repository/models_repository.dart';
 
-class OrderListTile extends StatelessWidget {
+class HistoryOrderListTile extends StatelessWidget {
   final UserOrder order;
-  const OrderListTile({
+  const HistoryOrderListTile({
     super.key,
     required this.order,
   });
@@ -17,7 +17,7 @@ class OrderListTile extends StatelessWidget {
     return ListTile(
       onTap: () {
         context.read<OrdersBloc>().add(OrderSelectedEvent(order));
-        context.push(RouteManager.orderDetailsRoute);
+        context.push(RouteManager.historyOrderDetailsRoute);
       },
       leading: CircleAvatar(
         child: Padding(

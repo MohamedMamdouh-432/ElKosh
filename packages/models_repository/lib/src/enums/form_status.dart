@@ -4,13 +4,6 @@ enum FormInputStatus {
   valid,
 }
 
-enum AddingStatus {
-  initial,
-  inProgress,
-  success,
-  failure,
-}
-
 enum LoadingStatus {
   initial,
   inProgress,

@@ -1,5 +1,5 @@
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
-import 'package:elkosh/orders/widgets/order_list_tile.dart';
+import 'package:elkosh/orders/widgets/ongoing_order_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +36,7 @@ class TalbatyOngoing extends StatelessWidget {
           inAsyncCall: state.status == OrdersStatus.onProgress,
           child: ListView.builder(
             itemCount: state.ongoingOrders.length,
-            itemBuilder: (ctx, index) => OrderListTile(
+            itemBuilder: (ctx, index) => OngoingOrderListTile(
               order: state.ongoingOrders[index],
             ),
           ),

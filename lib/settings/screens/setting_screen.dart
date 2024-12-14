@@ -1,4 +1,5 @@
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -118,7 +119,10 @@ class SettingScreen extends StatelessWidget {
                     'طلباتي',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () => context.push(RouteManager.talabatyScreen),
+                  onTap: () {
+                    context.read<OrdersBloc>().add(OrdersFetchedEvent());
+                    context.push(RouteManager.talabatyScreen);
+                  },
                 ),
                 ListTile(
                   leading: const Icon(

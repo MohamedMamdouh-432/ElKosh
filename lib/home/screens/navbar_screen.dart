@@ -17,30 +17,34 @@ class NavBarScreen extends StatelessWidget {
           onPageChanged: context.read<NavProvider>().animateToPage,
           children: context.read<NavProvider>().pages,
         ),
-        bottomNavigationBar: GNav(
-          selectedIndex: context.read<NavProvider>().curIdx,
-          activeColor: ColorManager.primary,
-          color: Colors.blueGrey,
-          backgroundColor: ColorManager.primary.withOpacity(0.07),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 25,
-            vertical: 15,
-          ),
-          onTabChange: context.read<NavProvider>().navToPage,
-          tabs: const [
-            GButton(
-              text: "الرئيسية",
-              icon: CupertinoIcons.home,
-            ),
-            GButton(
-              icon: CupertinoIcons.cart_fill,
-              text: "السلة",
-            ),
-            GButton(
-              icon: CupertinoIcons.settings_solid,
-              text: "الاعدادات",
-            ),
-          ],
+        bottomNavigationBar: Consumer<NavProvider>(
+          builder: (context, navProvider, child) {
+            return GNav(
+              selectedIndex: navProvider.curIdx,
+              activeColor: ColorManager.primary,
+              color: Colors.blueGrey,
+              backgroundColor: ColorManager.primary.withOpacity(0.07),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 25,
+                vertical: 15,
+              ),
+              onTabChange: navProvider.navToPage,
+              tabs: const [
+                GButton(
+                  text: "الرئيسية",
+                  icon: CupertinoIcons.home,
+                ),
+                GButton(
+                  icon: CupertinoIcons.cart_fill,
+                  text: "السلة",
+                ),
+                GButton(
+                  icon: CupertinoIcons.settings_solid,
+                  text: "الاعدادات",
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

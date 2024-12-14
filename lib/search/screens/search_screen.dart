@@ -57,8 +57,10 @@ class SearchScreen extends StatelessWidget {
                         childAspectRatio: 2 / 2.3,
                       ),
                       itemCount: state.products.length,
-                      itemBuilder: (context, index) =>
-                          ProductCard(product: state.products[index]),
+                      itemBuilder: (context, index) => ProductCard(
+                        product: state.products[index],
+                        steps: 2,
+                      ),
                     ),
                   ),
                 ],

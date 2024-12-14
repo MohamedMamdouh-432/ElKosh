@@ -6,7 +6,6 @@ import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +17,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
     return Scaffold(
       body: FlutterLocationPicker(
         // general
@@ -39,10 +38,10 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
           foregroundColor: const WidgetStatePropertyAll(Colors.white),
           elevation: const WidgetStatePropertyAll(15),
         ),
-        selectedLocationButtonTextstyle: TextStyle(
-          fontSize: 15.sp,
-          fontWeight: FontWeight.bold,
-        ),
+        // selectedLocationButtonTextstyle: TextStyle(
+        //   fontSize: 15.sp,
+        //   fontWeight: FontWeight.bold,
+        // ),
         // search bar
         searchBarHintText: 'ابحث عن موقع التوصيل',
         searchbarBorderRadius: BorderRadius.circular(20),

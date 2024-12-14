@@ -47,8 +47,10 @@ class ProductsScreen extends StatelessWidget {
                   childAspectRatio: 2 / 2.3,
                 ),
                 itemCount: state.products.length,
-                itemBuilder: (context, index) =>
-                    ProductCard(product: state.products[index]),
+                itemBuilder: (context, index) => ProductCard(
+                  product: state.products[index],
+                  steps: GoRouter.of(context).state?.extra as int,
+                ),
               ),
             ),
           ),

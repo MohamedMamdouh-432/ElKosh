@@ -31,6 +31,7 @@ String toArNumber(String input) {
     '8': '٨',
     '9': '٩',
     ':': ':',
+    '.': ',',
   };
 
   return input.split('').map((char) => eaMap[char] ?? char).join('');

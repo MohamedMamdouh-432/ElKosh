@@ -1,10 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:elkosh/shared/widgets/product_item_card.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
+import 'package:elkosh/shared/widgets/product_item_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
@@ -35,7 +34,7 @@ class CartScreen extends StatelessWidget {
             borderRadius: 20,
             animType: QuickAlertAnimType.scale,
           );
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+          // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           context.read<CartBloc>().add(CartResetEvent());
         } else if (state.status == CartStatus.failure)
           QuickAlert.show(

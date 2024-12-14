@@ -349,6 +349,19 @@ class DataRepository {
     }
   }
 
+  Future<Either<Failure, Null>> confirmDeliveryOrder(String orderId) async {
+    try {
+      await firestore
+          .collection('orders')
+          .doc(orderId)
+          .update({'status': OrderStatus.delivered.name});
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return Left(Failure(e.toString()));
+    }
+  }
+
   Future<Either<Failure, Null>> cancelOrder(String orderId) async {
     try {
       final orderData =

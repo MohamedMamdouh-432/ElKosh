@@ -19,7 +19,6 @@ dependencies:
   models_repository: 
     path: packages/models_repository
   cupertino_icons: ^1.0.8
-  dartz: ^0.10.1
   flutter_screenutil: ^5.9.3
   flutter_bloc: ^8.1.6
   shared_preferences: ^2.3.2

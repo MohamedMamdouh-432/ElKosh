@@ -1,6 +1,6 @@
-import 'package:elkosh/settings/screens/setting_screen.dart';
 import 'package:elkosh/cart/screens/cart_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
+import 'package:elkosh/settings/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavProvider extends ChangeNotifier {
