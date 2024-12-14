@@ -185,8 +185,9 @@ class ProductDetailsScreen extends StatelessWidget {
                   width: context.width * 0.8,
                   child: ElevatedButton(
                     onPressed: () {
-                      context.pop();
+                      int steps = GoRouter.of(context).state?.extra as int;
                       context.read<NavProvider>().navToPage(1);
+                      while(steps-- > 0) context.pop();
                     },
                     child: const Text(
                       "انتقل الى السلة",

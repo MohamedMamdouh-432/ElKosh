@@ -8,7 +8,8 @@ import 'package:elkosh/home/screens/market_details_screen.dart';
 import 'package:elkosh/home/screens/navbar_screen.dart';
 import 'package:elkosh/home/screens/product_details_screen.dart';
 import 'package:elkosh/home/screens/products_screen.dart';
-import 'package:elkosh/orders/screens/order_details_screen.dart';
+import 'package:elkosh/orders/screens/history_order_details_screen.dart';
+import 'package:elkosh/orders/screens/ongoing_order_details_screen.dart';
 import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,8 @@ abstract class RouteManager {
   static const String marketDetailsRoute = '/market_details';
   static const String talabatyScreen = '/talabaty';
   static const String deliveryLocationPickerRoute = '/delivery_location_picker';
-  static const String orderDetailsRoute = '/order_details';
+  static const String ongoingOrderDetailsRoute = '/ongoing_order_details';
+  static const String historyOrderDetailsRoute = '/history_order_details';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -78,8 +80,12 @@ abstract class RouteManager {
         builder: (context, state) => const DeliveryLocationPickerScreen(),
       ),
       GoRoute(
-        path: orderDetailsRoute,
-        builder: (context, state) => const OrderDetailsScreen(),
+        path: ongoingOrderDetailsRoute,
+        builder: (context, state) => const OngoingOrderDetailsScreen(),
+      ),
+      GoRoute(
+        path: historyOrderDetailsRoute,
+        builder: (context, state) => const HistoryOrderDetailsScreen(),
       ),
     ],
   );

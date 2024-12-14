@@ -19,10 +19,18 @@ class OrderSelectedEvent extends OrdersEvent {
 
 class CurOrderLoadingEvent extends OrdersEvent {}
 
-class OrderCancellingEvent extends OrdersEvent {
-  final String orderId;
-  const OrderCancellingEvent(this.orderId);
+class OrderDeleveringingEvent extends OrdersEvent {
+  final UserOrder order;
+  const OrderDeleveringingEvent(this.order);
 
   @override
-  List<Object> get props => [orderId];
+  List<Object> get props => [order];
+}
+
+class OrderCancellingEvent extends OrdersEvent {
+  final UserOrder order;
+  const OrderCancellingEvent(this.order);
+
+  @override
+  List<Object> get props => [order];
 }

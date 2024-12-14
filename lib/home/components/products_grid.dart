@@ -64,13 +64,13 @@ class ProductsGrid extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 children: [
                   for (int i = 0; i < min(state.products.length, 7); i++)
-                    ProductCard(product: state.products[i]),
+                    ProductCard(product: state.products[i], steps: 1),
                   InkWell(
                     onTap: () {
                       context
                           .read<ProductsBloc>()
                           .add(const ProductsLoadingEvent());
-                      context.push(RouteManager.productsRoute);
+                      context.push(RouteManager.productsRoute, extra: 2);
                     },
                     child: Column(
                       children: [

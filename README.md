@@ -46,30 +46,25 @@
     	- Order Bloc
 
     * 28/9 -> 2/10
-    	@Dooha
-    		- Cart Bloc
-    		- add & delete in cart (run)
-    		- increase & decrease quantity (run)
-    		- Profile Bloc
-    		- place order (need location picker)
-    			- open bottom sheet (price, market)
-    			- confirm => open map, then send order
-    		- after reset (cart not working well)
-    		- Order Bloc
-    	@Mohaned
-    		- about app
-    		- Orders
-    			1. orders view
-    				1.1 ongoing orders
-    				1.2 history orders
-    			2. order details
-    		- image slider
+    	- Cart Bloc
+    	- add & delete in cart (run)
+    	- increase & decrease quantity (run)
+    	- Profile Bloc
+    	- place order (need location picker)
+    		- open bottom sheet (price, market)
+    		- confirm => open map, then send order
+    	- after reset (cart not working well)
+    	- Order Bloc
+    	- about app
+    	- Orders
+    		1. orders view
+    			1.1 ongoing orders
+    			1.2 history orders
+    		2. order details
+    	- image slider
 
-    * ? search feature
+    * search feature
 
+### Edits
 
-
-    # discount => user
-    # orders
-    # user data in order
-    # user can confirm order
+    - listen to any change in firebase (final)

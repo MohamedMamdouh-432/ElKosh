@@ -13,8 +13,8 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
   OrdersBloc() : super(OrdersState.initial) {
     on<OrdersFetchedEvent>(_onOrdersFetched);
     on<OrderSelectedEvent>(_onOrderSelected);
+    on<OrderDeleveringingEvent>(_onOrderDelevering);
     on<OrderCancellingEvent>(_onOrderCancelled);
-    add(OrdersFetchedEvent());
   }
 
   Future<void> _onOrdersFetched(event, emit) async {
@@ -44,18 +44,55 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     emit(state.copyWith(curOrder: event.order));
   }
 
-  Future<void> _onOrderCancelled(OrderCancellingEvent event, emit) async {
+  Future<void> _onOrderDelevering(OrderDeleveringingEvent event, emit) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result = await sl.get<DataRepository>().cancelOrder(event.orderId);
+      final result =
+          await sl.get<DataRepository>().confirmDeliveryOrder(event.order.id);
+      final newOngoingOrders = state.ongoingOrders;
+      final newHistoryOrders = state.historyOrders;
+      newOngoingOrders.remove(event.order);
+      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.delivered));
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,
           status: OrdersStatus.placingFailure,
         )),
         (right) {
-          state.ongoingOrders.removeWhere((order) => order.id == event.orderId);
-          emit(state.copyWith(status: OrdersStatus.placingSuccess));
+          emit(state.copyWith(
+            ongoingOrders: newOngoingOrders,
+            historyOrders: newHistoryOrders,
+            status: OrdersStatus.placingSuccess,
+          ));
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: "حدث خطأ أثناء الغاء الاوردر",
+        status: OrdersStatus.placingFailure,
+      ));
+    }
+  }
+
+  Future<void> _onOrderCancelled(OrderCancellingEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: OrdersStatus.onProgress));
+      final result = await sl.get<DataRepository>().cancelOrder(event.order.id);
+      final newOngoingOrders = state.ongoingOrders;
+      final newHistoryOrders = state.historyOrders;
+      newOngoingOrders.remove(event.order);
+      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.cancelled));
+      result.fold(
+        (left) => emit(state.copyWith(
+          errMsg: left.message,
+          status: OrdersStatus.placingFailure,
+        )),
+        (right) {
+          emit(state.copyWith(
+            ongoingOrders: newOngoingOrders,
+            historyOrders: newHistoryOrders,
+            status: OrdersStatus.placingSuccess,
+          ));
         },
       );
     } catch (e) {

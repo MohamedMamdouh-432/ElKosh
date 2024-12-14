@@ -9,10 +9,12 @@ import 'package:models_repository/models_repository.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final int steps;
 
   const ProductCard({
     super.key,
     required this.product,
+    required this.steps,
   });
 
   @override
@@ -20,7 +22,7 @@ class ProductCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
-        context.push(RouteManager.productDetailsRoute);
+        context.push(RouteManager.productDetailsRoute, extra: steps);
       },
       splashColor: Colors.transparent,
       child: Column(
