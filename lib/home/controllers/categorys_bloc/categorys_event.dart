@@ -22,3 +22,11 @@ class CategorySelectedEvent extends CategorysEvent {
   @override
   List<Object> get props => [category];
 }
+
+class CategorysUpdatedEvent extends CategorysEvent {
+  final List<Category> categorys;
+  const CategorysUpdatedEvent(this.categorys);
+
+  @override
+  List<Object> get props => [categorys];
+}

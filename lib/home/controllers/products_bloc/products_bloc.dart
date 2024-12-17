@@ -10,11 +10,21 @@ part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
+  StreamSubscription? _subscription;
+
   ProductsBloc() : super(ProductsState.initial) {
     on<ProductsLoadingEvent>(_onProductLoading);
     on<ProductsRelatedLoadingEvent>(_onProductRelatedLoading);
     on<ProductSelectedEvent>(_onProductSelected);
-    add(const ProductsLoadingEvent(7));
+    on<ProductsUpdatedEvent>(_onProductsUpdated);
+
+    _subscription = sl.get<DataRepository>().productsStream().listen(
+          (result) => result.fold(
+            (l) => addError(l.message),
+            (r) => add(ProductsUpdatedEvent(r)),
+          ),
+          onError: (e) => addError(e.toString()),
+        );
   }
 
   FutureOr<void> _onProductLoading(ProductsLoadingEvent event, emit) async {
@@ -38,11 +48,12 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
       ));
     }
   }
-  
+
   FutureOr<void> _onProductRelatedLoading(event, emit) async {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
-      final results = await sl.get<DataRepository>().fetchCategoryRelatedProducts();
+      final results =
+          await sl.get<DataRepository>().fetchCategoryRelatedProducts();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -64,5 +75,20 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   FutureOr<void> _onProductSelected(ProductSelectedEvent event, emit) {
     sl.get<DataRepository>().setCurProduct(event.product);
     emit(state.copyWith(curProduct: event.product));
+  }
+
+  FutureOr<void> _onProductsUpdated(ProductsUpdatedEvent event, emit) {
+    emit(state.copyWith(
+      products: event.products,
+      status: LoadingStatus.success,
+      curProduct: state.curProduct,
+    ));
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    _subscription = null;
+    return super.close();
   }
 }

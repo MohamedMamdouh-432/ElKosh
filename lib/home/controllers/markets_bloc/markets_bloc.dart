@@ -10,10 +10,29 @@ part 'markets_event.dart';
 part 'markets_state.dart';
 
 class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
+  StreamSubscription? _marketsSubscription, _marketDetailsSubscription;
   MarketsBloc() : super(MarketsState.initial) {
     on<MarketsLoadingEvent>(_onMarketsLoading);
     on<MarketSelectedEvent>(_onMarketSelected);
-    add(MarketsLoadingEvent());
+    on<MarketsUpdatedEvent>(_onMarketsUpdated);
+    on<MarketUpdatedEvent>(_onMarketUpdated);
+
+    _marketsSubscription = sl.get<DataRepository>().marketsStream().listen(
+          (result) => result.fold(
+            (l) => addError(l.message),
+            (r) => add(MarketsUpdatedEvent(r)),
+          ),
+          onError: (e) => addError(e.toString()),
+        );
+
+    _marketDetailsSubscription =
+        sl.get<DataRepository>().marketDetailsStream().listen(
+              (result) => result.fold(
+                (l) => addError(l.message),
+                (r) => add(MarketUpdatedEvent(r)),
+              ),
+              onError: (e) => addError(e.toString()),
+            );
   }
 
   FutureOr<void> _onMarketsLoading(event, emit) async {
@@ -51,5 +70,34 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
         status: LoadingStatus.failure,
       ));
     }
+  }
+
+  FutureOr<void> _onMarketsUpdated(MarketsUpdatedEvent event, emit) {
+    emit(state.copyWith(
+      markets: event.markets,
+      status: LoadingStatus.success,
+      curMarket: state.curMarket,
+    ));
+  }
+
+  FutureOr<void> _onMarketUpdated(MarketUpdatedEvent event, emit) {
+    emit(state.copyWith(status: LoadingStatus.inProgress));
+    sl.get<DataRepository>().setCurMarket(event.market);
+    emit(state.copyWith(
+      markets: state.markets
+        ..removeWhere((m) => m.id == event.market.id)
+        ..add(event.market),
+      curMarket: event.market,
+      status: LoadingStatus.success,
+    ));
+  }
+
+  @override
+  Future<void> close() {
+    _marketsSubscription?.cancel();
+    _marketDetailsSubscription?.cancel();
+    _marketsSubscription = null;
+    _marketDetailsSubscription = null;
+    return super.close();
   }
 }

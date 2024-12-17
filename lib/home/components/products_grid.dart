@@ -32,7 +32,7 @@ class ProductsGrid extends StatelessWidget {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              context.read<ProductsBloc>().add(const ProductsLoadingEvent());
+              // context.read<ProductsBloc>().add(const ProductsLoadingEvent());
             },
           );
         }

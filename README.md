@@ -64,7 +64,9 @@
     	- image slider
 
     * search feature
-
-### Edits
-
-    - listen to any change in firebase (final)
+	
+# Edits
+	- make market_details, product_details blocs
+	- updating for cart Bloc
+	- price check
+	- remove external data when placing order (username, userphone, marketname)
