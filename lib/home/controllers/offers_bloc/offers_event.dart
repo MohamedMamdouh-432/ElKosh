@@ -16,3 +16,11 @@ class OfferSelectedEvent extends OffersEvent {
   @override
   List<Object> get props => [offer];
 }
+
+class OffersUpdatedEvent extends OffersEvent {
+  final List<Offer> offers;
+  const OffersUpdatedEvent(this.offers);
+
+  @override
+  List<Object> get props => [offers];
+}

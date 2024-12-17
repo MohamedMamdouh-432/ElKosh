@@ -64,7 +64,6 @@
     	- image slider
 
     * search feature
-
-### Edits
-
-    - listen to any change in firebase (final)
+	
+# Views
+	- product details

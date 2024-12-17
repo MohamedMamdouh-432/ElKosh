@@ -24,3 +24,11 @@ class ProductSelectedEvent extends ProductsEvent {
   @override
   List<Object> get props => [product];
 }
+
+class ProductsUpdatedEvent extends ProductsEvent {
+  final List<Product> products;
+  const ProductsUpdatedEvent(this.products);
+
+  @override
+  List<Object> get props => [products];
+}

@@ -41,6 +41,43 @@ class DataRepository {
   void setCurOffer(Offer offer) => _selectedOffer = offer;
   void setCurOrder(UserOrder order) => _selectedOrder = order;
 
+  Stream<Either<Failure, List<Market>>> marketsStream() async* {
+    try {
+      final query = firestore.collection('markets');
+      yield* query.snapshots().asyncMap((snapshot) async {
+        try {
+          List<Market> marketsList = [];
+          for (var doc in snapshot.docs) {
+            if (doc.data()['active'] == false) continue;
+            marketsList.add(Market.fromDoc(doc.id, doc.data()));
+          }
+          return Right(marketsList);
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, Market>> marketDetailsStream() async* {
+    try {
+      final docRef = firestore.collection('markets').doc(_selctedMarket?.id);
+      yield* docRef.snapshots().asyncMap((snapshot) async {
+        try {
+          if (!snapshot.exists)
+            return const Left(Failure('لم يتم العثور على هذاالمتجر'));
+          return Right(Market.fromDoc(snapshot.id, snapshot.data()!));
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
+    }
+  }
+
   Future<Either<Failure, List<Market>>> fetchMarkets() async {
     try {
       final response = await firestore.collection('markets').get();
@@ -53,6 +90,28 @@ class DataRepository {
     } catch (e) {
       log(e.toString());
       return Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, List<Category>>> categorysStream() async* {
+    try {
+      final query = firestore
+          .collection('categories')
+          .where('marketId', isEqualTo: _selctedMarket?.id);
+      yield* query.snapshots().asyncMap((snapshot) async {
+        try {
+          List<Category> categorysList = [];
+          for (var doc in snapshot.docs) {
+            if (doc.data()['active'] == false) continue;
+            categorysList.add(Category.fromDoc(doc.id, doc.data()));
+          }
+          return Right(categorysList);
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
     }
   }
 
@@ -75,6 +134,23 @@ class DataRepository {
     }
   }
 
+  Stream<Either<Failure, Market>> productDetailsStream() async* {
+    try {
+      final docRef = firestore.collection('markets').doc(_selctedMarket?.id);
+      yield* docRef.snapshots().asyncMap((snapshot) async {
+        try {
+          if (!snapshot.exists)
+            return const Left(Failure('لم يتم العثور على هذاالمتجر'));
+          return Right(Market.fromDoc(snapshot.id, snapshot.data()!));
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
+    }
+  }
+
   Future<Either<Failure, List<Product>>> fetchProducts(int? limits) async {
     try {
       final response = limits != null
@@ -92,6 +168,31 @@ class DataRepository {
     } catch (e) {
       log(e.toString());
       return Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, List<Product>>> productsStream() async* {
+    try {
+      final query = firestore.collection('products');
+      yield* query.snapshots().asyncMap((snapshot) async {
+        try {
+          List<Product> productsList = [];
+          for (var doc in snapshot.docs) {
+            final parentMarketActive =
+                (await getMarketInfo(doc.data()['marketId'])).value;
+            if (!parentMarketActive ||
+                doc.data()['quantity'].toDouble().floor() == 0) {
+              continue;
+            }
+            productsList.add(Product.fromDoc(doc.id, doc.data()));
+          }
+          return Right(productsList);
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
     }
   }
 
@@ -445,6 +546,24 @@ class DataRepository {
       log(e.toString());
       log(e.toString());
       return Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, List<Offer>>> offersStream() async* {
+    try {
+      final query = firestore.collection('offers');
+      yield* query.snapshots().asyncMap((snapshot) async {
+        try {
+          List<Offer> offersList = [];
+          for (var doc in snapshot.docs)
+            offersList.add(Offer.fromDoc(doc.id, doc.data()));
+          return Right(offersList);
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
     }
   }
 

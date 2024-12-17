@@ -10,10 +10,18 @@ part 'offers_event.dart';
 part 'offers_state.dart';
 
 class OffersBloc extends Bloc<OffersEvent, OffersState> {
+  StreamSubscription? _subscription;
   OffersBloc() : super(OffersState.initial) {
     on<OffersLoadingEvent>(_onOffersLoading);
     on<OfferSelectedEvent>(_onOfferSelecting);
-    add(OffersLoadingEvent());
+    on<OffersUpdatedEvent>(_onOffersUpdated);
+
+    _subscription = sl.get<DataRepository>().offersStream().listen(
+        (result) => result.fold(
+              (l) => addError(l.message),
+              (r) => add(OffersUpdatedEvent(r)),
+            ),
+        onError: (e) => addError(e.toString()));
   }
 
   FutureOr<void> _onOffersLoading(event, emit) async {
@@ -50,5 +58,20 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
         status: LoadingStatus.failure,
       ));
     }
+  }
+  
+  FutureOr<void> _onOffersUpdated(OffersUpdatedEvent event, emit) {
+    emit(state.copyWith(
+      offers: event.offers,
+      status: LoadingStatus.success,
+      curOffer: state.curOffer,
+    ));
+  }
+  
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    _subscription = null;
+    return super.close();
   }
 }

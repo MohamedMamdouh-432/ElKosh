@@ -2,20 +2,29 @@ import 'dart:async';
 
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
 part 'categorys_event.dart';
 part 'categorys_state.dart';
 
 class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
+  StreamSubscription? _subscription;
   CategorysBloc() : super(CategorysState.initial) {
     on<CategorysLoadingEvent>(_onCategorysLoading);
     on<CategorySelectedEvent>(_onCategorySelected);
-    add(const CategorysLoadingEvent());
+    on<CategorysUpdatedEvent>(_onCategorysUpdated);
+
+    _subscription = sl.get<DataRepository>().categorysStream().listen(
+          (result) => result.fold(
+            (l) => addError(l.message),
+            (r) => add(CategorysUpdatedEvent(r)),
+          ),
+          onError: (e) => addError(e.toString()),
+        );
   }
-  
+
   FutureOr<void> _onCategorysLoading(event, emit) async {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
@@ -51,5 +60,20 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
         status: LoadingStatus.failure,
       ));
     }
+  }
+
+  FutureOr<void> _onCategorysUpdated(CategorysUpdatedEvent event, emit) {
+    emit(state.copyWith(
+      categorys: event.categorys,
+      status: LoadingStatus.success,
+      curCategory: state.curCategory,
+    ));
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    _subscription = null;
+    return super.close();
   }
 }
