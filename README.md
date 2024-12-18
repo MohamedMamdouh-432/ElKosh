@@ -67,6 +67,6 @@
 	
 # Edits
 	- make market_details, product_details blocs
-	- updating for cart Bloc
+	- updating for rest blocs
 	- price check
 	- remove external data when placing order (username, userphone, marketname)
