@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataRepository {
@@ -14,7 +15,7 @@ class DataRepository {
   Market? _selctedMarket;
   Category? _selectedCategory;
   Product? _selectedProduct;
-  Offer? _selectedOffer;
+  Advertisment? _selectedOffer;
   UserOrder? _selectedOrder;
   double _price;
   String? _marketId, _marketName;
@@ -33,12 +34,12 @@ class DataRepository {
   Market? getCurMarket() => _selctedMarket;
   Category? getCurCategory() => _selectedCategory;
   Product? getCurProduct() => _selectedProduct;
-  Offer? getCurOffer() => _selectedOffer;
+  Advertisment? getCurOffer() => _selectedOffer;
   UserOrder? getCurOrder() => _selectedOrder;
   void setCurMarket(Market market) => _selctedMarket = market;
   void setCurCategory(Category category) => _selectedCategory = category;
   void setCurProduct(Product product) => _selectedProduct = product;
-  void setCurOffer(Offer offer) => _selectedOffer = offer;
+  void setCurAd(Advertisment offer) => _selectedOffer = offer;
   void setCurOrder(UserOrder order) => _selectedOrder = order;
 
   Stream<Either<Failure, List<Market>>> marketsStream() async* {
@@ -134,14 +135,14 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, Market>> productDetailsStream() async* {
+  Stream<Either<Failure, Product>> productDetailsStream() async* {
     try {
-      final docRef = firestore.collection('markets').doc(_selctedMarket?.id);
+      final docRef = firestore.collection('products').doc(_selectedProduct?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
-            return const Left(Failure('لم يتم العثور على هذاالمتجر'));
-          return Right(Market.fromDoc(snapshot.id, snapshot.data()!));
+            return const Left(Failure('لم يتم العثور على المنتج'));
+          return Right(Product.fromDoc(snapshot.id, snapshot.data()!));
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -234,9 +235,9 @@ class DataRepository {
 
   Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
     try {
+      _price = 0;
       String? cartMap = sharedPref.getString('shopping');
       if (cartMap == null) {
-        _price = 0;
         _shopping = {};
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
@@ -249,14 +250,16 @@ class DataRepository {
           'marketName': '',
         });
       }
-      _price = sharedPref.getDouble('price') ?? 0;
       _marketId = sharedPref.getString('marketId');
-      _marketName = sharedPref.getString('marketName');
+      _marketName = (await getMarketInfo(_marketId!)).key;
       Map<String, dynamic> decShopping = json.decode(cartMap);
       Map<Product, int> shoppingData = {};
       _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
       for (MapEntry<String, int> entry in _shopping.entries) {
         final mappedProduct = await fetchProductById(entry.key);
+        _price += mappedProduct.updatedPrice == 0
+            ? mappedProduct.price * entry.value
+            : mappedProduct.updatedPrice * entry.value;
         shoppingData.putIfAbsent(mappedProduct, () => entry.value);
       }
       return Right({
@@ -423,7 +426,7 @@ class DataRepository {
           firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       final orderMap = {
-        'total': _price + 10,
+        'total': _price,
         'code': seqIdVal,
         'shopping': _shopping,
         'userName': user.name,
@@ -484,6 +487,76 @@ class DataRepository {
     } catch (e) {
       log(e.toString());
       return Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, Map<String, List<UserOrder>>>> ordersStream() async* {
+    try {
+      final userId = getUserId();
+      final ongoingOrdersStream = firestore
+          .collection('orders')
+          .where('userId', isEqualTo: userId)
+          .where('status', whereIn: ['pending', 'shipped'])
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+
+      final historyOrdersStream = firestore
+          .collection('orders')
+          .where('userId', isEqualTo: userId)
+          .where('status', whereIn: ['cancelled', 'delivered'])
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+
+      yield* Rx.combineLatest2(
+        ongoingOrdersStream,
+        historyOrdersStream,
+        (ongoingSnapshot, historySnapshot) async {
+          try {
+            final List<UserOrder> ongoingOrderList = [];
+            final List<UserOrder> historyOrderList = [];
+
+            for (var doc in ongoingSnapshot.docs) {
+              if (doc.data()['seqId'] != null) continue;
+              Map<Product, int> shopping = {};
+              for (MapEntry<String, dynamic> entry
+                  in doc.data()['shopping'].entries) {
+                final mappedProduct = await fetchProductById(entry.key);
+                shopping[mappedProduct] = entry.value as int;
+              }
+              ongoingOrderList.add(UserOrder.fromDoc(
+                doc.data(),
+                shopping,
+                doc.id,
+              ));
+            }
+
+            for (var doc in historySnapshot.docs) {
+              if (doc.data()['seqId'] != null) continue;
+              Map<Product, int> shopping = {};
+              for (MapEntry<String, dynamic> entry
+                  in doc.data()['shopping'].entries) {
+                final mappedProduct = await fetchProductById(entry.key);
+                shopping[mappedProduct] = entry.value as int;
+              }
+              historyOrderList.add(UserOrder.fromDoc(
+                doc.data(),
+                shopping,
+                doc.id,
+              ));
+            }
+
+            return Right({
+              'ongoing': ongoingOrderList,
+              'history': historyOrderList,
+            });
+          } catch (e) {
+            return Left(Failure(e.toString()));
+          }
+        },
+      ).asyncMap((value) async =>
+          await value as Either<Failure, Map<String, List<UserOrder>>>);
+    } catch (e) {
+      yield Left(Failure(e.toString()));
     }
   }
 
@@ -549,14 +622,14 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, List<Offer>>> offersStream() async* {
+  Stream<Either<Failure, List<Advertisment>>> adsStream() async* {
     try {
       final query = firestore.collection('offers');
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
-          List<Offer> offersList = [];
+          List<Advertisment> offersList = [];
           for (var doc in snapshot.docs)
-            offersList.add(Offer.fromDoc(doc.id, doc.data()));
+            offersList.add(Advertisment.fromDoc(doc.id, doc.data()));
           return Right(offersList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -567,12 +640,12 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, List<Offer>>> fetchOffers() async {
+  Future<Either<Failure, List<Advertisment>>> fetchAds() async {
     try {
       final response = await firestore.collection('offers').get();
-      List<Offer> offersList = [];
+      List<Advertisment> offersList = [];
       for (var offerDoc in response.docs)
-        offersList.add(Offer.fromDoc(offerDoc.id, offerDoc.data()));
+        offersList.add(Advertisment.fromDoc(offerDoc.id, offerDoc.data()));
       return Right(offersList);
     } catch (e) {
       log(e.toString());

@@ -23,11 +23,10 @@ class NavBarScreen extends StatelessWidget {
               selectedIndex: navProvider.curIdx,
               activeColor: ColorManager.primary,
               color: Colors.blueGrey,
-              backgroundColor: ColorManager.primary.withOpacity(0.07),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 25,
-                vertical: 15,
-              ),
+              backgroundColor: const Color(0xffFFF3EC),
+              iconSize: 26,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               onTabChange: navProvider.navToPage,
               tabs: const [
                 GButton(

@@ -1,7 +1,6 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
@@ -22,7 +21,6 @@ class ElKoshApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => RegisterBloc()),
-        BlocProvider(create: (_) => MarketsBloc()),
         BlocProvider(create: (_) => ProductsBloc()),
         BlocProvider(create: (_) => ProfileBloc()),
         BlocProvider(create: (_) => CartBloc()),
@@ -47,9 +45,9 @@ class ElKoshLauncher extends StatelessWidget {
         statusBarColor: Colors.white,
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Color(0xffFFF9F6),
+        systemNavigationBarColor: Color(0xffFFF3EC),
         systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarDividerColor: Color(0xffFFF3EC),
       ),
     );
 

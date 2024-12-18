@@ -9,6 +9,7 @@ enum LoadingStatus {
   inProgress,
   success,
   failure,
+  updated,
 }
 
 enum VerificationStatus {

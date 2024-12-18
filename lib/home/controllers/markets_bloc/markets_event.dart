@@ -24,11 +24,3 @@ class MarketsUpdatedEvent extends MarketsEvent {
   @override
   List<Object> get props => [markets];
 }
-
-class MarketUpdatedEvent extends MarketsEvent {
-  final Market market;
-  const MarketUpdatedEvent(this.market);
-
-  @override
-  List<Object> get props => [market];
-}

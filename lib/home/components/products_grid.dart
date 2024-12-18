@@ -13,9 +13,7 @@ import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProductsGrid extends StatelessWidget {
-  const ProductsGrid({
-    super.key,
-  });
+  const ProductsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,7 @@ class ProductsGrid extends StatelessWidget {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              // context.read<ProductsBloc>().add(const ProductsLoadingEvent());
+              context.read<ProductsBloc>().add(const ProductsLoadingEvent());
             },
           );
         }
@@ -40,61 +38,68 @@ class ProductsGrid extends StatelessWidget {
       builder: (context, state) {
         return Skeletonizer(
           enabled: state.status == LoadingStatus.inProgress,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                margin: const EdgeInsets.only(top: 20),
-                child: const Text(
-                  "المنتجات",
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            margin: const EdgeInsets.only(top: 4),
+            decoration: BoxDecoration(
+              color: Colors.black12.withValues(alpha: 0.05),
+              // borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                const Text(
+                  "تصفح اكثر المنتجات طلبا",
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-              GridView.extent(
-                shrinkWrap: true,
-                maxCrossAxisExtent: 110,
-                crossAxisSpacing: 5,
-                childAspectRatio: 2 / 2.3,
-                physics: const NeverScrollableScrollPhysics(),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                children: [
-                  for (int i = 0; i < min(state.products.length, 7); i++)
-                    ProductCard(product: state.products[i], steps: 1),
-                  InkWell(
-                    onTap: () {
-                      context
-                          .read<ProductsBloc>()
-                          .add(const ProductsLoadingEvent());
-                      context.push(RouteManager.productsRoute, extra: 2);
-                    },
-                    child: Column(
-                      children: [
-                        const Gap(10),
-                        Container(
-                          width: 60,
-                          height: 60,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(15),
+                const Gap(10),
+                GridView.extent(
+                  shrinkWrap: true,
+                  maxCrossAxisExtent: 110,
+                  crossAxisSpacing: 5,
+                  childAspectRatio: 2 / 2.3,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  children: [
+                    for (int i = 0; i < min(state.products.length, 10); i++)
+                      ProductCard(product: state.products[i], steps: 1),
+                    InkWell(
+                      onTap: () {
+                        context
+                            .read<ProductsBloc>()
+                            .add(const ProductsLoadingEvent());
+                        context.push(RouteManager.productsRoute, extra: 2);
+                      },
+                      child: Column(
+                        children: [
+                          const Gap(10),
+                          Container(
+                            width: 60,
+                            height: 60,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                width: 2,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                            child: const Icon(
+                              CupertinoIcons.square_grid_2x2,
+                              size: 40,
+                            ),
                           ),
-                          child: const Icon(
-                            CupertinoIcons.square_grid_2x2,
-                            size: 32,
-                          ),
-                        ),
-                        const Text("عرض الكل"),
-                      ],
+                          const Text("عرض الكل"),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

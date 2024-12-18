@@ -3,7 +3,6 @@ import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 
@@ -27,12 +26,14 @@ class ProductCard extends StatelessWidget {
       splashColor: Colors.transparent,
       child: Column(
         children: [
-          const Gap(5),
-          CachedNetworkImage(
-            imageUrl: product.imgUrl,
-            fit: BoxFit.fill,
-            width: 80,
-            height: 70,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: CachedNetworkImage(
+              imageUrl: product.imgUrl,
+              fit: BoxFit.fill,
+              width: 80,
+              height: 70,
+            ),
           ),
           Text(product.name),
         ],

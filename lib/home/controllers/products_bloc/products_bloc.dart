@@ -78,6 +78,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   }
 
   FutureOr<void> _onProductsUpdated(ProductsUpdatedEvent event, emit) {
+    emit(state.copyWith(status: LoadingStatus.updated));
     emit(state.copyWith(
       products: event.products,
       status: LoadingStatus.success,
