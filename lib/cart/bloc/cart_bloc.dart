@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:equatable/equatable.dart';

@@ -1,8 +1,9 @@
 import 'package:elkosh/core/utils/color_manager.dart';
+import 'package:elkosh/home/components/ads_slider.dart';
 import 'package:elkosh/home/components/custom_app_bar.dart';
 import 'package:elkosh/home/components/markets_view.dart';
-import 'package:elkosh/home/components/offers_slider.dart';
 import 'package:elkosh/home/components/products_grid.dart';
+import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +21,14 @@ class HomeScreen extends StatelessWidget {
       onRefresh: () async {
         context.read<MarketsBloc>().add(MarketsLoadingEvent());
         context.read<ProductsBloc>().add(const ProductsLoadingEvent());
+        context.read<AdsBloc>().add(AdsLoadingEvent());
       },
       child: const SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(),
-            OffersSlider(),
+            AdsSlider(),
             ProductsGrid(),
             MarketsView(),
           ],

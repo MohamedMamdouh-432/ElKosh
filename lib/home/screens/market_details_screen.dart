@@ -1,5 +1,5 @@
 import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/home/controllers/market_details_bloc/market_details_bloc.dart';
 import 'package:elkosh/home/widgets/category_item.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,11 +15,14 @@ class MarkettDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CategorysBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => CategorysBloc()),
+        BlocProvider(create: (context) => MarketDetailsBloc()),
+      ],
       child: SafeArea(
         child: Scaffold(
-          body: BlocBuilder<MarketsBloc, MarketsState>(
+          body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
             builder: (context, state) {
               return Skeletonizer(
                 enabled: state.status == LoadingStatus.inProgress,
@@ -36,7 +39,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SliverImageSection(imageUrl: state.curMarket.imgUrl),
+                    SliverImageSection(imageUrl: state.market.imgUrl),
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -47,14 +50,14 @@ class MarkettDetailsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  state.curMarket.name,
+                                  state.market.name,
                                   style: const TextStyle(
                                     fontSize: 25,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 Text(
-                                  state.curMarket.hotline,
+                                  state.market.hotline,
                                   style: const TextStyle(
                                     fontSize: 22,
                                     color: Colors.grey,
@@ -74,7 +77,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                             ),
                             const Gap(5),
                             Text(
-                              state.curMarket.desc,
+                              state.market.desc,
                               style: const TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,

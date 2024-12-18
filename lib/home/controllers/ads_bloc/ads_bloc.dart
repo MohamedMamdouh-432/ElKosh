@@ -6,35 +6,35 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-part 'offers_event.dart';
-part 'offers_state.dart';
+part 'ads_event.dart';
+part 'ads_state.dart';
 
-class OffersBloc extends Bloc<OffersEvent, OffersState> {
+class AdsBloc extends Bloc<AdsEvent, AdsState> {
   StreamSubscription? _subscription;
-  OffersBloc() : super(OffersState.initial) {
-    on<OffersLoadingEvent>(_onOffersLoading);
-    on<OfferSelectedEvent>(_onOfferSelecting);
-    on<OffersUpdatedEvent>(_onOffersUpdated);
+  AdsBloc() : super(AdsState.initial) {
+    on<AdsLoadingEvent>(_onAdsLoading);
+    on<AdSelectedEvent>(_onAdSelecting);
+    on<AdsUpdatedEvent>(_onAdsUpdated);
 
-    _subscription = sl.get<DataRepository>().offersStream().listen(
+    _subscription = sl.get<DataRepository>().adsStream().listen(
         (result) => result.fold(
               (l) => addError(l.message),
-              (r) => add(OffersUpdatedEvent(r)),
+              (r) => add(AdsUpdatedEvent(r)),
             ),
         onError: (e) => addError(e.toString()));
   }
 
-  FutureOr<void> _onOffersLoading(event, emit) async {
+  FutureOr<void> _onAdsLoading(event, emit) async {
     try {
       emit(state.copyWith(status: LoadingStatus.inProgress));
-      final results = await sl.get<DataRepository>().fetchOffers();
+      final results = await sl.get<DataRepository>().fetchAds();
       results.fold(
           (l) => emit(state.copyWith(
                 errMsg: l.message,
                 status: LoadingStatus.failure,
               )),
           (r) => emit(state.copyWith(
-                offers: r,
+                ads: r,
                 status: LoadingStatus.success,
               )));
     } catch (e) {
@@ -45,11 +45,11 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
     }
   }
 
-  FutureOr<void> _onOfferSelecting(OfferSelectedEvent event, emit) async {
+  FutureOr<void> _onAdSelecting(AdSelectedEvent event, emit) async {
     try {
-      sl.get<DataRepository>().setCurOffer(event.offer);
+      sl.get<DataRepository>().setCurAd(event.ad);
       emit(state.copyWith(
-        curOffer: event.offer,
+        curAd: event.ad,
         status: LoadingStatus.inProgress,
       ));
     } catch (e) {
@@ -59,15 +59,15 @@ class OffersBloc extends Bloc<OffersEvent, OffersState> {
       ));
     }
   }
-  
-  FutureOr<void> _onOffersUpdated(OffersUpdatedEvent event, emit) {
+
+  FutureOr<void> _onAdsUpdated(AdsUpdatedEvent event, emit) {
     emit(state.copyWith(
-      offers: event.offers,
+      ads: event.ads,
       status: LoadingStatus.success,
-      curOffer: state.curOffer,
+      curAd: state.curAd,
     ));
   }
-  
+
   @override
   Future<void> close() {
     _subscription?.cancel();

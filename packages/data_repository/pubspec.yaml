@@ -12,3 +12,4 @@ dependencies:
   models_repository: 
     path: ../models_repository
   shared_preferences: ^2.3.2
+  rxdart: ^0.28.0

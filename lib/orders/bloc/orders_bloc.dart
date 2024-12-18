@@ -10,11 +10,26 @@ part 'orders_event.dart';
 part 'orders_state.dart';
 
 class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
+  StreamSubscription? _subscription;
   OrdersBloc() : super(OrdersState.initial) {
     on<OrdersFetchedEvent>(_onOrdersFetched);
     on<OrderSelectedEvent>(_onOrderSelected);
     on<OrderDeleveringingEvent>(_onOrderDelevering);
     on<OrderCancellingEvent>(_onOrderCancelled);
+    on<OrdersUpdatedEvent>(_onOrdersUpdated);
+
+    _subscription = sl.get<DataRepository>().ordersStream().listen(
+          (result) => result.fold(
+            (l) => addError(l.message),
+            (r) => add(
+              OrdersUpdatedEvent(
+                r['ongoing'] as List<UserOrder>,
+                r['history'] as List<UserOrder>,
+              ),
+            ),
+          ),
+          onError: (e) => addError(e.toString()),
+        );
   }
 
   Future<void> _onOrdersFetched(event, emit) async {
@@ -38,6 +53,13 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         status: OrdersStatus.fetchFailure,
       ));
     }
+  }
+
+  Future<void> _onOrdersUpdated(OrdersUpdatedEvent event, emit) async {
+    emit(state.copyWith(
+      ongoingOrders: event.ongoingOrders,
+      historyOrders: event.historyOrders,
+    ));
   }
 
   void _onOrderSelected(OrderSelectedEvent event, emit) {
@@ -101,5 +123,12 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
         status: OrdersStatus.placingFailure,
       ));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _subscription?.cancel();
+    _subscription = null;
+    return super.close();
   }
 }

@@ -34,3 +34,13 @@ class OrderCancellingEvent extends OrdersEvent {
   @override
   List<Object> get props => [order];
 }
+
+class OrdersUpdatedEvent extends OrdersEvent {
+  final List<UserOrder> ongoingOrders;
+  final List<UserOrder> historyOrders;
+  
+  const OrdersUpdatedEvent(this.ongoingOrders, this.historyOrders);
+  
+  @override
+  List<Object> get props => [ongoingOrders, historyOrders];
+}

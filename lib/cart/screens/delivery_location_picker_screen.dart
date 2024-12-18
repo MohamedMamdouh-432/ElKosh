@@ -34,7 +34,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
         ),
         selectLocationButtonStyle: ButtonStyle(
           backgroundColor:
-              WidgetStateProperty.all(ColorManager.primary.withOpacity(0.8)),
+              WidgetStateProperty.all(ColorManager.primary.withValues(alpha: 0.8)),
           foregroundColor: const WidgetStatePropertyAll(Colors.white),
           elevation: const WidgetStatePropertyAll(15),
         ),
@@ -51,8 +51,8 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
         searchBarTextColor: Colors.deepOrange,
         searchBarBackgroundColor: Colors.grey.shade200,
         // other buttons
-        locationButtonBackgroundColor: ColorManager.primary.withOpacity(0.8),
-        zoomButtonsBackgroundColor: ColorManager.primary.withOpacity(0.8),
+        locationButtonBackgroundColor: ColorManager.primary.withValues(alpha: 0.8),
+        zoomButtonsBackgroundColor: ColorManager.primary.withValues(alpha: 0.8),
         locationButtonsColor: Colors.grey.shade300,
         zoomButtonsColor: Colors.grey.shade300,
         markerIcon: Icon(

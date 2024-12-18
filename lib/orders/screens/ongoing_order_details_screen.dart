@@ -54,7 +54,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                           children: [
                             TextSpan(
                               text:
-                                  '${toArNumber((state.curOrder.total + 10).toStringAsFixed(2))} جنيه',
+                                  '${toArNumber((state.curOrder.total).toStringAsFixed(2))} جنيه',
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 color: Colors.black,

@@ -1,23 +1,24 @@
 import 'package:equatable/equatable.dart';
 
-class Offer extends Equatable {
+class Advertisment extends Equatable {
   final String id;
   final String title;
   final String imgUrl;
 
-  const Offer({
+  const Advertisment({
     required this.id,
     required this.title,
     required this.imgUrl,
   });
 
-  static Offer empty = const Offer(
+  static Advertisment empty = const Advertisment(
     id: '',
     title: '',
     imgUrl: '',
   );
 
-  factory Offer.fromDoc(String id, Map<String, dynamic> offerDoc) => Offer(
+  factory Advertisment.fromDoc(String id, Map<String, dynamic> offerDoc) =>
+      Advertisment(
         id: id,
         title: offerDoc['title'],
         imgUrl: offerDoc['imgUrl'],
@@ -28,12 +29,12 @@ class Offer extends Equatable {
         'imgUrl': imgUrl,
       };
 
-  Offer copyWith({
+  Advertisment copyWith({
     String? id,
     String? title,
     String? imgUrl,
   }) {
-    return Offer(
+    return Advertisment(
       id: id ?? this.id,
       title: title ?? this.title,
       imgUrl: imgUrl ?? this.imgUrl,
