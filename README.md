@@ -66,4 +66,4 @@
     * search feature
 
 # Edits
-	- remove external data when placing order (username, userphone, marketId, marketname)
+	- 

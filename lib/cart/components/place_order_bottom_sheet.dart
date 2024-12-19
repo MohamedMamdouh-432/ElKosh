@@ -1,5 +1,5 @@
-import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,13 +20,6 @@ class PlaceOrderBottomSheet extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "اسم المتجر : \t\t${state.marketName}",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
               const Gap(15),
               Text(
                 "تكلفة الطلب: \t\t\t${state.price}",
