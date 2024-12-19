@@ -33,8 +33,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           errorMessage: '',
           price: right['price'],
           shopping: right['shopping'],
-          marketId: right['marketId'],
-          marketName: right['marketName'],
           status: CartStatus.success,
         )),
       );
@@ -88,8 +86,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
               (event.product.updatedPrice == 0
                   ? event.product.price
                   : event.product.updatedPrice),
-          marketId: right['marketId'],
-          marketName: right['marketName'],
         ));
       },
     );
@@ -113,8 +109,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           price: state.price - event.product.price * count,
           status: CartStatus.success,
           shopping: updatedShopping,
-          marketId: right['marketId'],
-          marketName: right['marketName'],
         ));
       },
     );
@@ -145,8 +139,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
                   ? event.product.price
                   : event.product.updatedPrice),
           status: CartStatus.success,
-          marketId: right['marketId'],
-          marketName: right['marketName'],
         ));
       },
     );
@@ -179,8 +171,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             price: state.price - (isExist ? event.product.price : 0),
             status: CartStatus.success,
             shopping: updatedShopping,
-            marketId: right['marketId'],
-            marketName: right['marketName'],
           ));
         },
       );

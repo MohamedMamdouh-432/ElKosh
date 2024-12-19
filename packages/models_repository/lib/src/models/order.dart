@@ -18,10 +18,6 @@ class UserOrder extends Equatable {
   final String id;
   final int code;
   final double total;
-  final String marketId;
-  final String marketName;
-  final String userPhone;
-  final String userName;
   final String userId;
   final OrderStatus status;
   final DateTime createdAt;
@@ -33,29 +29,21 @@ class UserOrder extends Equatable {
     required this.code,
     required this.total,
     required this.shopping,
-    required this.marketId,
-    required this.userPhone,
     required this.userId,
     required this.status,
-    required this.marketName,
     required this.createdAt,
     required this.location,
-    required this.userName,
   });
 
   static UserOrder empty = UserOrder(
     id: '',
     code: 0,
-    status: OrderStatus.pending,
-    shopping: const {},
     total: 0,
-    createdAt: DateTime(0),
-    marketId: '',
-    userName: '',
-    userPhone: '',
     userId: '',
-    marketName: "",
+    shopping: const {},
+    createdAt: DateTime(0),
     location: Location.empty,
+    status: OrderStatus.pending,
   );
 
   factory UserOrder.fromDoc(
@@ -65,16 +53,12 @@ class UserOrder extends Equatable {
   ) =>
       UserOrder(
         id: id,
+        userId: map['userId'],
+        shopping: shoppingList,
         code: map['code'].toInt(),
         total: map['total'].toDouble(),
-        shopping: shoppingList,
-        status: getOrderStatus(map['status']),
         createdAt: map['createdAt'].toDate(),
-        marketId: map['marketId'],
-        userName: map['userName'],
-        userId: map['userId'],
-        userPhone: map['userPhone'],
-        marketName: map['marketName'],
+        status: getOrderStatus(map['status']),
         location: Location.fromJson(map['location']),
       );
 
@@ -83,13 +67,9 @@ class UserOrder extends Equatable {
     int? code,
     double? total,
     Map<Product, int>? shopping,
-    String? marketId,
-    String? userName,
     String? userId,
-    String? userPhone,
     OrderStatus? status,
     DateTime? createdAt,
-    String? marketName,
     Location? location,
   }) {
     return UserOrder(
@@ -97,13 +77,9 @@ class UserOrder extends Equatable {
       code: code ?? this.code,
       total: total ?? this.total,
       shopping: shopping ?? this.shopping,
-      marketId: marketId ?? this.marketId,
-      userPhone: userPhone ?? this.userPhone,
       userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
-      marketName: marketName ?? this.marketName,
       location: location ?? this.location,
     );
   }
@@ -115,13 +91,9 @@ class UserOrder extends Equatable {
       code,
       total,
       shopping,
-      marketId,
-      userPhone,
-      userName,
       userId,
       status,
       createdAt,
-      marketName,
       location,
     ];
   }

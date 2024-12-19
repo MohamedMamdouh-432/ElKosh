@@ -18,7 +18,6 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
         return Scaffold(
-          appBar: AppBar(title: Text(state.curOrder.marketName)),
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),

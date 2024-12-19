@@ -1,5 +1,6 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -31,7 +32,7 @@ class OngoingOrderListTile extends StatelessWidget {
           ),
         ),
       ),
-      title: Text(order.marketName),
+      title: Text("رقم الطلب: ${toArNumber(order.code.toString())}"),
       subtitle: Text('السعر ${order.total} جنيه'),
       trailing: Text(DateFormat("yyyy-MM-dd").format(order.createdAt)),
     );

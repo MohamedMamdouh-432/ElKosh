@@ -18,16 +18,13 @@ class DataRepository {
   Advertisment? _selectedOffer;
   UserOrder? _selectedOrder;
   double _price;
-  String? _marketId, _marketName;
   Map<String, int> _shopping;
 
   DataRepository({
     required this.firestore,
     required this.fireStorage,
     required this.sharedPref,
-  })  : _marketId = '',
-        _marketName = '',
-        _price = 0,
+  })  : _price = 0,
         _shopping = {};
 
   String getUserId() => sharedPref.getString('userId') ?? '';
@@ -241,17 +238,11 @@ class DataRepository {
         _shopping = {};
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-        await sharedPref.setString('marketId', '');
-        await sharedPref.setString('marketName', '');
         return const Right({
           'shopping': <Product, int>{},
           'price': 0.0,
-          'marketId': '',
-          'marketName': '',
         });
       }
-      _marketId = sharedPref.getString('marketId');
-      _marketName = (await getMarketInfo(_marketId!)).key;
       Map<String, dynamic> decShopping = json.decode(cartMap);
       Map<Product, int> shoppingData = {};
       _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
@@ -265,8 +256,6 @@ class DataRepository {
       return Right({
         'price': _price,
         'shopping': shoppingData,
-        'marketId': _marketId,
-        'marketName': _marketName,
       });
     } catch (e) {
       log(e.toString());
@@ -277,17 +266,12 @@ class DataRepository {
   Future<Either<Failure, Map<String, dynamic>>> resetCart() async {
     _price = 0;
     _shopping = {};
-    _marketId = _marketName = '';
     try {
       await sharedPref.setDouble('price', _price);
       await sharedPref.setString('shopping', json.encode(_shopping));
-      await sharedPref.setString('marketId', '');
-      await sharedPref.setString('marketName', '');
       return Right({
         'price': _price,
         'shopping': const <Product, int>{},
-        'marketId': _marketId,
-        'marketName': _marketName,
       });
     } catch (e) {
       log(e.toString());
@@ -295,15 +279,10 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, Map<String, String>>> addProductToCart(
+  Future<Either<Failure, void>> addProductToCart(
     Product product,
   ) async {
     try {
-      if (_shopping.isEmpty) {
-        _marketId = product.marketId;
-        _marketName = (await getMarketInfo(_marketId ?? '')).key;
-      } else if (_marketId != product.marketId)
-        return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price +=
           product.updatedPrice == 0 ? product.price : product.updatedPrice;
       _shopping.update(
@@ -313,55 +292,33 @@ class DataRepository {
       );
       await sharedPref.setDouble('price', _price);
       await sharedPref.setString('shopping', json.encode(_shopping));
-      await sharedPref.setString('marketId', _marketId ?? '');
-      await sharedPref.setString('marketName', _marketName ?? '');
-      return Right({
-        'marketId': _marketId ?? '',
-        'marketName': _marketName ?? '',
-      });
+      return const Right(null);
     } catch (e) {
       log(e.toString());
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
     }
   }
 
-  Future<Either<Failure, Map<String, String>>> removeProductFromCart(
-    Product product,
-  ) async {
+  Future<Either<Failure, void>> removeProductFromCart(Product product) async {
     try {
       if (_shopping.containsKey(product.id)) {
         _price -=
             (product.updatedPrice == 0 ? product.price : product.updatedPrice) *
                 (_shopping[product.id] ?? 0);
         _shopping.remove(product.id);
-        if (_shopping.isEmpty) {
-          _marketId = '';
-          _marketName = '';
-        }
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-        await sharedPref.setString('marketId', _marketId ?? '');
-        await sharedPref.setString('marketName', _marketName ?? '');
       }
-      return Right({
-        'marketId': _marketId ?? '',
-        'marketName': _marketName ?? '',
-      });
+      return const Right(null);
     } catch (e) {
       log(e.toString());
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
     }
   }
 
-  Future<Either<Failure, Map<String, String>>> increaseProductQuantityInCart(
-    Product product,
-  ) async {
+  Future<Either<Failure, void>> increaseProductQuantityInCart(
+      Product product) async {
     try {
-      if (_shopping.isEmpty) {
-        _marketId = product.marketId;
-        _marketName = (await getMarketInfo(_marketId ?? '')).key;
-      } else if (_marketId != product.marketId)
-        return const Left(Failure("يجب ان تشترى من نفس المتجر"));
       _price +=
           product.updatedPrice == 0 ? product.price : product.updatedPrice;
       _shopping.update(
@@ -371,19 +328,14 @@ class DataRepository {
       );
       await sharedPref.setDouble('price', _price);
       await sharedPref.setString('shopping', json.encode(_shopping));
-      await sharedPref.setString('marketId', _marketId ?? '');
-      await sharedPref.setString('marketName', _marketName ?? '');
-      return Right({
-        'marketId': _marketId ?? '',
-        'marketName': _marketName ?? '',
-      });
+      return const Right(null);
     } catch (e) {
       log(e.toString());
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
     }
   }
 
-  Future<Either<Failure, Map<String, String>>> decreaseProductQuantityFromCart(
+  Future<Either<Failure, void>> decreaseProductQuantityFromCart(
     Product product,
   ) async {
     try {
@@ -398,19 +350,10 @@ class DataRepository {
         if (_shopping[product.id] == 0) {
           _shopping.remove(product.id);
         }
-        if (_shopping.isEmpty) {
-          _marketId = '';
-          _marketName = '';
-        }
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
-        await sharedPref.setString('marketId', _marketId ?? '');
-        await sharedPref.setString('marketName', _marketName ?? '');
       }
-      return Right({
-        'marketId': _marketId ?? '',
-        'marketName': _marketName ?? '',
-      });
+      return const Right(null);
     } catch (e) {
       log(e.toString());
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
@@ -429,11 +372,7 @@ class DataRepository {
         'total': _price,
         'code': seqIdVal,
         'shopping': _shopping,
-        'userName': user.name,
-        'userPhone': user.phone,
         'userId': user.id,
-        'marketId': _marketId ?? '',
-        'marketName': _marketName ?? '',
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
         'location': location.toJson(),
