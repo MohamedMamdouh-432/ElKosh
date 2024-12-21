@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/home/widgets/product_card.dart';
+import 'package:elkosh/home/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,14 +57,15 @@ class ProductsGrid extends StatelessWidget {
                 const Gap(10),
                 GridView.extent(
                   shrinkWrap: true,
-                  maxCrossAxisExtent: 110,
-                  crossAxisSpacing: 5,
-                  childAspectRatio: 2 / 2.3,
+                  maxCrossAxisExtent: 100,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                  childAspectRatio: 7 / 7.4,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   children: [
                     for (int i = 0; i < min(state.products.length, 10); i++)
-                      ProductCard(product: state.products[i], steps: 1),
+                      ProductGridCard(product: state.products[i]),
                     InkWell(
                       onTap: () {
                         context
@@ -74,7 +75,6 @@ class ProductsGrid extends StatelessWidget {
                       },
                       child: Column(
                         children: [
-                          const Gap(10),
                           Container(
                             width: 60,
                             height: 60,

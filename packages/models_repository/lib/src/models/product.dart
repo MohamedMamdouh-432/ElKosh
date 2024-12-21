@@ -7,7 +7,7 @@ class Product extends Equatable {
   final String imgUrl;
   final double price;
   final String unit;
-  final double unitVal;
+  final String unitVal;
   final double quantity;
   final double updatedPrice;
   final String marketId;
@@ -34,7 +34,7 @@ class Product extends Equatable {
     price: 0.0,
     quantity: 0.0,
     imgUrl: '',
-    unitVal: 0,
+    unitVal: '',
     updatedPrice: 0,
     categoryId: '',
     marketId: '',
@@ -51,7 +51,7 @@ class Product extends Equatable {
         marketId: productDoc['marketId'],
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
-        unitVal: productDoc['unitVal'].toDouble(),
+        unitVal: productDoc['unitVal'],
         updatedPrice: (productDoc['updatedPrice'] ?? 0).toDouble(),
       );
 
@@ -78,7 +78,7 @@ class Product extends Equatable {
     String? marketId,
     String? imgUrl,
     String? unit,
-    double? unitVal,
+    String? unitVal,
     double? updatedPrice,
   }) =>
       Product(

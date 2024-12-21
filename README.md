@@ -66,4 +66,4 @@
     * search feature
 
 # Edits
-	- 
+	- UI Cards for Category

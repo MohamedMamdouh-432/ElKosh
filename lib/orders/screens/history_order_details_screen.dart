@@ -20,9 +20,10 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
         return Scaffold(
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  const Gap(30),
                   Text(
                     "الطلب رقم # ${toArNumber(state.curOrder.code.toString())}",
                     style: TextStyle(
