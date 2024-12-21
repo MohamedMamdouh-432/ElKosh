@@ -18,14 +18,15 @@ class HomeScreen extends StatelessWidget {
       displacement: 60,
       color: ColorManager.primary,
       backgroundColor: Colors.white,
+      notificationPredicate: (notification) => notification.depth <= 2,
       onRefresh: () async {
         context.read<MarketsBloc>().add(MarketsLoadingEvent());
         context.read<ProductsBloc>().add(const ProductsLoadingEvent());
         context.read<AdsBloc>().add(AdsLoadingEvent());
       },
       child: const SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(),
             AdsSlider(),

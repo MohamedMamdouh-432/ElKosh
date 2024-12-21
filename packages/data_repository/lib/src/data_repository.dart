@@ -15,7 +15,7 @@ class DataRepository {
   Market? _selctedMarket;
   Category? _selectedCategory;
   Product? _selectedProduct;
-  Advertisment? _selectedOffer;
+  Advertisment? _selectedAd;
   UserOrder? _selectedOrder;
   double _price;
   Map<String, int> _shopping;
@@ -31,17 +31,19 @@ class DataRepository {
   Market? getCurMarket() => _selctedMarket;
   Category? getCurCategory() => _selectedCategory;
   Product? getCurProduct() => _selectedProduct;
-  Advertisment? getCurOffer() => _selectedOffer;
+  Advertisment? getCurAd() => _selectedAd;
   UserOrder? getCurOrder() => _selectedOrder;
   void setCurMarket(Market market) => _selctedMarket = market;
   void setCurCategory(Category category) => _selectedCategory = category;
   void setCurProduct(Product product) => _selectedProduct = product;
-  void setCurAd(Advertisment offer) => _selectedOffer = offer;
+  void setCurAd(Advertisment ad) => _selectedAd = ad;
   void setCurOrder(UserOrder order) => _selectedOrder = order;
+
+  /*----- Market Operations -----*/
 
   Stream<Either<Failure, List<Market>>> marketsStream() async* {
     try {
-      final query = firestore.collection('markets');
+      final query = firestore.collection(ConstantManager.marketCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Market> marketsList = [];
@@ -61,7 +63,9 @@ class DataRepository {
 
   Stream<Either<Failure, Market>> marketDetailsStream() async* {
     try {
-      final docRef = firestore.collection('markets').doc(_selctedMarket?.id);
+      final docRef = firestore
+          .collection(ConstantManager.marketCollection)
+          .doc(_selctedMarket?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -78,7 +82,8 @@ class DataRepository {
 
   Future<Either<Failure, List<Market>>> fetchMarkets() async {
     try {
-      final response = await firestore.collection('markets').get();
+      final response =
+          await firestore.collection(ConstantManager.marketCollection).get();
       List<Market> marketsList = [];
       for (var marketDoc in response.docs) {
         if (marketDoc.data()['active'] == false) continue;
@@ -91,18 +96,32 @@ class DataRepository {
     }
   }
 
+  Future<bool> isMarketActive(String id) async {
+    try {
+      final marketDoc = await firestore
+          .collection(ConstantManager.marketCollection)
+          .doc(id)
+          .get();
+      return marketDoc.data()?['active'];
+    } catch (e) {
+      log(e.toString());
+      throw const Failure("حدث خطأ أثناء جلب المتجر");
+    }
+  }
+
+  /*----- Category Operations -----*/
+
   Stream<Either<Failure, List<Category>>> categorysStream() async* {
     try {
       final query = firestore
-          .collection('categories')
-          .where('marketId', isEqualTo: _selctedMarket?.id);
+          .collection(ConstantManager.categoryCollection)
+          .where('marketId', isEqualTo: _selctedMarket?.id)
+          .orderBy('orderId');
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Category> categorysList = [];
-          for (var doc in snapshot.docs) {
-            if (doc.data()['active'] == false) continue;
+          for (var doc in snapshot.docs)
             categorysList.add(Category.fromDoc(doc.id, doc.data()));
-          }
           return Right(categorysList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -116,15 +135,13 @@ class DataRepository {
   Future<Either<Failure, List<Category>>> fetchCategories() async {
     try {
       final response = await firestore
-          .collection('categories')
+          .collection(ConstantManager.categoryCollection)
           .where('marketId', isEqualTo: _selctedMarket?.id)
+          .orderBy('orderId')
           .get();
       List<Category> categoriesList = [];
-      for (var categoryDoc in response.docs) {
-        if (categoryDoc.data()['active'] == false) continue;
-        categoriesList
-            .add(Category.fromDoc(categoryDoc.id, categoryDoc.data()));
-      }
+      for (var doc in response.docs)
+        categoriesList.add(Category.fromDoc(doc.id, doc.data()));
       return Right(categoriesList);
     } catch (e) {
       log(e.toString());
@@ -132,9 +149,13 @@ class DataRepository {
     }
   }
 
+  /*----- Product Operations -----*/
+
   Stream<Either<Failure, Product>> productDetailsStream() async* {
     try {
-      final docRef = firestore.collection('products').doc(_selectedProduct?.id);
+      final docRef = firestore
+          .collection(ConstantManager.productCollection)
+          .doc(_selectedProduct?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -152,14 +173,15 @@ class DataRepository {
   Future<Either<Failure, List<Product>>> fetchProducts(int? limits) async {
     try {
       final response = limits != null
-          ? await firestore.collection('products').limit(limits).get()
-          : await firestore.collection('products').get();
+          ? await firestore
+              .collection(ConstantManager.productCollection)
+              .limit(limits)
+              .get()
+          : await firestore.collection(ConstantManager.productCollection).get();
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
-        final parentMarketActive =
-            (await getMarketInfo(productDoc.data()['marketId'])).value;
-        if (!parentMarketActive ||
-            productDoc.data()['quantity'].toDouble().floor() == 0) continue;
+        final marketActive = await isMarketActive(productDoc.data()['marketId']);
+        if (!marketActive || productDoc.data()['quantity'].toDouble().floor() == 0) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
       return Right(productsList);
@@ -171,17 +193,14 @@ class DataRepository {
 
   Stream<Either<Failure, List<Product>>> productsStream() async* {
     try {
-      final query = firestore.collection('products');
+      final query = firestore.collection(ConstantManager.productCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Product> productsList = [];
           for (var doc in snapshot.docs) {
-            final parentMarketActive =
-                (await getMarketInfo(doc.data()['marketId'])).value;
-            if (!parentMarketActive ||
-                doc.data()['quantity'].toDouble().floor() == 0) {
+            final marketActive = await isMarketActive(doc.data()['marketId']);
+            if (!marketActive || doc.data()['quantity'].toDouble().floor() == 0) 
               continue;
-            }
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
           return Right(productsList);
@@ -197,7 +216,7 @@ class DataRepository {
   Future<Either<Failure, List<Product>>> fetchCategoryRelatedProducts() async {
     try {
       final response = await firestore
-          .collection('products')
+          .collection(ConstantManager.productCollection)
           .where('categoryId', isEqualTo: _selectedCategory?.id)
           .get();
       List<Product> productsList = [];
@@ -210,9 +229,12 @@ class DataRepository {
     }
   }
 
-  Future<Product> fetchProductById(String id) async {
+  Future<Product> getProductById(String id) async {
     try {
-      final productDoc = await firestore.collection('products').doc(id).get();
+      final productDoc = await firestore
+          .collection(ConstantManager.productCollection)
+          .doc(id)
+          .get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
       log(e.toString());
@@ -220,15 +242,7 @@ class DataRepository {
     }
   }
 
-  Future<MapEntry<String, bool>> getMarketInfo(String id) async {
-    try {
-      final marketDoc = await firestore.collection('markets').doc(id).get();
-      return MapEntry(marketDoc.data()?['name'], marketDoc.data()?['active']);
-    } catch (e) {
-      log(e.toString());
-      throw const Failure("حدث خطأ أثناء جلب المتجر");
-    }
-  }
+  /*----- Cart Operations -----*/
 
   Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
     try {
@@ -247,7 +261,7 @@ class DataRepository {
       Map<Product, int> shoppingData = {};
       _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
       for (MapEntry<String, int> entry in _shopping.entries) {
-        final mappedProduct = await fetchProductById(entry.key);
+        final mappedProduct = await getProductById(entry.key);
         _price += mappedProduct.updatedPrice == 0
             ? mappedProduct.price * entry.value
             : mappedProduct.updatedPrice * entry.value;
@@ -360,13 +374,15 @@ class DataRepository {
     }
   }
 
+  /*----- Order Operations -----*/
+
   Future<Either<Failure, Null>> placeOrder({
     required User user,
     required Location location,
   }) async {
     try {
       final seqIdDoc =
-          firestore.collection('orders').doc(ConstantManager.orderSeqIdDoc);
+          firestore.collection(ConstantManager.ordersCollection).doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       final orderMap = {
         'total': _price,
@@ -381,7 +397,7 @@ class DataRepository {
       await seqIdDoc.set({'seqId': seqIdVal + 1});
       _shopping.forEach((id, taken) async {
         await firestore
-            .collection('products')
+            .collection(ConstantManager.productCollection)
             .doc(id)
             .update({'quantity': FieldValue.increment(-taken)});
       });
@@ -418,7 +434,7 @@ class DataRepository {
           .update({'status': OrderStatus.cancelled.name});
       orderData['shopping'].forEach((id, taken) async {
         await firestore
-            .collection('products')
+            .collection(ConstantManager.productCollection)
             .doc(id)
             .update({'quantity': FieldValue.increment(taken)});
       });
@@ -459,7 +475,7 @@ class DataRepository {
               Map<Product, int> shopping = {};
               for (MapEntry<String, dynamic> entry
                   in doc.data()['shopping'].entries) {
-                final mappedProduct = await fetchProductById(entry.key);
+                final mappedProduct = await getProductById(entry.key);
                 shopping[mappedProduct] = entry.value as int;
               }
               ongoingOrderList.add(UserOrder.fromDoc(
@@ -474,7 +490,7 @@ class DataRepository {
               Map<Product, int> shopping = {};
               for (MapEntry<String, dynamic> entry
                   in doc.data()['shopping'].entries) {
-                final mappedProduct = await fetchProductById(entry.key);
+                final mappedProduct = await getProductById(entry.key);
                 shopping[mappedProduct] = entry.value as int;
               }
               historyOrderList.add(UserOrder.fromDoc(
@@ -526,7 +542,7 @@ class DataRepository {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await fetchProductById(id);
+          final mappedProduct = await getProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
         ongoingOrderList.add(UserOrder.fromDoc(
@@ -540,7 +556,7 @@ class DataRepository {
         if (orderDoc.data()['seqId'] != null) continue;
         Map<Product, int> shopping = {};
         orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await fetchProductById(id);
+          final mappedProduct = await getProductById(id);
           shopping.putIfAbsent(mappedProduct, () => countVal);
         });
         historyOrderList.add(UserOrder.fromDoc(
@@ -561,9 +577,11 @@ class DataRepository {
     }
   }
 
+  /*----- Ads Operations -----*/
+
   Stream<Either<Failure, List<Advertisment>>> adsStream() async* {
     try {
-      final query = firestore.collection('offers');
+      final query = firestore.collection(ConstantManager.adsCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Advertisment> offersList = [];
@@ -581,7 +599,8 @@ class DataRepository {
 
   Future<Either<Failure, List<Advertisment>>> fetchAds() async {
     try {
-      final response = await firestore.collection('offers').get();
+      final response =
+          await firestore.collection(ConstantManager.adsCollection).get();
       List<Advertisment> offersList = [];
       for (var offerDoc in response.docs)
         offersList.add(Advertisment.fromDoc(offerDoc.id, offerDoc.data()));
@@ -592,12 +611,14 @@ class DataRepository {
     }
   }
 
+  /*----- Search Operation -----*/
+
   Future<Either<Failure, List<Product>>> searchForProductByName(
     String productName,
   ) async {
     try {
       final searchResults = await firestore
-          .collection('products')
+          .collection(ConstantManager.productCollection)
           .where(
             'name',
             isGreaterThanOrEqualTo: productName,

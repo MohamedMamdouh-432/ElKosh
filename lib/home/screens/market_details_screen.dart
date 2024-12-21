@@ -1,6 +1,6 @@
+import 'package:elkosh/home/components/related_categories_grid.dart';
 import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/home/controllers/market_details_bloc/market_details_bloc.dart';
-import 'package:elkosh/home/widgets/category_item.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -94,30 +94,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             const Gap(10),
-                            BlocBuilder<CategorysBloc, CategorysState>(
-                              builder: (context, categorysState) {
-                                return Skeletonizer(
-                                  enabled: categorysState.status ==
-                                      LoadingStatus.inProgress,
-                                  child: GridView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                                        crossAxisSpacing: 5,
-                                        maxCrossAxisExtent: 120,
-                                        childAspectRatio: 2 / 3,
-                                      ),
-                                      itemCount:
-                                          categorysState.categorys.length,
-                                      itemBuilder: (context, index) =>
-                                          CategoryItem(
-                                            categorysState.categorys[index],
-                                          )),
-                                );
-                              },
-                            ),
+                            const RelatedCategorysGrid(),
                           ],
                         ),
                       ),

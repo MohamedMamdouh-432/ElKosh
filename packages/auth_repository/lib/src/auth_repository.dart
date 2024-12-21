@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CodeErrorGetter {
@@ -109,7 +110,10 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      _firestore.collection('users').doc(userCredentials.user?.uid).set({
+      _firestore
+          .collection(ConstantManager.userCollection)
+          .doc(userCredentials.user?.uid)
+          .set({
         'name': name,
         'phone': phone,
         'email': email,
@@ -153,7 +157,10 @@ class AuthRepository {
         password: password,
       );
       _userId = userCredentials.user?.uid;
-      final userDoc = await _firestore.collection('users').doc(_userId).get();
+      final userDoc = await _firestore
+          .collection(ConstantManager.userCollection)
+          .doc(_userId)
+          .get();
       if (userDoc.data()?['active'] == false) throw "الحساب موقوف";
       await _sharedPref.setString('userId', _userId ?? '');
       return _userId ?? '';

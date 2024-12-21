@@ -1,6 +1,8 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
@@ -21,11 +23,13 @@ class ElKoshApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => RegisterBloc()),
+        BlocProvider(create: (_) => MarketsBloc()),
         BlocProvider(create: (_) => ProductsBloc()),
         BlocProvider(create: (_) => ProfileBloc()),
         BlocProvider(create: (_) => CartBloc()),
         BlocProvider(create: (_) => OrdersBloc()),
         BlocProvider(create: (_) => SearchBloc()),
+        BlocProvider(create: (_) => AdsBloc()),
       ],
       child: ChangeNotifierProvider(
         create: (context) => NavProvider(),

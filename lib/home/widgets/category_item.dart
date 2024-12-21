@@ -22,19 +22,25 @@ class CategoryItem extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xffFAEFD9),
-          borderRadius: BorderRadius.circular(20),
+          color: const Color.fromARGB(255, 242, 240, 240),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              spreadRadius: 3,
+              blurRadius: 2,
+              blurStyle: BlurStyle.inner,
+            ),
+          ],
         ),
         child: Column(
           children: [
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-              child: Text(
-                category.name,
-                textAlign: TextAlign.center,
-                textScaler: const TextScaler.linear(1.2),
-              ),
+            Text(
+              category.name,
+              textAlign: TextAlign.center,
+              textScaler: const TextScaler.linear(1.2),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
             const Spacer(),
             CachedNetworkImage(

@@ -1,5 +1,5 @@
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/orders/widgets/order_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:elkosh/shared/widgets/order_item_card.dart';
@@ -22,9 +22,10 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
         return Scaffold(
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  const Gap(30),
                   Text(
                     "الطلب رقم # ${toArNumber(state.curOrder.code.toString())}",
                     style: TextStyle(
@@ -88,42 +89,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const Gap(20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          endIndent: 10,
-                          thickness: 2,
-                          color: ColorManager.primary,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 25,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: ColorManager.primary),
-                        ),
-                        child: const Text(
-                          "سلة المشتريات",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          indent: 10,
-                          thickness: 2,
-                          color: ColorManager.primary,
-                        ),
-                      ),
-                    ],
-                  ),
+                  const OrderSection(sectionTitle: "سلة المشتريات"),
                   const Gap(20),
                   ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
