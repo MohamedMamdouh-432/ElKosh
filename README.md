@@ -66,4 +66,7 @@
     * search feature
 
 # Edits
-	- UI Cards for Category
+	- un get order Logic
+
+# Bugs
+	

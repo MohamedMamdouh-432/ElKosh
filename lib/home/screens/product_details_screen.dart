@@ -1,9 +1,10 @@
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/product_details_bloc/product_details_bloc.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
+import 'package:elkosh/home/controllers/product_details_bloc/product_details_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,8 +54,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SliverImageSection(
-                          imageUrl: productState.product.imgUrl),
+                      SliverImageSection(imageUrl: productState.product.imgUrl),
                       SliverToBoxAdapter(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -69,7 +69,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '${productState.product.unitVal} ${productState.product.unit}',
+                                productState.product.unitDesc,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   color: Colors.black54,
@@ -149,11 +149,50 @@ class ProductDetailsScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    '${productState.product.price} جنيه',
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
+                                  const Gap(10),
+                                  ConditionalBuilder(
+                                    condition:
+                                        productState.product.updatedPrice ==
+                                                0 ||
+                                            productState.product.updatedPrice ==
+                                                productState.product.price,
+                                    builder: (_) => Text(
+                                      '${productState.product.updatedPrice} جنيه',
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    fallback: (_) => Row(
+                                      children: [
+                                        Text(
+                                          productState.product.updatedPrice
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                        const Gap(10),
+                                        Text(
+                                          productState.product.updatedPrice
+                                              .toString(),
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Gap(10),
+                                        const Text(
+                                          'جنيه',
+                                          style: TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],

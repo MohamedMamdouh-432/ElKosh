@@ -180,8 +180,10 @@ class DataRepository {
           : await firestore.collection(ConstantManager.productCollection).get();
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
-        final marketActive = await isMarketActive(productDoc.data()['marketId']);
-        if (!marketActive || productDoc.data()['quantity'].toDouble().floor() == 0) continue;
+        final marketActive =
+            await isMarketActive(productDoc.data()['marketId']);
+        if (!marketActive ||
+            productDoc.data()['quantity'].toDouble().floor() == 0) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
       return Right(productsList);
@@ -199,7 +201,7 @@ class DataRepository {
           List<Product> productsList = [];
           for (var doc in snapshot.docs) {
             final marketActive = await isMarketActive(doc.data()['marketId']);
-            if (!marketActive || doc.data()['quantity'].toDouble().floor() == 0) 
+            if (!marketActive || doc.data()['quantity'].toDouble().floor() == 0)
               continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
@@ -262,9 +264,7 @@ class DataRepository {
       _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
       for (MapEntry<String, int> entry in _shopping.entries) {
         final mappedProduct = await getProductById(entry.key);
-        _price += mappedProduct.updatedPrice == 0
-            ? mappedProduct.price * entry.value
-            : mappedProduct.updatedPrice * entry.value;
+        _price += mappedProduct.updatedPrice * entry.value;
         shoppingData.putIfAbsent(mappedProduct, () => entry.value);
       }
       return Right({
@@ -297,8 +297,7 @@ class DataRepository {
     Product product,
   ) async {
     try {
-      _price +=
-          product.updatedPrice == 0 ? product.price : product.updatedPrice;
+      _price += product.updatedPrice;
       _shopping.update(
         product.id,
         (value) => value + 1,
@@ -316,9 +315,7 @@ class DataRepository {
   Future<Either<Failure, void>> removeProductFromCart(Product product) async {
     try {
       if (_shopping.containsKey(product.id)) {
-        _price -=
-            (product.updatedPrice == 0 ? product.price : product.updatedPrice) *
-                (_shopping[product.id] ?? 0);
+        _price -= product.updatedPrice * (_shopping[product.id] ?? 0);
         _shopping.remove(product.id);
         await sharedPref.setDouble('price', _price);
         await sharedPref.setString('shopping', json.encode(_shopping));
@@ -333,8 +330,7 @@ class DataRepository {
   Future<Either<Failure, void>> increaseProductQuantityInCart(
       Product product) async {
     try {
-      _price +=
-          product.updatedPrice == 0 ? product.price : product.updatedPrice;
+      _price += product.updatedPrice;
       _shopping.update(
         product.id,
         (value) => value + 1,
@@ -354,8 +350,7 @@ class DataRepository {
   ) async {
     try {
       if (_shopping.containsKey(product.id)) {
-        _price -=
-            product.updatedPrice == 0 ? product.price : product.updatedPrice;
+        _price -= product.updatedPrice;
         _shopping.update(
           product.id,
           (value) => value - 1,
@@ -381,8 +376,9 @@ class DataRepository {
     required Location location,
   }) async {
     try {
-      final seqIdDoc =
-          firestore.collection(ConstantManager.ordersCollection).doc(ConstantManager.orderSeqIdDoc);
+      final seqIdDoc = firestore
+          .collection(ConstantManager.ordersCollection)
+          .doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       final orderMap = {
         'total': _price,

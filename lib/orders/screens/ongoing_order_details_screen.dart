@@ -1,8 +1,8 @@
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/orders/widgets/order_card.dart';
 import 'package:elkosh/orders/widgets/order_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/shared/widgets/order_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +46,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: RichText(
                       text: TextSpan(
-                          text: ' التكلفة الكليه:  ',
+                          text: ' إجمالى التكلفة:  ',
                           style: TextStyle(
                             fontSize: 18.sp,
                             color: Colors.black,
@@ -88,6 +88,27 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                           ]),
                     ),
                   ),
+                  const Gap(10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: RichText(
+                      text: TextSpan(
+                          text: ' موقع التوصيل:  ',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.black,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: state.curOrder.location.address,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
                   const Gap(20),
                   const OrderSection(sectionTitle: "سلة المشتريات"),
                   const Gap(20),
@@ -96,7 +117,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: shopping.length,
-                    itemBuilder: (context, i) => OrderItemCard(
+                    itemBuilder: (context, i) => OrderCard(
                       product: shopping.keys.elementAt(i),
                       quantity: shopping.values.elementAt(i),
                     ),
@@ -142,6 +163,25 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                       "إلغاء",
                       style: TextStyle(
                         fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<OrdersBloc>()
+                          .add(OrderDeleveringingEvent(state.curOrder));
+                      context.pop();
+                    },
+                    child: const Text(
+                      "رفض الاستلام",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

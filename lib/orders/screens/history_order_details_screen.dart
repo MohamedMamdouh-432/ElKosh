@@ -1,7 +1,7 @@
 import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/widgets/order_item_card.dart';
+import 'package:elkosh/orders/widgets/order_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,7 +44,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: RichText(
                       text: TextSpan(
-                          text: ' التكلفة الكليه:  ',
+                          text: ' إجمالى التكلفة:  ',
                           style: TextStyle(
                             fontSize: 18.sp,
                             color: Colors.black,
@@ -82,6 +82,27 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                                 fontSize: 18.sp,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                  const Gap(10),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: RichText(
+                      text: TextSpan(
+                          text: ' موقع التوصيل:  ',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            color: Colors.black,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: state.curOrder.location.address,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.black,
                               ),
                             ),
                           ]),
@@ -130,7 +151,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: shopping.length,
-                    itemBuilder: (context, i) => OrderItemCard(
+                    itemBuilder: (context, i) => OrderCard(
                       product: shopping.keys.elementAt(i),
                       quantity: shopping.values.elementAt(i),
                     ),

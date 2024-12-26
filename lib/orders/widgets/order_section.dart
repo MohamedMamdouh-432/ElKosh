@@ -27,7 +27,7 @@ class OrderSection extends StatelessWidget {
           ),
           child: Text(
             sectionTitle,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               overflow: TextOverflow.ellipsis,
