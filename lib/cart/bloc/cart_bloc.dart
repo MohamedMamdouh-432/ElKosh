@@ -82,10 +82,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           shopping: updatedShopping,
           errorMessage: '',
           status: CartStatus.success,
-          price: state.price +
-              (event.product.updatedPrice == 0
-                  ? event.product.price
-                  : event.product.updatedPrice),
+          price: state.price + event.product.updatedPrice,
         ));
       },
     );
@@ -106,7 +103,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         updatedShopping.remove(event.product);
         emit(state.copyWith(
           errorMessage: '',
-          price: state.price - event.product.price * count,
+          price: state.price - (event.product.updatedPrice * count),
           status: CartStatus.success,
           shopping: updatedShopping,
         ));
@@ -134,10 +131,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(state.copyWith(
           shopping: updatedShopping,
           errorMessage: '',
-          price: state.price +
-              (event.product.updatedPrice == 0
-                  ? event.product.price
-                  : event.product.updatedPrice),
+          price: state.price + event.product.updatedPrice,
           status: CartStatus.success,
         ));
       },
@@ -168,7 +162,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             updatedShopping.remove(event.product);
           emit(state.copyWith(
             errorMessage: '',
-            price: state.price - (isExist ? event.product.price : 0),
+            price: state.price - (isExist ? event.product.updatedPrice : 0),
             status: CartStatus.success,
             shopping: updatedShopping,
           ));

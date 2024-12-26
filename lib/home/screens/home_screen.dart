@@ -25,7 +25,6 @@ class HomeScreen extends StatelessWidget {
         context.read<AdsBloc>().add(AdsLoadingEvent());
       },
       child: const SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
         child: Column(
           children: [
             CustomAppBar(),

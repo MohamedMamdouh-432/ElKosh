@@ -37,24 +37,25 @@ class AdsSlider extends StatelessWidget {
         },
         builder: (context, state) {
           return Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                color: Colors.black12.withValues(alpha: 0.05),
-              ),
-              child: Skeletonizer(
-                enabled: state.status == LoadingStatus.inProgress,
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    height: context.height * 0.22,
-                    enlargeCenterPage: true,
-                    autoPlay: true,
-                    aspectRatio: 16 / 8,
-                    viewportFraction: 0.7,
-                    autoPlayAnimationDuration: const Duration(seconds: 1),
-                  ),
-                  items: state.ads.map((adv) => AdItem(ad: adv)).toList(),
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.black12.withValues(alpha: 0.03),
+            ),
+            child: Skeletonizer(
+              enabled: state.status == LoadingStatus.inProgress,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: context.height * 0.22,
+                  enlargeCenterPage: true,
+                  autoPlay: true,
+                  aspectRatio: 16 / 8,
+                  viewportFraction: 0.7,
+                  autoPlayAnimationDuration: const Duration(seconds: 1),
                 ),
-              ));
+                items: state.ads.map((adv) => AdItem(ad: adv)).toList(),
+              ),
+            ),
+          );
         },
       ),
     );

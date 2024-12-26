@@ -39,8 +39,7 @@ class MarketsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 15),
               margin: const EdgeInsets.only(top: 4),
               decoration: BoxDecoration(
-                color: Colors.black12.withValues(alpha: 0.05),
-                // borderRadius: BorderRadius.circular(20),
+                color: Colors.black12.withValues(alpha: 0.03),
               ),
               child: Column(
                 children: [

@@ -6,8 +6,7 @@ class Product extends Equatable {
   final String desc;
   final String imgUrl;
   final double price;
-  final String unit;
-  final String unitVal;
+  final String unitDesc;
   final double quantity;
   final double updatedPrice;
   final String marketId;
@@ -20,8 +19,7 @@ class Product extends Equatable {
     required this.price,
     required this.quantity,
     required this.imgUrl,
-    this.unit = 'كيلو',
-    required this.unitVal,
+    required this.unitDesc,
     required this.updatedPrice,
     required this.categoryId,
     required this.marketId,
@@ -34,10 +32,10 @@ class Product extends Equatable {
     price: 0.0,
     quantity: 0.0,
     imgUrl: '',
-    unitVal: '',
     updatedPrice: 0,
     categoryId: '',
     marketId: '',
+    unitDesc: '',
   );
 
   factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
@@ -46,12 +44,11 @@ class Product extends Equatable {
         name: productDoc['name'],
         desc: productDoc['desc'],
         imgUrl: productDoc['imgUrl'],
-        unit: productDoc['unit'],
+        unitDesc: productDoc['unitDesc'],
         categoryId: productDoc['categoryId'],
         marketId: productDoc['marketId'],
         price: productDoc['price'].toDouble(),
         quantity: productDoc['quantity'].toDouble(),
-        unitVal: productDoc['unitVal'],
         updatedPrice: (productDoc['updatedPrice'] ?? 0).toDouble(),
       );
 
@@ -63,8 +60,7 @@ class Product extends Equatable {
         'imgUrl': imgUrl,
         'categoryId': categoryId,
         'marketId': marketId,
-        'unit': unit,
-        'unitVal': unitVal,
+        'unitDesc': unitDesc,
         'updatedPrice': updatedPrice,
       };
 
@@ -77,8 +73,7 @@ class Product extends Equatable {
     String? categoryId,
     String? marketId,
     String? imgUrl,
-    String? unit,
-    String? unitVal,
+    String? unitDesc,
     double? updatedPrice,
   }) =>
       Product(
@@ -90,14 +85,13 @@ class Product extends Equatable {
         categoryId: categoryId ?? this.categoryId,
         marketId: marketId ?? this.marketId,
         imgUrl: imgUrl ?? this.imgUrl,
-        unit: unit ?? 'packet',
-        unitVal: unitVal ?? this.unitVal,
+        unitDesc: unitDesc ?? this.unitDesc,
         updatedPrice: updatedPrice ?? this.updatedPrice,
       );
 
   @override
   String toString() {
-    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit: $unit\n\tUnit Value: $unitVal\nUpdatedPrice; $updatedPrice';
+    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit Desc: $unitDesc\nUpdatedPrice; $updatedPrice';
   }
 
   @override
@@ -111,8 +105,7 @@ class Product extends Equatable {
       imgUrl,
       categoryId,
       marketId,
-      unit,
-      unitVal,
+      unitDesc,
       updatedPrice,
     ];
   }

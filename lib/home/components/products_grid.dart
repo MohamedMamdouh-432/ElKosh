@@ -42,8 +42,7 @@ class ProductsGrid extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15),
             margin: const EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: Colors.black12.withValues(alpha: 0.05),
-              // borderRadius: BorderRadius.circular(20),
+              color: Colors.black12.withValues(alpha: 0.03),
             ),
             child: Column(
               children: [
@@ -66,34 +65,37 @@ class ProductsGrid extends StatelessWidget {
                   children: [
                     for (int i = 0; i < min(state.products.length, 10); i++)
                       ProductGridCard(product: state.products[i]),
-                    InkWell(
-                      onTap: () {
-                        context
-                            .read<ProductsBloc>()
-                            .add(const ProductsLoadingEvent());
-                        context.push(RouteManager.productsRoute, extra: 2);
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                width: 2,
-                                color: Colors.blueGrey,
+                    Visibility(
+                      visible: state.products.isNotEmpty,
+                      child: InkWell(
+                        onTap: () {
+                          context
+                              .read<ProductsBloc>()
+                              .add(const ProductsLoadingEvent());
+                          context.push(RouteManager.productsRoute, extra: 2);
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
+                              child: const Icon(
+                                CupertinoIcons.square_grid_2x2,
+                                size: 40,
                               ),
                             ),
-                            child: const Icon(
-                              CupertinoIcons.square_grid_2x2,
-                              size: 40,
-                            ),
-                          ),
-                          const Text("عرض الكل"),
-                        ],
+                            const Text("عرض الكل"),
+                          ],
+                        ),
                       ),
                     ),
                   ],

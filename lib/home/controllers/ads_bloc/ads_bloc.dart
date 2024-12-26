@@ -48,10 +48,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
   FutureOr<void> _onAdSelecting(AdSelectedEvent event, emit) async {
     try {
       sl.get<DataRepository>().setCurAd(event.ad);
-      emit(state.copyWith(
-        curAd: event.ad,
-        status: LoadingStatus.inProgress,
-      ));
+      emit(state.copyWith(curAd: event.ad));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
