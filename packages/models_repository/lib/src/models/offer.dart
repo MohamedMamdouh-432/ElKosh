@@ -1,49 +1,58 @@
 import 'package:equatable/equatable.dart';
+import 'package:models_repository/models_repository.dart';
 
-class Advertisment extends Equatable {
-  final String id;
-  final String title;
-  final String imgUrl;
+class Offer extends Equatable {
+  final int quantity;
+  final double price;
+  final Product product;
 
-  const Advertisment({
-    required this.id,
-    required this.title,
-    required this.imgUrl,
+  const Offer({
+    required this.product,
+    required this.quantity,
+    required this.price,
   });
 
-  static Advertisment empty = const Advertisment(
-    id: '',
-    title: '',
-    imgUrl: '',
+  static Offer empty = Offer(
+    price: 0,
+    quantity: 0,
+    product: Product.empty,
   );
 
-  factory Advertisment.fromDoc(String id, Map<String, dynamic> offerDoc) =>
-      Advertisment(
-        id: id,
-        title: offerDoc['title'],
-        imgUrl: offerDoc['imgUrl'],
+  bool get isValid => quantity > 0 && price > 0 && product != Product.empty;
+
+  Offer copyWith({
+    Product? product,
+    int? quantity,
+    double? price,
+  }) =>
+      Offer(
+        product: product ?? this.product,
+        quantity: quantity ?? this.quantity,
+        price: price ?? this.price,
       );
 
-  Map<String, dynamic> toDoc() => {
-        'title': title,
-        'imgUrl': imgUrl,
+  factory Offer.fromDoc(Map<String, dynamic> offerDoc, Product product) =>
+      Offer(
+        product: product,
+        price: offerDoc['price'].toDouble(),
+        quantity: offerDoc['quantity'].toInt(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'price': price,
+        'quantity': quantity,
+        'productId': product.id,
       };
 
-  Advertisment copyWith({
-    String? id,
-    String? title,
-    String? imgUrl,
-  }) {
-    return Advertisment(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      imgUrl: imgUrl ?? this.imgUrl,
-    );
+  @override
+  String toString() {
+    return ''' Offer::
+        product: ${product.name}, 
+        quantity: $quantity, 
+        price: $price
+      ''';
   }
 
   @override
-  String toString() => 'Offer :: \nid: $id\ntitle: $title\nimgUrl: $imgUrl';
-
-  @override
-  List<Object> get props => [id, title, imgUrl];
+  List<Object> get props => [product, quantity, price];
 }

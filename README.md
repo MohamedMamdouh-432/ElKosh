@@ -67,6 +67,8 @@
 
 # Edits
 	- un get order Logic
+	- google maps
+	- otp
 
 # Bugs
 	

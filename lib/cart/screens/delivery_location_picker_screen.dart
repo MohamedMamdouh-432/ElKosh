@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +32,8 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
           size: 28,
         ),
         selectLocationButtonStyle: ButtonStyle(
-          backgroundColor:
-              WidgetStateProperty.all(ColorManager.primary.withValues(alpha: 0.8)),
+          backgroundColor: WidgetStateProperty.all(
+              ColorManager.primary.withValues(alpha: 0.8)),
           foregroundColor: const WidgetStatePropertyAll(Colors.white),
           elevation: const WidgetStatePropertyAll(15),
         ),
@@ -51,7 +50,8 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
         searchBarTextColor: Colors.deepOrange,
         searchBarBackgroundColor: Colors.grey.shade200,
         // other buttons
-        locationButtonBackgroundColor: ColorManager.primary.withValues(alpha: 0.8),
+        locationButtonBackgroundColor:
+            ColorManager.primary.withValues(alpha: 0.8),
         zoomButtonsBackgroundColor: ColorManager.primary.withValues(alpha: 0.8),
         locationButtonsColor: Colors.grey.shade300,
         zoomButtonsColor: Colors.grey.shade300,
@@ -68,11 +68,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
             pickedData.latLong.longitude,
             getAddress(pickedData.addressData),
           );
-          final profileState = BlocProvider.of<ProfileBloc>(context).state;
-          context.read<CartBloc>().add(CartPlaceOrderEvent(
-                profileState.user,
-                location,
-              ));
+          context.read<CartBloc>().add(CartPlaceOrderEvent(location));
           context.pop();
           context.pop();
         },

@@ -17,6 +17,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     on<OrderDeleveringingEvent>(_onOrderDelevering);
     on<OrderCancellingEvent>(_onOrderCancelled);
     on<OrdersUpdatedEvent>(_onOrdersUpdated);
+    on<OrderRefusingEvent>(_onOrderRefusing);
 
     _subscription = sl.get<DataRepository>().ordersStream().listen(
           (result) => result.fold(
@@ -104,6 +105,35 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       final newHistoryOrders = state.historyOrders;
       newOngoingOrders.remove(event.order);
       newHistoryOrders.add(event.order.copyWith(status: OrderStatus.cancelled));
+      result.fold(
+        (left) => emit(state.copyWith(
+          errMsg: left.message,
+          status: OrdersStatus.placingFailure,
+        )),
+        (right) {
+          emit(state.copyWith(
+            ongoingOrders: newOngoingOrders,
+            historyOrders: newHistoryOrders,
+            status: OrdersStatus.placingSuccess,
+          ));
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: "حدث خطأ أثناء الغاء الاوردر",
+        status: OrdersStatus.placingFailure,
+      ));
+    }
+  }
+  
+  Future<void> _onOrderRefusing(OrderRefusingEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: OrdersStatus.onProgress));
+      final result = await sl.get<DataRepository>().refuseOrder(event.order.id);
+      final newOngoingOrders = state.ongoingOrders;
+      final newHistoryOrders = state.historyOrders;
+      newOngoingOrders.remove(event.order);
+      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.refused));
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,

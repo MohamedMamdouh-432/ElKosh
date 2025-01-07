@@ -179,10 +179,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   Future<void> _onPlacingOrder(CartPlaceOrderEvent event, emit) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
-      final result = await sl.get<DataRepository>().placeOrder(
-            user: event.user,
-            location: event.location,
-          );
+      final result = await sl.get<DataRepository>().placeOrder(event.location);
       // todo: send notification to admin (later when notifications feature is ready)
       result.fold(
           (l) => emit(state.copyWith(

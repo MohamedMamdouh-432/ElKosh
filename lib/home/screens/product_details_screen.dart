@@ -166,8 +166,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                     fallback: (_) => Row(
                                       children: [
                                         Text(
-                                          productState.product.updatedPrice
-                                              .toString(),
+                                          productState.product.price.toString(),
                                           style: const TextStyle(
                                             fontSize: 22,
                                             fontWeight: FontWeight.bold,

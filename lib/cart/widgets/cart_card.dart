@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/widgets/cart_product_quantity_counter.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,7 +37,6 @@ class CartCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // right
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: CachedNetworkImage(
@@ -47,17 +47,20 @@ class CartCard extends StatelessWidget {
             ),
           ),
           MaxGap(15.w),
-          // middle
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                product.name,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+              SizedBox(
+                width: context.width * 0.38,
+                child: Text(
+                  product.name,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
               ),
               Text(
@@ -70,10 +73,7 @@ class CartCard extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          // left
           Column(
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            // spacing: 2,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(

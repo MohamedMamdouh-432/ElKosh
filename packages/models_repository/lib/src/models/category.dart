@@ -42,12 +42,6 @@ class Category extends Equatable {
         marketId: catDoc['marketId'],
       );
 
-  Map<String, dynamic> toDoc() => {
-        'name': name,
-        'imgUrl': imgUrl,
-        'marketId': marketId,
-      };
-
   @override
   String toString() =>
       '\nCategory :: Name: $name, imgUrl: $imgUrl, MarketId: $marketId';

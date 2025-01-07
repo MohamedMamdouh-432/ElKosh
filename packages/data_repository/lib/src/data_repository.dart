@@ -15,7 +15,7 @@ class DataRepository {
   Market? _selctedMarket;
   Category? _selectedCategory;
   Product? _selectedProduct;
-  Advertisment? _selectedAd;
+  Ad? _selectedAd;
   UserOrder? _selectedOrder;
   double _price;
   Map<String, int> _shopping;
@@ -31,12 +31,12 @@ class DataRepository {
   Market? getCurMarket() => _selctedMarket;
   Category? getCurCategory() => _selectedCategory;
   Product? getCurProduct() => _selectedProduct;
-  Advertisment? getCurAd() => _selectedAd;
+  Ad? getCurAd() => _selectedAd;
   UserOrder? getCurOrder() => _selectedOrder;
   void setCurMarket(Market market) => _selctedMarket = market;
   void setCurCategory(Category category) => _selectedCategory = category;
   void setCurProduct(Product product) => _selectedProduct = product;
-  void setCurAd(Advertisment ad) => _selectedAd = ad;
+  void setCurAd(Ad ad) => _selectedAd = ad;
   void setCurOrder(UserOrder order) => _selectedOrder = order;
 
   /*----- Market Operations -----*/
@@ -371,10 +371,7 @@ class DataRepository {
 
   /*----- Order Operations -----*/
 
-  Future<Either<Failure, Null>> placeOrder({
-    required User user,
-    required Location location,
-  }) async {
+  Future<Either<Failure, Null>> placeOrder(Location location) async {
     try {
       final seqIdDoc = firestore
           .collection(ConstantManager.ordersCollection)
@@ -384,7 +381,7 @@ class DataRepository {
         'total': _price,
         'code': seqIdVal,
         'shopping': _shopping,
-        'userId': user.id,
+        'userId': getUserId(),
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
         'location': location.toJson(),
@@ -441,6 +438,28 @@ class DataRepository {
     }
   }
 
+  Future<Either<Failure, Null>> refuseOrder(String orderId) async {
+    try {
+      final orderData =
+          (await firestore.collection('orders').doc(orderId).get()).data() ??
+              {};
+      await firestore
+          .collection('orders')
+          .doc(orderId)
+          .update({'status': OrderStatus.refused.name});
+      orderData['shopping'].forEach((id, taken) async {
+        await firestore
+            .collection(ConstantManager.productCollection)
+            .doc(id)
+            .update({'quantity': FieldValue.increment(taken)});
+      });
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return Left(Failure(e.toString()));
+    }
+  }
+
   Stream<Either<Failure, Map<String, List<UserOrder>>>> ordersStream() async* {
     try {
       final userId = getUserId();
@@ -454,7 +473,7 @@ class DataRepository {
       final historyOrdersStream = firestore
           .collection('orders')
           .where('userId', isEqualTo: userId)
-          .where('status', whereIn: ['cancelled', 'delivered'])
+          .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
           .orderBy('createdAt', descending: true)
           .snapshots();
 
@@ -465,7 +484,6 @@ class DataRepository {
           try {
             final List<UserOrder> ongoingOrderList = [];
             final List<UserOrder> historyOrderList = [];
-
             for (var doc in ongoingSnapshot.docs) {
               if (doc.data()['seqId'] != null) continue;
               Map<Product, int> shopping = {};
@@ -523,7 +541,7 @@ class DataRepository {
         firestore
             .collection('orders')
             .where('userId', isEqualTo: getUserId())
-            .where('status', whereIn: ['cancelled', 'delivered'])
+            .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
             .orderBy('createdAt', descending: true)
             .get(),
       ]);
@@ -575,15 +593,21 @@ class DataRepository {
 
   /*----- Ads Operations -----*/
 
-  Stream<Either<Failure, List<Advertisment>>> adsStream() async* {
+  Stream<Either<Failure, List<Ad>>> adsStream() async* {
     try {
       final query = firestore.collection(ConstantManager.adsCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
-          List<Advertisment> offersList = [];
-          for (var doc in snapshot.docs)
-            offersList.add(Advertisment.fromDoc(doc.id, doc.data()));
-          return Right(offersList);
+          List<Ad> adsList = [];
+          for (var adDoc in snapshot.docs) {
+            List<Offer> offers = [];
+            for (var offerDoc in adDoc.data()['offers']) {
+              final offerProduct = await getProductById(offerDoc['productId']);
+              offers.add(Offer.fromDoc(offerDoc, offerProduct));
+            }
+            adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
+          }
+          return Right(adsList);
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -593,17 +617,47 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, List<Advertisment>>> fetchAds() async {
+  Future<Either<Failure, List<Ad>>> fetchAds() async {
     try {
       final response =
           await firestore.collection(ConstantManager.adsCollection).get();
-      List<Advertisment> offersList = [];
-      for (var offerDoc in response.docs)
-        offersList.add(Advertisment.fromDoc(offerDoc.id, offerDoc.data()));
-      return Right(offersList);
+      List<Ad> adsList = [];
+      for (var adDoc in response.docs) {
+        List<Offer> offers = [];
+        for (var offerDoc in adDoc.data()['offers']) {
+          final offerProduct = await getProductById(offerDoc['productId']);
+          offers.add(Offer.fromDoc(offerDoc, offerProduct));
+        }
+        adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
+      }
+      return Right(adsList);
     } catch (e) {
       log(e.toString());
-      return const Left(Failure('حدث خطأ أثناء جلب العروض'));
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Stream<Either<Failure, Ad>> adDetailsStream() async* {
+    try {
+      final docRef = firestore
+          .collection(ConstantManager.adsCollection)
+          .doc(_selectedAd?.id);
+      yield* docRef.snapshots().asyncMap((snapshot) async {
+        try {
+          if (!snapshot.exists)
+            return const Left(Failure('لم يتم العثور على المنتج'));
+          List<Offer> offers = [];
+          for (var offerDoc in snapshot.data()!['offers']) {
+            final offerProduct = await getProductById(offerDoc['productId']);
+            offers.add(Offer.fromDoc(offerDoc, offerProduct));
+          }
+          return Right(Ad.fromDoc(snapshot.id, offers, snapshot.data()!));
+        } catch (e) {
+          return Left(Failure(e.toString()));
+        }
+      });
+    } catch (e) {
+      yield Left(Failure(e.toString()));
     }
   }
 

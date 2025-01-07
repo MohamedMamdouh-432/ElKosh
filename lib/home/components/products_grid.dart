@@ -19,7 +19,7 @@ class ProductsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ProductsBloc, ProductsState>(
       listener: (context, state) {
-        if (state.status == LoadingStatus.failure) {
+        if (state.status == LoadStatus.failure) {
           QuickAlert.show(
             context: context,
             type: QuickAlertType.error,
@@ -37,7 +37,7 @@ class ProductsGrid extends StatelessWidget {
       },
       builder: (context, state) {
         return Skeletonizer(
-          enabled: state.status == LoadingStatus.inProgress,
+          enabled: state.status == LoadStatus.inProgress,
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 15),
             margin: const EdgeInsets.only(top: 4),

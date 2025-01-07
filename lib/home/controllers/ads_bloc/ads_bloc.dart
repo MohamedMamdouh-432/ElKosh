@@ -26,21 +26,21 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
 
   FutureOr<void> _onAdsLoading(event, emit) async {
     try {
-      emit(state.copyWith(status: LoadingStatus.inProgress));
+      emit(state.copyWith(status: LoadStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchAds();
       results.fold(
           (l) => emit(state.copyWith(
                 errMsg: l.message,
-                status: LoadingStatus.failure,
+                status: LoadStatus.failure,
               )),
           (r) => emit(state.copyWith(
                 ads: r,
-                status: LoadingStatus.success,
+                status: LoadStatus.success,
               )));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -52,7 +52,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -60,8 +60,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
   FutureOr<void> _onAdsUpdated(AdsUpdatedEvent event, emit) {
     emit(state.copyWith(
       ads: event.ads,
-      status: LoadingStatus.success,
-      curAd: state.curAd,
+      status: LoadStatus.success,
     ));
   }
 

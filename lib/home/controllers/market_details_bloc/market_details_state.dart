@@ -2,7 +2,7 @@ part of 'market_details_bloc.dart';
 
 class MarketDetailsState extends Equatable {
   final Market market;
-  final LoadingStatus status;
+  final LoadStatus status;
   final String errMsg;
 
   const MarketDetailsState({
@@ -14,12 +14,12 @@ class MarketDetailsState extends Equatable {
   static MarketDetailsState initial = MarketDetailsState(
     market: Market.empty,
     errMsg: '',
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
   );
 
   MarketDetailsState copyWith({
     Market? market,
-    LoadingStatus? status,
+    LoadStatus? status,
     String? errMsg,
   }) {
     return MarketDetailsState(

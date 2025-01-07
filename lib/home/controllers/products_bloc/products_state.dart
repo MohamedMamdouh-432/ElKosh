@@ -4,7 +4,7 @@ class ProductsState extends Equatable {
   final List<Product> products;
   final Product curProduct;
   final String errMsg;
-  final LoadingStatus status;
+  final LoadStatus status;
 
   const ProductsState({
     required this.products,
@@ -17,14 +17,14 @@ class ProductsState extends Equatable {
     products: const [],
     curProduct: Product.empty,
     errMsg: '',
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
   );
 
   ProductsState copyWith({
     List<Product>? products,
     Product? curProduct,
     String? errMsg,
-    LoadingStatus? status,
+    LoadStatus? status,
   }) {
     return ProductsState(
       products: products ?? this.products,

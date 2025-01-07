@@ -4,7 +4,7 @@ enum FormInputStatus {
   valid,
 }
 
-enum LoadingStatus {
+enum LoadStatus {
   initial,
   inProgress,
   success,

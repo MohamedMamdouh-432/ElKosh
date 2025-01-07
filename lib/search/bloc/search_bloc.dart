@@ -19,12 +19,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   FutureOr<void> _onSearchQueryChanged(SearchQueryChanged event, emit) async {
     emit(state.copyWith(
       query: event.query,
-      status: LoadingStatus.inProgress,
+      status: LoadStatus.inProgress,
     ));
     if (event.query.isEmpty)
       emit(state.copyWith(
         products: [],
-        status: LoadingStatus.success,
+        status: LoadStatus.success,
       ));
     try {
       final queryResults =
@@ -32,28 +32,28 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       queryResults.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           products: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
 
   FutureOr<void> _onSearchQuerySubmitted(event, emit) async {
-    emit(state.copyWith(status: LoadingStatus.inProgress));
+    emit(state.copyWith(status: LoadStatus.inProgress));
     if (event.query.isEmpty)
       emit(state.copyWith(
         products: [],
-        status: LoadingStatus.success,
+        status: LoadStatus.success,
       ));
     try {
       final queryResults =
@@ -61,18 +61,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       queryResults.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           products: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       log(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }

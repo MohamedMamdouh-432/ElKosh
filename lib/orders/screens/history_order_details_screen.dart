@@ -1,7 +1,7 @@
 import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
-import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/orders/widgets/order_card.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,26 +65,38 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                   const Gap(10),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: RichText(
-                      text: TextSpan(
-                          text: ' حالة الطلب:  ',
+                    child: Row(
+                      children: [
+                        Text(
+                          ' حالة الطلب:  ',
                           style: TextStyle(
                             fontSize: 18.sp,
                             color: Colors.black,
                           ),
-                          children: [
-                            TextSpan(
-                              text:
-                                  state.curOrder.status == OrderStatus.delivered
-                                      ? "تم توصيل الطلب"
-                                      : "تم إالغاء الطلب",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: state.curOrder.color,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            state.curOrder.status == OrderStatus.delivered
+                                ? "تم توصيل الطلب"
+                                : state.curOrder.status == OrderStatus.cancelled
+                                    ? "تم الغاء الطلب"
+                                    : "تم رفض استلام الطلب",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ]),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const Gap(10),

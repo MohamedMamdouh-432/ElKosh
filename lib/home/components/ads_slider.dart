@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
-import 'package:elkosh/home/widgets/advertisement_item.dart';
+import 'package:elkosh/home/widgets/ad_item.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +19,7 @@ class AdsSlider extends StatelessWidget {
       create: (context) => AdsBloc(),
       child: BlocConsumer<AdsBloc, AdsState>(
         listener: (context, state) {
-          if (state.status == LoadingStatus.failure) {
+          if (state.status == LoadStatus.failure) {
             QuickAlert.show(
               context: context,
               type: QuickAlertType.error,
@@ -42,7 +42,7 @@ class AdsSlider extends StatelessWidget {
               color: Colors.black12.withValues(alpha: 0.03),
             ),
             child: Skeletonizer(
-              enabled: state.status == LoadingStatus.inProgress,
+              enabled: state.status == LoadStatus.inProgress,
               child: CarouselSlider(
                 options: CarouselOptions(
                   height: context.height * 0.22,

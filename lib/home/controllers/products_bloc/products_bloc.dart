@@ -29,45 +29,45 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   FutureOr<void> _onProductLoading(ProductsLoadingEvent event, emit) async {
     try {
-      emit(state.copyWith(status: LoadingStatus.inProgress));
+      emit(state.copyWith(status: LoadStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchProducts(event.limit);
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           products: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
 
   FutureOr<void> _onProductRelatedLoading(event, emit) async {
     try {
-      emit(state.copyWith(status: LoadingStatus.inProgress));
+      emit(state.copyWith(status: LoadStatus.inProgress));
       final results =
           await sl.get<DataRepository>().fetchCategoryRelatedProducts();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           products: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -78,10 +78,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   }
 
   FutureOr<void> _onProductsUpdated(ProductsUpdatedEvent event, emit) {
-    emit(state.copyWith(status: LoadingStatus.updated));
+    emit(state.copyWith(status: LoadStatus.updated));
     emit(state.copyWith(
       products: event.products,
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
       curProduct: state.curProduct,
     ));
   }

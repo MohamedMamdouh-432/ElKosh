@@ -46,16 +46,10 @@ class CartDecreasingProductQuantityEvent extends CartEvent {
 }
 
 class CartPlaceOrderEvent extends CartEvent {
-  final User user;
   final Location location;
 
-  const CartPlaceOrderEvent(this.user, this.location);
+  const CartPlaceOrderEvent(this.location);
 
   @override
-  String toString() {
-    return 'CartPlaceOrderEvent :\nUser: \n$user\nLocation: $location\n';
-  }
-
-  @override
-  List<Object> get props => [user, location];
+  List<Object> get props => [location];
 }
