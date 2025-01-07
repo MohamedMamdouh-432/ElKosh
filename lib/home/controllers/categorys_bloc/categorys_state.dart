@@ -4,7 +4,7 @@ class CategorysState extends Equatable {
   final List<Category> categorys;
   final Category curCategory;
   final String errMsg;
-  final LoadingStatus status;
+  final LoadStatus status;
 
   const CategorysState({
     required this.categorys,
@@ -17,14 +17,14 @@ class CategorysState extends Equatable {
     categorys: const [],
     curCategory: Category.empty,
     errMsg: '',
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
   );
 
   CategorysState copyWith({
     List<Category>? categorys,
     Category? curCategory,
     String? errMsg,
-    LoadingStatus? status,
+    LoadStatus? status,
   }) {
     return CategorysState(
       categorys: categorys ?? this.categorys,

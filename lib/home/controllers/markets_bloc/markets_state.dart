@@ -4,7 +4,7 @@ class MarketsState extends Equatable {
   final List<Market> markets;
   final Market curMarket;
   final String errMsg;
-  final LoadingStatus status;
+  final LoadStatus status;
 
   const MarketsState({
     required this.markets,
@@ -17,14 +17,14 @@ class MarketsState extends Equatable {
     markets: const [],
     curMarket: Market.empty,
     errMsg: '',
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
   );
 
   MarketsState copyWith({
     List<Market>? markets,
     Market? curMarket,
     String? errMsg,
-    LoadingStatus? status,
+    LoadStatus? status,
   }) {
     return MarketsState(
       markets: markets ?? this.markets,

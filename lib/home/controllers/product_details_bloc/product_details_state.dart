@@ -2,7 +2,7 @@ part of 'product_details_bloc.dart';
 
 class ProductDetailsState extends Equatable {
   final Product product;
-  final LoadingStatus status;
+  final LoadStatus status;
   final String errMsg;
 
   const ProductDetailsState({
@@ -14,12 +14,12 @@ class ProductDetailsState extends Equatable {
   static ProductDetailsState initial = ProductDetailsState(
     product: Product.empty,
     errMsg: '',
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
   );
 
   ProductDetailsState copyWith({
     Product? product,
-    LoadingStatus? status,
+    LoadStatus? status,
     String? errMsg,
   }) {
     return ProductDetailsState(

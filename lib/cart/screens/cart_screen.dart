@@ -2,9 +2,9 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
+import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -18,7 +18,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ProductsBloc, ProductsState>(
       listener: (context, state) {
-        if (state.status == LoadingStatus.updated)
+        if (state.status == LoadStatus.updated)
           context.read<CartBloc>().add(CartFetchingEvent());
       },
       child: BlocConsumer<CartBloc, CartState>(

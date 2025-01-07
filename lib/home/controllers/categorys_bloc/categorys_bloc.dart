@@ -27,22 +27,22 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
 
   FutureOr<void> _onCategorysLoading(event, emit) async {
     try {
-      emit(state.copyWith(status: LoadingStatus.inProgress));
+      emit(state.copyWith(status: LoadStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchCategories();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           categorys: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -52,12 +52,12 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
       sl.get<DataRepository>().setCurCategory(event.category);
       emit(state.copyWith(
         curCategory: event.category,
-        status: LoadingStatus.success,
+        status: LoadStatus.success,
       ));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -65,7 +65,7 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
   FutureOr<void> _onCategorysUpdated(CategorysUpdatedEvent event, emit) {
     emit(state.copyWith(
       categorys: event.categorys,
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
       curCategory: state.curCategory,
     ));
   }

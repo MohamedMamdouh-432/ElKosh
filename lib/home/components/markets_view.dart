@@ -16,7 +16,7 @@ class MarketsView extends StatelessWidget {
       create: (context) => MarketsBloc(),
       child: BlocConsumer<MarketsBloc, MarketsState>(
         listener: (context, state) {
-          if (state.status == LoadingStatus.failure) {
+          if (state.status == LoadStatus.failure) {
             QuickAlert.show(
               context: context,
               type: QuickAlertType.error,
@@ -34,7 +34,7 @@ class MarketsView extends StatelessWidget {
         },
         builder: (context, state) {
           return Skeletonizer(
-            enabled: state.status == LoadingStatus.inProgress,
+            enabled: state.status == LoadStatus.inProgress,
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 15),
               margin: const EdgeInsets.only(top: 4),

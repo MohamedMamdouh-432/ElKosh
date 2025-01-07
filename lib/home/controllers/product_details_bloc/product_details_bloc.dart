@@ -9,7 +9,8 @@ import 'package:models_repository/models_repository.dart';
 part 'product_details_event.dart';
 part 'product_details_state.dart';
 
-class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> {
+class ProductDetailsBloc
+    extends Bloc<ProductDetailsEvent, ProductDetailsState> {
   StreamSubscription? _subscription;
   ProductDetailsBloc() : super(ProductDetailsState.initial) {
     on<ProductDetailsLoadingEvent>(_onProductDetailsLoaded);
@@ -20,12 +21,12 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
               (r) => add(ProductDetailsUpdatingEvent(r))),
         );
   }
-  
+
   FutureOr<void> _onProductDetailsLoaded(
       ProductDetailsLoadingEvent event, emit) {
-    emit(state.copyWith(status: LoadingStatus.inProgress));
+    emit(state.copyWith(status: LoadStatus.inProgress));
     emit(state.copyWith(
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
       product: sl.get<DataRepository>().getCurProduct(),
     ));
   }
@@ -34,7 +35,7 @@ class ProductDetailsBloc extends Bloc<ProductDetailsEvent, ProductDetailsState> 
       ProductDetailsUpdatingEvent event, emit) {
     emit(state.copyWith(
       product: event.product,
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
     ));
   }
 

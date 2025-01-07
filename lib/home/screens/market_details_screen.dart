@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MarkettDetailsScreen extends StatelessWidget {
   const MarkettDetailsScreen({super.key});
@@ -25,7 +26,7 @@ class MarkettDetailsScreen extends StatelessWidget {
           body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
             builder: (context, state) {
               return Skeletonizer(
-                enabled: state.status == LoadingStatus.inProgress,
+                enabled: state.status == LoadStatus.inProgress,
                 child: CustomScrollView(
                   slivers: [
                     SliverAppBar(
@@ -49,18 +50,34 @@ class MarkettDetailsScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  state.market.name,
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w500,
+                                Expanded(
+                                  child: Text(
+                                    state.market.name,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 2,
+                                    softWrap: true,
                                   ),
                                 ),
-                                Text(
-                                  state.market.hotline,
-                                  style: const TextStyle(
-                                    fontSize: 22,
-                                    color: Colors.grey,
+                                IconButton(
+                                  onPressed: () async {
+                                    final Uri phoneUri = Uri(
+                                      scheme: 'tel',
+                                      path: state.market.hotline,
+                                    );
+                                    if (await canLaunchUrl(phoneUri)) {
+                                      await launchUrl(phoneUri);
+                                    } else {
+                                      throw 'Could not launch phone app for ${state.market.hotline}';
+                                    }
+                                  },
+                                  icon: const Icon(
+                                    CupertinoIcons.phone,
+                                    color: Colors.green,
+                                    size: 35,
                                   ),
                                 ),
                               ],
@@ -74,6 +91,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                                 fontSize: 25,
                                 fontWeight: FontWeight.w500,
                               ),
+                              maxLines: 3,
                             ),
                             const Gap(5),
                             Text(

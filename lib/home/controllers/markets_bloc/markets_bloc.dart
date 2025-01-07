@@ -27,22 +27,22 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
 
   FutureOr<void> _onMarketsLoading(event, emit) async {
     try {
-      emit(state.copyWith(status: LoadingStatus.inProgress));
+      emit(state.copyWith(status: LoadStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchMarkets();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
-          status: LoadingStatus.failure,
+          status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
           markets: r,
-          status: LoadingStatus.success,
+          status: LoadStatus.success,
         )),
       );
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -52,12 +52,12 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
       sl.get<DataRepository>().setCurMarket(event.market);
       emit(state.copyWith(
         curMarket: event.market,
-        status: LoadingStatus.success,
+        status: LoadStatus.success,
       ));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        status: LoadingStatus.failure,
+        status: LoadStatus.failure,
       ));
     }
   }
@@ -65,7 +65,7 @@ class MarketsBloc extends Bloc<MarketsEvent, MarketsState> {
   FutureOr<void> _onMarketsUpdated(MarketsUpdatedEvent event, emit) {
     emit(state.copyWith(
       markets: event.markets,
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
       curMarket: state.curMarket,
     ));
   }

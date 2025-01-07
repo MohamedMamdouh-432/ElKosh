@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:models_repository/models_repository.dart';
 
 OrderStatus getOrderStatus(String stateValue) {
@@ -9,6 +10,8 @@ OrderStatus getOrderStatus(String stateValue) {
       return OrderStatus.shipped;
     case "delivered":
       return OrderStatus.delivered;
+    case "refused":
+      return OrderStatus.refused;
     default:
       return OrderStatus.cancelled;
   }
@@ -45,6 +48,16 @@ class UserOrder extends Equatable {
     location: Location.empty,
     status: OrderStatus.pending,
   );
+
+  Color get color => status == OrderStatus.pending
+      ? Colors.blueGrey
+      : status == OrderStatus.shipped
+          ? Colors.teal
+          : status == OrderStatus.delivered
+              ? Colors.green
+              : status == OrderStatus.refused
+                  ? Colors.deepPurple
+                  : Colors.red;
 
   factory UserOrder.fromDoc(
     Map<String, dynamic> map,

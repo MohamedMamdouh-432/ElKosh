@@ -13,7 +13,7 @@ class RelatedCategorysGrid extends StatelessWidget {
     return BlocBuilder<CategorysBloc, CategorysState>(
       builder: (context, categorysState) {
         return Skeletonizer(
-          enabled: categorysState.status == LoadingStatus.inProgress,
+          enabled: categorysState.status == LoadStatus.inProgress,
           child: GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

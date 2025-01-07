@@ -6,3 +6,4 @@ export 'user.dart';
 export 'location.dart';
 export 'category.dart';
 export 'offer.dart';
+export 'ad.dart';

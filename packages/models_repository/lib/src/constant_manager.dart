@@ -4,7 +4,7 @@ class ConstantManager {
   static const String marketCollection = 'markets';
   static const String categoryCollection = 'categories';
   static const String productCollection = 'products';
-  static const String adsCollection = 'offers';
+  static const String adsCollection = 'ads';
   static const String ordersCollection = 'orders';
   static const String userCollection = 'users';
 }

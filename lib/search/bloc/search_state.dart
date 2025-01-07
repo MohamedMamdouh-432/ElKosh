@@ -3,7 +3,7 @@ part of 'search_bloc.dart';
 class SearchState extends Equatable {
   final String query;
   final List<Product> products;
-  final LoadingStatus status;
+  final LoadStatus status;
   final String errMsg;
 
   const SearchState({
@@ -16,14 +16,14 @@ class SearchState extends Equatable {
   static const SearchState initial = SearchState(
     query: '',
     products: [],
-    status: LoadingStatus.initial,
+    status: LoadStatus.initial,
     errMsg: '',
   );
 
   SearchState copyWith({
     String? query,
     List<Product>? products,
-    LoadingStatus? status,
+    LoadStatus? status,
     String? errMsg,
   }) {
     return SearchState(

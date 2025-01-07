@@ -44,3 +44,11 @@ class OrdersUpdatedEvent extends OrdersEvent {
   @override
   List<Object> get props => [ongoingOrders, historyOrders];
 }
+
+class OrderRefusingEvent extends OrdersEvent {
+  final UserOrder order;
+  const OrderRefusingEvent(this.order);
+
+  @override
+  List<Object> get props => [order];
+}

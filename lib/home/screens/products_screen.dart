@@ -14,7 +14,7 @@ class ProductsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ProductsBloc, ProductsState>(
       listener: (context, state) {
-        if (state.status == LoadingStatus.failure) {
+        if (state.status == LoadStatus.failure) {
           QuickAlert.show(
             context: context,
             type: QuickAlertType.error,
@@ -35,7 +35,7 @@ class ProductsScreen extends StatelessWidget {
           child: Scaffold(
             appBar: AppBar(title: const Text("تصفح المنتجات")),
             body: Skeletonizer(
-              enabled: state.status == LoadingStatus.inProgress,
+              enabled: state.status == LoadStatus.inProgress,
               child: GridView.builder(
                 padding: const EdgeInsets.symmetric(
                   vertical: 10,

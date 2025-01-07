@@ -10,7 +10,7 @@ sealed class AdsEvent extends Equatable {
 class AdsLoadingEvent extends AdsEvent {}
 
 class AdSelectedEvent extends AdsEvent {
-  final Advertisment ad;
+  final Ad ad;
   const AdSelectedEvent(this.ad);
 
   @override
@@ -18,7 +18,7 @@ class AdSelectedEvent extends AdsEvent {
 }
 
 class AdsUpdatedEvent extends AdsEvent {
-  final List<Advertisment> ads;
+  final List<Ad> ads;
   const AdsUpdatedEvent(this.ads);
 
   @override

@@ -3,6 +3,7 @@ import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/opt_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
 import 'package:elkosh/cart/screens/delivery_location_picker_screen.dart';
+import 'package:elkosh/home/screens/ad_details_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
 import 'package:elkosh/home/screens/market_details_screen.dart';
 import 'package:elkosh/home/screens/navbar_screen.dart';
@@ -29,6 +30,7 @@ abstract class RouteManager {
   static const String deliveryLocationPickerRoute = '/delivery_location_picker';
   static const String ongoingOrderDetailsRoute = '/ongoing_order_details';
   static const String historyOrderDetailsRoute = '/history_order_details';
+  static const String adDetailsRoute = '/ad_details';
 
   static GoRouter router = GoRouter(
     routes: [
@@ -86,6 +88,10 @@ abstract class RouteManager {
       GoRoute(
         path: historyOrderDetailsRoute,
         builder: (context, state) => const HistoryOrderDetailsScreen(),
+      ),
+      GoRoute(
+        path: adDetailsRoute,
+        builder: (context, state) => const AdDetailsScreen(),
       ),
     ],
   );

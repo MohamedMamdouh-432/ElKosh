@@ -22,20 +22,21 @@ class MarketDetailsBloc extends Bloc<MarketDetailsEvent, MarketDetailsState> {
   }
 
   FutureOr<void> _onMarketDetailsLoaded(MarketDetailsLoadingEvent event, emit) {
-    emit(state.copyWith(status: LoadingStatus.inProgress));
+    emit(state.copyWith(status: LoadStatus.inProgress));
     emit(state.copyWith(
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
       market: sl.get<DataRepository>().getCurMarket(),
     ));
   }
-  
-  FutureOr<void> _onMarketDetailsUpdated(MarketDetailsUpdatingEvent event, emit) {
+
+  FutureOr<void> _onMarketDetailsUpdated(
+      MarketDetailsUpdatingEvent event, emit) {
     emit(state.copyWith(
       market: event.market,
-      status: LoadingStatus.success,
+      status: LoadStatus.success,
     ));
   }
-  
+
   @override
   Future<void> close() {
     _subscription?.cancel();

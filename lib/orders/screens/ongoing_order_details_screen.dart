@@ -67,25 +67,36 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                   const Gap(10),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: RichText(
-                      text: TextSpan(
-                          text: ' حالة الطلب:  ',
+                    child: Row(
+                      children: [
+                        Text(
+                          ' حالة الطلب:  ',
                           style: TextStyle(
                             fontSize: 18.sp,
                             color: Colors.black,
                           ),
-                          children: [
-                            TextSpan(
-                              text: state.curOrder.status == OrderStatus.pending
-                                  ? "تم تسجيل الطلب"
-                                  : "تم شحن الطلب",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: state.curOrder.color,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            state.curOrder.status == OrderStatus.pending
+                                ? "تم تسجيل الطلب"
+                                : "تم شحن الطلب",
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ]),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const Gap(10),
@@ -174,7 +185,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                     onPressed: () {
                       context
                           .read<OrdersBloc>()
-                          .add(OrderDeleveringingEvent(state.curOrder));
+                          .add(OrderRefusingEvent(state.curOrder));
                       context.pop();
                     },
                     child: const Text(

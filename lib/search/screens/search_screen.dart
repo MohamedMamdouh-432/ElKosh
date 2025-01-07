@@ -42,7 +42,7 @@ class SearchScreen extends StatelessWidget {
                   ),
                   const Gap(10),
                   Skeletonizer(
-                    enabled: state.status == LoadingStatus.inProgress,
+                    enabled: state.status == LoadStatus.inProgress,
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -54,7 +54,7 @@ class SearchScreen extends StatelessWidget {
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                         crossAxisSpacing: 5,
                         maxCrossAxisExtent: 110,
-                        childAspectRatio: 2 / 2.3,
+                        childAspectRatio: 7 / 10,
                       ),
                       itemCount: state.products.length,
                       itemBuilder: (context, index) => ProductCard(
