@@ -15,7 +15,7 @@ class SliverImageSection extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: context.height * 0.4,
-        margin: const EdgeInsets.only(bottom: 20),
+        margin: const EdgeInsets.only(bottom: 15),
         padding: const EdgeInsets.all(30),
         clipBehavior: Clip.hardEdge,
         alignment: Alignment.center,

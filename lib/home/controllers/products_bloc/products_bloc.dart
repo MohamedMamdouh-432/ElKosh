@@ -10,7 +10,7 @@ part 'products_event.dart';
 part 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
-  StreamSubscription? _subscription;
+  StreamSubscription? _tinySubscription, _bigSubscription;
 
   ProductsBloc() : super(ProductsState.initial) {
     on<ProductsLoadingEvent>(_onProductLoading);
@@ -18,7 +18,15 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     on<ProductSelectedEvent>(_onProductSelected);
     on<ProductsUpdatedEvent>(_onProductsUpdated);
 
-    _subscription = sl.get<DataRepository>().productsStream().listen(
+    _tinySubscription = sl.get<DataRepository>().productsStream(10).listen(
+          (result) => result.fold(
+            (l) => addError(l.message),
+            (r) => add(ProductsUpdatedEvent(r)),
+          ),
+          onError: (e) => addError(e.toString()),
+        );
+        
+    _bigSubscription = sl.get<DataRepository>().productsStream(null).listen(
           (result) => result.fold(
             (l) => addError(l.message),
             (r) => add(ProductsUpdatedEvent(r)),
@@ -88,8 +96,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   @override
   Future<void> close() {
-    _subscription?.cancel();
-    _subscription = null;
+    _tinySubscription?.cancel();
+    _bigSubscription?.cancel();
+    _tinySubscription = null;
+    _bigSubscription = null;
     return super.close();
   }
 }

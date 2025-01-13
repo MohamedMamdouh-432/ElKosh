@@ -36,7 +36,12 @@ class MarketsState extends Equatable {
 
   @override
   String toString() {
-    return 'Products State ::\nCurrent Market: $curMarket\nStatus: $status\nError: $errMsg\nMarkets: ${markets.length}\n';
+    return '''Markets State ::
+      Current Market: ${curMarket.name}
+      Status: ${status.name}
+      Error: $errMsg
+      Markets: ${markets.length}
+    ''';
   }
 
   @override

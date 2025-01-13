@@ -30,7 +30,11 @@ class ProductDetailsState extends Equatable {
   }
 
   @override
-  String toString() => "Product: $product\nStatus: $status\nError: $errMsg";
+  String toString() => '''Product Details State :: 
+    Name: ${product.name}
+    Status: ${status.name}
+    Error: $errMsg
+  ''';
 
   @override
   List<Object> get props => [product, status, errMsg];

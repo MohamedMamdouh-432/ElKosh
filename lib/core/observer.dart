@@ -5,12 +5,6 @@ class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
 
   @override
-  void onEvent(Bloc<dynamic, dynamic> bloc, Object? event) {
-    super.onEvent(bloc, event);
-    log("Current Event: $event");
-  }
-
-  @override
   void onTransition(
     Bloc<dynamic, dynamic> bloc,
     Transition<dynamic, dynamic> transition,

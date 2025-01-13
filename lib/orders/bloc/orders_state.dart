@@ -41,7 +41,13 @@ class OrdersState extends Equatable {
 
   @override
   String toString() {
-    return 'OrdersState ::\nongoingOrders: ${ongoingOrders.length}\nhistoryOrders: ${historyOrders.length}\nError Message: $errMsg\nstatus: $status\ncurOrder: ${curOrder == UserOrder.empty ? Null : curOrder}\n';
+    return '''OrdersState ::
+      ongoingOrders: ${ongoingOrders.length}
+      historyOrders: ${historyOrders.length}
+      Error: $errMsg
+      status: ${status.name}
+      curOrder Id: ${curOrder == UserOrder.empty ? Null : curOrder.id}
+    ''';
   }
 
   @override

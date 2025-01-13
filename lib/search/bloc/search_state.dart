@@ -36,7 +36,12 @@ class SearchState extends Equatable {
 
   @override
   String toString() {
-    return 'SearchState ::\nQuery: $query\nProducts: ${products.length}\nLoading Status: ${status.name}\nError: $errMsg';
+    return '''SearchState ::
+      Query: $query
+      Products: ${products.length}
+      Load Status: ${status.name}
+      Error: $errMsg
+    ''';
   }
 
   @override

@@ -20,9 +20,22 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       notificationPredicate: (notification) => notification.depth <= 2,
       onRefresh: () async {
-        context.read<MarketsBloc>().add(MarketsLoadingEvent());
-        context.read<ProductsBloc>().add(const ProductsLoadingEvent());
-        context.read<AdsBloc>().add(AdsLoadingEvent());
+        Future.wait([
+          Future.delayed(
+            Duration.zero,
+            () => context.read<AdsBloc>().add(AdsLoadingEvent()),
+          ),
+          Future.delayed(
+            Duration.zero,
+            () => context.read<MarketsBloc>().add(MarketsLoadingEvent()),
+          ),
+          Future.delayed(
+            Duration.zero,
+            () => context
+                .read<ProductsBloc>()
+                .add(const ProductsLoadingEvent(10)),
+          ),
+        ]);
       },
       child: const SingleChildScrollView(
         child: Column(

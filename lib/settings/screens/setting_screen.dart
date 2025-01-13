@@ -148,7 +148,7 @@ class SettingScreen extends StatelessWidget {
                     'عن التطبيق',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () {},
+                  onTap: () => context.push(RouteManager.aboutAppRoute),
                 ),
                 ListTile(
                   leading: const Icon(

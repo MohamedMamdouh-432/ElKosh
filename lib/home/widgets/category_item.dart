@@ -20,35 +20,32 @@ class CategoryItem extends StatelessWidget {
         context.push(RouteManager.productsRoute, extra: 3);
         context.read<ProductsBloc>().add(ProductsRelatedLoadingEvent());
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 242, 240, 240),
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.shade400,
-              spreadRadius: 3,
-              blurRadius: 2,
-              blurStyle: BlurStyle.inner,
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(
-              category.name,
-              textAlign: TextAlign.center,
-              textScaler: const TextScaler.linear(1.2),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-            const Spacer(),
-            CachedNetworkImage(
-              imageUrl: category.imgUrl,
-              fit: BoxFit.fitWidth,
-              filterQuality: FilterQuality.high,
-            ),
-          ],
+      child: Card(
+        elevation: 40,
+        color: Colors.transparent,
+        clipBehavior: Clip.hardEdge,
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 242, 240, 240),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            children: [
+              Text(
+                category.name,
+                textAlign: TextAlign.center,
+                textScaler: const TextScaler.linear(1.2),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+              const Spacer(),
+              CachedNetworkImage(
+                imageUrl: category.imgUrl,
+                fit: BoxFit.fitWidth,
+                filterQuality: FilterQuality.high,
+              ),
+            ],
+          ),
         ),
       ),
     );

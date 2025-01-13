@@ -32,25 +32,40 @@ class ProductsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return SafeArea(
-          child: Scaffold(
-            appBar: AppBar(title: const Text("تصفح المنتجات")),
-            body: Skeletonizer(
-              enabled: state.status == LoadStatus.inProgress,
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 20,
-                ),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 180,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 7 / 9,
-                ),
-                itemCount: state.products.length,
-                itemBuilder: (context, index) => ProductCard(
-                  product: state.products[index],
-                  steps: GoRouter.of(context).state?.extra as int,
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(255, 247, 234, 250),
+                  Color.fromARGB(255, 250, 240, 236),
+                  Color.fromARGB(255, 235, 244, 251),
+                  Color.fromARGB(255, 246, 237, 233),
+                ],
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(title: const Text("تصفح المنتجات")),
+              body: Skeletonizer(
+                enabled: state.status == LoadStatus.inProgress,
+                child: GridView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 10,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 180,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 7 / 12,
+                  ),
+                  itemCount: state.products.length,
+                  itemBuilder: (context, index) => ProductCard(
+                    product: state.products[index],
+                    steps: GoRouter.of(context).state?.extra as int,
+                  ),
                 ),
               ),
             ),

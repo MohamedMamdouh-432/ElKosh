@@ -36,7 +36,12 @@ class ProductsState extends Equatable {
 
   @override
   String toString() {
-    return 'Products State ::\nCurrent Product: $curProduct\nStatus: $status\nError: $errMsg\nproducts: ${products.length}\n';
+    return '''Products State ::
+      Current Product: ${curProduct.name}
+      Status: ${status.name}
+      Error: $errMsg
+      products: ${products.length}
+    ''';
   }
 
   @override

@@ -182,8 +182,7 @@ class DataRepository {
       for (var productDoc in response.docs) {
         final marketActive =
             await isMarketActive(productDoc.data()['marketId']);
-        if (!marketActive ||
-            productDoc.data()['quantity'].toDouble().floor() == 0) continue;
+        if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
       return Right(productsList);
@@ -193,16 +192,19 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, List<Product>>> productsStream() async* {
+  Stream<Either<Failure, List<Product>>> productsStream(int? limits) async* {
     try {
-      final query = firestore.collection(ConstantManager.productCollection);
+      final query = limits != null
+          ? firestore
+              .collection(ConstantManager.productCollection)
+              .limit(limits)
+          : firestore.collection(ConstantManager.productCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Product> productsList = [];
           for (var doc in snapshot.docs) {
             final marketActive = await isMarketActive(doc.data()['marketId']);
-            if (!marketActive || doc.data()['quantity'].toDouble().floor() == 0)
-              continue;
+            if (!marketActive) continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
           return Right(productsList);
@@ -222,8 +224,12 @@ class DataRepository {
           .where('categoryId', isEqualTo: _selectedCategory?.id)
           .get();
       List<Product> productsList = [];
-      for (var productDoc in response.docs)
+      for (var productDoc in response.docs) {
+        final marketActive =
+            await isMarketActive(productDoc.data()['marketId']);
+        if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
+      }
       return Right(productsList);
     } catch (e) {
       log(e.toString());
@@ -377,10 +383,16 @@ class DataRepository {
           .collection(ConstantManager.ordersCollection)
           .doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+      Map<String, List> shoppingList = {};
+      _shopping.forEach((id, cnt) async {
+        final mappedProduct = await getProductById(id);
+        shoppingList.putIfAbsent(id, () => [cnt, mappedProduct.updatedPrice]);
+      });
       final orderMap = {
         'total': _price,
         'code': seqIdVal,
-        'shopping': _shopping,
+        'shopping': shoppingList,
+        'isAd': false,
         'userId': getUserId(),
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
@@ -394,6 +406,41 @@ class DataRepository {
             .doc(id)
             .update({'quantity': FieldValue.increment(-taken)});
       });
+      return const Right(null);
+    } catch (e) {
+      log(e.toString());
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Null>> placeAdOrder(Location location) async {
+    try {
+      final seqIdDoc = firestore
+          .collection(ConstantManager.ordersCollection)
+          .doc(ConstantManager.orderSeqIdDoc);
+      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+      Map<String, List> shoppingList = {};
+      for (Offer offer in _selectedAd!.offers)
+        shoppingList.putIfAbsent(
+            offer.product.id, () => [offer.quantity, offer.price]);
+      final orderMap = {
+        'code': seqIdVal,
+        'createdAt': DateTime.now(),
+        'isAd': true,
+        'location': location.toJson(),
+        'shopping': shoppingList,
+        'status': OrderStatus.pending.name,
+        'total': _selectedAd?.total,
+        'userId': getUserId(),
+      };
+      await firestore.collection('orders').add(orderMap);
+      await seqIdDoc.set({'seqId': seqIdVal + 1});
+      for (var offer in _selectedAd!.offers) {
+        await firestore
+            .collection(ConstantManager.productCollection)
+            .doc(offer.product.id)
+            .update({'quantity': FieldValue.increment(-offer.quantity)});
+      }
       return const Right(null);
     } catch (e) {
       log(e.toString());
@@ -486,11 +533,10 @@ class DataRepository {
             final List<UserOrder> historyOrderList = [];
             for (var doc in ongoingSnapshot.docs) {
               if (doc.data()['seqId'] != null) continue;
-              Map<Product, int> shopping = {};
-              for (MapEntry<String, dynamic> entry
-                  in doc.data()['shopping'].entries) {
+              List<ShoppingItem> shopping = [];
+              for (MapEntry entry in doc.data()['shopping'].entries) {
                 final mappedProduct = await getProductById(entry.key);
-                shopping[mappedProduct] = entry.value as int;
+                shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
               }
               ongoingOrderList.add(UserOrder.fromDoc(
                 doc.data(),
@@ -501,13 +547,12 @@ class DataRepository {
 
             for (var doc in historySnapshot.docs) {
               if (doc.data()['seqId'] != null) continue;
-              Map<Product, int> shopping = {};
-              for (MapEntry<String, dynamic> entry
-                  in doc.data()['shopping'].entries) {
+              List<ShoppingItem> shopping = [];
+              for (MapEntry entry in doc.data()['shopping'].entries) {
                 final mappedProduct = await getProductById(entry.key);
-                shopping[mappedProduct] = entry.value as int;
+                shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
               }
-              historyOrderList.add(UserOrder.fromDoc(
+              ongoingOrderList.add(UserOrder.fromDoc(
                 doc.data(),
                 shopping,
                 doc.id,
@@ -554,11 +599,11 @@ class DataRepository {
 
       for (var orderDoc in ongoingOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
-        Map<Product, int> shopping = {};
-        orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await getProductById(id);
-          shopping.putIfAbsent(mappedProduct, () => countVal);
-        });
+        List<ShoppingItem> shopping = [];
+        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
+          final mappedProduct = await getProductById(entry.key);
+          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
+        }
         ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
@@ -568,12 +613,12 @@ class DataRepository {
 
       for (var orderDoc in historyOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
-        Map<Product, int> shopping = {};
-        orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await getProductById(id);
-          shopping.putIfAbsent(mappedProduct, () => countVal);
-        });
-        historyOrderList.add(UserOrder.fromDoc(
+        List<ShoppingItem> shopping = [];
+        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
+          final mappedProduct = await getProductById(entry.key);
+          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
+        }
+        ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,

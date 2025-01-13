@@ -37,7 +37,7 @@ class CartScreen extends StatelessWidget {
               context: context,
               type: QuickAlertType.success,
               title: 'نجاح',
-              text: "تم طلب الاوردر بنجاح",
+              text: "تم تسجيل الطلب بنجاح",
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );

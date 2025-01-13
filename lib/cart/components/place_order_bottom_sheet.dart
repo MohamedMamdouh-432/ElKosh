@@ -1,5 +1,6 @@
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,22 +23,22 @@ class PlaceOrderBottomSheet extends StatelessWidget {
             children: [
               const Gap(15),
               Text(
-                "تكلفة الطلب: \t\t\t${state.price}",
+                "تكلفة الطلب: \t\t\t${toArNumber(state.price.toString())}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "مصاريف إضافيه: \t\t\t10",
-                style: TextStyle(
+              Text(
+                "مصاريف إضافيه: \t\t\t${toArNumber("10")}",
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Text("-------------------------------------------"),
               Text(
-                "الإجمالى: \t\t\t${state.price + 10}",
+                "الإجمالى: \t\t\t${toArNumber((state.price + 10).toString())}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

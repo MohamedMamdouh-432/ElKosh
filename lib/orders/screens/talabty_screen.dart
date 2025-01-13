@@ -12,33 +12,48 @@ class TalabtyScreen extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("الطلبات"),
-            centerTitle: true,
-            automaticallyImplyLeading: false,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_outlined),
-              onPressed: () => context.pop(),
-            ),
-            bottom: const TabBar(
-              tabs: [
-                Tab(
-                  text: "الطلبات",
-                  icon: Icon(Icons.list),
-                ),
-                Tab(
-                  text: "السجلات",
-                  icon: Icon(Icons.list),
-                ),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 247, 234, 250),
+                Color.fromARGB(255, 250, 240, 236),
+                Color.fromARGB(255, 235, 244, 251),
+                Color.fromARGB(255, 246, 237, 233),
               ],
             ),
           ),
-          body: const TabBarView(
-            children: [
-              TalbatyOngoing(),
-              TalabatyHistory(),
-            ],
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              title: const Text("الطلبات"),
+              centerTitle: true,
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_outlined),
+                onPressed: () => context.pop(),
+              ),
+              bottom: const TabBar(
+                tabs: [
+                  Tab(
+                    text: "الطلبات",
+                    icon: Icon(Icons.list),
+                  ),
+                  Tab(
+                    text: "السجلات",
+                    icon: Icon(Icons.list),
+                  ),
+                ],
+              ),
+            ),
+            body: const TabBarView(
+              children: [
+                TalbatyOngoing(),
+                TalabatyHistory(),
+              ],
+            ),
           ),
         ),
       ),

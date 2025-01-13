@@ -2,9 +2,11 @@ import 'package:elkosh/home/components/related_categories_grid.dart';
 import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/home/controllers/market_details_bloc/market_details_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
@@ -22,105 +24,141 @@ class MarkettDetailsScreen extends StatelessWidget {
         BlocProvider(create: (context) => MarketDetailsBloc()),
       ],
       child: SafeArea(
-        child: Scaffold(
-          body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
-            builder: (context, state) {
-              return Skeletonizer(
-                enabled: state.status == LoadStatus.inProgress,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverAppBar(
-                      backgroundColor: const Color(0xffF2F3F2),
-                      leading: IconButton(
-                        onPressed: () => context.pop(),
-                        icon: const Icon(
-                          CupertinoIcons.back,
-                          size: 35,
-                          color: Colors.black,
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 247, 234, 250),
+                Color.fromARGB(255, 250, 240, 236),
+                Color.fromARGB(255, 235, 244, 251),
+                Color.fromARGB(255, 246, 237, 233),
+              ],
+            ),
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
+              builder: (context, state) {
+                bool isOpened = isMarketOpen(state.market);
+                return Skeletonizer(
+                  enabled: state.status == LoadStatus.inProgress,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        backgroundColor: const Color(0xffF2F3F2),
+                        leading: IconButton(
+                          onPressed: () => context.pop(),
+                          icon: const Icon(
+                            CupertinoIcons.back,
+                            size: 35,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                    SliverImageSection(imageUrl: state.market.imgUrl),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    state.market.name,
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.ellipsis,
+                      SliverImageSection(imageUrl: state.market.imgUrl),
+                      SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color:
+                                      isOpened ? Colors.green : Colors.blueGrey,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  isOpened ? 'مفتوح' : 'مغلق',
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      state.market.name,
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      maxLines: 2,
+                                      softWrap: true,
                                     ),
-                                    maxLines: 2,
-                                    softWrap: true,
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () async {
-                                    final Uri phoneUri = Uri(
-                                      scheme: 'tel',
-                                      path: state.market.hotline,
-                                    );
-                                    if (await canLaunchUrl(phoneUri)) {
-                                      await launchUrl(phoneUri);
-                                    } else {
-                                      throw 'Could not launch phone app for ${state.market.hotline}';
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    CupertinoIcons.phone,
-                                    color: Colors.green,
-                                    size: 35,
+                                  IconButton(
+                                    onPressed: () async {
+                                      final Uri phoneUri = Uri(
+                                        scheme: 'tel',
+                                        path: state.market.hotline,
+                                      );
+                                      if (await canLaunchUrl(phoneUri)) {
+                                        await launchUrl(phoneUri);
+                                      } else {
+                                        throw 'Could not launch phone app for ${state.market.hotline}';
+                                      }
+                                    },
+                                    icon: const Icon(
+                                      CupertinoIcons.phone,
+                                      color: Colors.green,
+                                      size: 35,
+                                    ),
                                   ),
+                                ],
+                              ),
+                              const Gap(10),
+                              const Divider(),
+                              const Gap(10),
+                              const Text(
+                                "الوصف",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w500,
                                 ),
-                              ],
-                            ),
-                            const Gap(10),
-                            const Divider(),
-                            const Gap(10),
-                            const Text(
-                              "الوصف",
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w500,
+                                maxLines: 3,
                               ),
-                              maxLines: 3,
-                            ),
-                            const Gap(5),
-                            Text(
-                              state.market.desc,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
+                              const Gap(5),
+                              Text(
+                                state.market.desc,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
                               ),
-                            ),
-                            const Gap(10),
-                            const Divider(),
-                            const Gap(10),
-                            const Text(
-                              "اصناف المتجر",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
+                              const Gap(10),
+                              const Divider(),
+                              const Gap(10),
+                              const Text(
+                                "اصناف المتجر",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                            const Gap(10),
-                            const RelatedCategorysGrid(),
-                          ],
+                              const Gap(10),
+                              const RelatedCategorysGrid(),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
