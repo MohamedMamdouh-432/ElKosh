@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 
@@ -17,6 +18,7 @@ class MarketItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isOpened = isMarketOpen(market);
     return InkWell(
       onTap: () {
         context.read<MarketsBloc>().add(MarketSelectedEvent(market));
@@ -25,6 +27,7 @@ class MarketItem extends StatelessWidget {
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
+            spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -39,7 +42,6 @@ class MarketItem extends StatelessWidget {
                   ),
                 ),
               ),
-              const Gap(20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,9 +56,20 @@ class MarketItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Text(
-                    market.hotline,
-                    style: const TextStyle(fontSize: 16),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: isOpened ? Colors.green : Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      isOpened ? 'مفتوح' : 'مغلق',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: context.width * 0.5,

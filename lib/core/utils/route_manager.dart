@@ -2,6 +2,7 @@ import 'package:elkosh/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/auth/login/screens/login_screen.dart';
 import 'package:elkosh/auth/register/screens/opt_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
+import 'package:elkosh/home/screens/ad_delivery_location_picker_screen.dart';
 import 'package:elkosh/cart/screens/delivery_location_picker_screen.dart';
 import 'package:elkosh/home/screens/ad_details_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
@@ -13,6 +14,7 @@ import 'package:elkosh/orders/screens/history_order_details_screen.dart';
 import 'package:elkosh/orders/screens/ongoing_order_details_screen.dart';
 import 'package:elkosh/orders/screens/talabty_screen.dart';
 import 'package:elkosh/search/screens/search_screen.dart';
+import 'package:elkosh/settings/screens/about_app_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,67 +33,77 @@ abstract class RouteManager {
   static const String ongoingOrderDetailsRoute = '/ongoing_order_details';
   static const String historyOrderDetailsRoute = '/history_order_details';
   static const String adDetailsRoute = '/ad_details';
+  static const String aboutAppRoute = '/about_app';
+  static const String adDeliveryLocationPickerRoute = '/ad_delivery_location_picker';
 
   static GoRouter router = GoRouter(
     routes: [
       GoRoute(
         path: talabatyScreen,
-        builder: (context, state) => const TalabtyScreen(),
+        builder: (_, __) => const TalabtyScreen(),
       ),
       GoRoute(
         path: registerRoute,
-        builder: (context, state) => const RegisterScreen(),
+        builder: (_, __) => const RegisterScreen(),
       ),
       GoRoute(
         path: optRoute,
-        builder: (context, state) => const OptScreen(),
+        builder: (_, __) => const OptScreen(),
       ),
       GoRoute(
         path: loginRoute,
-        builder: (context, state) => BlocProvider(
-          create: (context) => LoginBloc()..add(LoginRecognizeRequested()),
+        builder: (_, __) => BlocProvider(
+          create: (___) => LoginBloc()..add(LoginRecognizeRequested()),
           child: const LoginScreen(),
         ),
       ),
       GoRoute(
         path: navbarRoute,
-        builder: (context, state) => const NavBarScreen(),
+        builder: (_, __) => const NavBarScreen(),
       ),
       GoRoute(
         path: homeRoute,
-        builder: (context, state) => const HomeScreen(),
+        builder: (_, __) => const HomeScreen(),
       ),
       GoRoute(
         path: searchRoute,
-        builder: (context, state) => const SearchScreen(),
+        builder: (_, __) => const SearchScreen(),
       ),
       GoRoute(
         path: productDetailsRoute,
-        builder: (context, state) => const ProductDetailsScreen(),
+        builder: (_, __) => const ProductDetailsScreen(),
       ),
       GoRoute(
         path: productsRoute,
-        builder: (context, state) => const ProductsScreen(),
+        builder: (_, __) => const ProductsScreen(),
       ),
       GoRoute(
         path: marketDetailsRoute,
-        builder: (context, state) => const MarkettDetailsScreen(),
+        builder: (_, __) => const MarkettDetailsScreen(),
       ),
       GoRoute(
         path: deliveryLocationPickerRoute,
-        builder: (context, state) => const DeliveryLocationPickerScreen(),
+        builder: (_, __) => const DeliveryLocationPickerScreen(),
       ),
       GoRoute(
         path: ongoingOrderDetailsRoute,
-        builder: (context, state) => const OngoingOrderDetailsScreen(),
+        builder: (_, __) => const OngoingOrderDetailsScreen(),
       ),
       GoRoute(
         path: historyOrderDetailsRoute,
-        builder: (context, state) => const HistoryOrderDetailsScreen(),
+        builder: (_, __) => const HistoryOrderDetailsScreen(),
       ),
       GoRoute(
         path: adDetailsRoute,
-        builder: (context, state) => const AdDetailsScreen(),
+        builder: (_, __) => const AdDetailsScreen(),
+      ),
+      GoRoute(
+        path: aboutAppRoute,
+        builder: (_, __) => const AboutAppScreen(),
+      ),
+      GoRoute(
+        path: adDeliveryLocationPickerRoute,
+        builder: (_, __) => const AdDeliveryLocationPickerScreen(),
       ),
     ],
   );

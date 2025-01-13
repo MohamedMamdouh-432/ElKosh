@@ -68,12 +68,8 @@ class ProductsGrid extends StatelessWidget {
                     Visibility(
                       visible: state.products.isNotEmpty,
                       child: InkWell(
-                        onTap: () {
-                          context
-                              .read<ProductsBloc>()
-                              .add(const ProductsLoadingEvent());
-                          context.push(RouteManager.productsRoute, extra: 2);
-                        },
+                        onTap: () =>
+                            context.push(RouteManager.productsRoute, extra: 2),
                         child: Column(
                           children: [
                             Container(

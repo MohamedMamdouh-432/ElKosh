@@ -30,7 +30,11 @@ class MarketDetailsState extends Equatable {
   }
 
   @override
-  String toString() => "Market: $market\nStatus: $status\nError: $errMsg";
+  String toString() => '''Market Details State :: 
+    Name: ${market.name}
+    Status: ${status.name}
+    Error: $errMsg
+  ''';
 
   @override
   List<Object> get props => [market, status, errMsg];

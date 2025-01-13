@@ -6,14 +6,10 @@ import 'package:gap/gap.dart';
 import 'package:models_repository/models_repository.dart';
 
 class OrderCard extends StatelessWidget {
-  final Product product;
-  final int quantity;
+  final bool isAd;
+  final ShoppingItem shoppingItem;
 
-  const OrderCard({
-    super.key,
-    required this.product,
-    required this.quantity,
-  });
+  const OrderCard({super.key, required this.shoppingItem, required this.isAd});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +31,6 @@ class OrderCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // right
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 15,
@@ -47,7 +42,7 @@ class OrderCard extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: Text(
-                  toArNumber(quantity.toString()),
+                  toArNumber(shoppingItem.quantity.toString()),
                   style: TextStyle(
                     fontSize: 18.sp,
                     color: ColorManager.primary,
@@ -62,7 +57,7 @@ class OrderCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    product.name,
+                    shoppingItem.product.name,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -70,7 +65,7 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${toArNumber(product.updatedPrice.toStringAsFixed(2))} جنيه',
+                    '${toArNumber((isAd ? shoppingItem.price : shoppingItem.product.updatedPrice).toStringAsFixed(2))} جنيه',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
@@ -94,7 +89,7 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${toArNumber((product.updatedPrice * quantity).toString())} جنيه',
+                    '${toArNumber(((isAd ? shoppingItem.price : shoppingItem.product.updatedPrice) * shoppingItem.quantity).toString())} جنيه',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,

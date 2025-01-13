@@ -25,13 +25,15 @@ class UserOrder extends Equatable {
   final OrderStatus status;
   final DateTime createdAt;
   final Location location;
-  final Map<Product, int> shopping;
+  final bool isAd;
+  final List<ShoppingItem> shopping;
 
   const UserOrder({
     required this.id,
     required this.code,
     required this.total,
     required this.shopping,
+    required this.isAd,
     required this.userId,
     required this.status,
     required this.createdAt,
@@ -43,7 +45,8 @@ class UserOrder extends Equatable {
     code: 0,
     total: 0,
     userId: '',
-    shopping: const {},
+    shopping: const [],
+    isAd: false,
     createdAt: DateTime(0),
     location: Location.empty,
     status: OrderStatus.pending,
@@ -61,7 +64,7 @@ class UserOrder extends Equatable {
 
   factory UserOrder.fromDoc(
     Map<String, dynamic> map,
-    Map<Product, int> shoppingList,
+    List<ShoppingItem> shoppingList,
     String id,
   ) =>
       UserOrder(
@@ -71,6 +74,7 @@ class UserOrder extends Equatable {
         code: map['code'].toInt(),
         total: map['total'].toDouble(),
         createdAt: map['createdAt'].toDate(),
+        isAd: map['isAd'],
         status: getOrderStatus(map['status']),
         location: Location.fromJson(map['location']),
       );
@@ -79,8 +83,9 @@ class UserOrder extends Equatable {
     String? id,
     int? code,
     double? total,
-    Map<Product, int>? shopping,
+    List<ShoppingItem>? shopping,
     String? userId,
+    bool? isAd,
     OrderStatus? status,
     DateTime? createdAt,
     Location? location,
@@ -92,6 +97,7 @@ class UserOrder extends Equatable {
       shopping: shopping ?? this.shopping,
       userId: userId ?? this.userId,
       status: status ?? this.status,
+      isAd: isAd ?? this.isAd,
       createdAt: createdAt ?? this.createdAt,
       location: location ?? this.location,
     );
@@ -103,6 +109,7 @@ class UserOrder extends Equatable {
       id,
       code,
       total,
+      isAd,
       shopping,
       userId,
       status,

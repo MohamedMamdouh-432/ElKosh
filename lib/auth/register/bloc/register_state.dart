@@ -61,7 +61,15 @@ class RegisterState extends Equatable {
 
   @override
   String toString() {
-    return 'RegisterState\nName: ${name.value}\nEmail: ${email.value}\nPhone: ${phone.value}\npassword: ${password.value}\nError: $errMsg\nInput Status: ${inputStatus.name}\nSubmission Status: ${submissionStatus.name}';
+    return '''RegisterState ::
+      Name: ${name.value}
+      Email: ${email.value}
+      Phone: ${phone.value}
+      Password: ${password.value}
+      Error: $errMsg
+      Input Status: ${inputStatus.name}
+      Submission Status: ${submissionStatus.name}
+    ''';
   }
 
   @override

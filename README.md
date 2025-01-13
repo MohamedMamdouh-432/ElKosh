@@ -66,9 +66,9 @@
     * search feature
 
 # Edits
-	- un get order Logic
-	- google maps
-	- otp
+    - check on any text/image constraints
+    - google maps
+    - otp
 
 # Bugs
 	

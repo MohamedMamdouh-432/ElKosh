@@ -18,6 +18,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<CartIncreasingProductQuantityEvent>(_onIncreaseProductQuantityInCart);
     on<CartDecreasingProductQuantityEvent>(_onDecreaseProductQuantityInCart);
     on<CartPlaceOrderEvent>(_onPlacingOrder);
+    on<CartPlaceAdOrderEvent>(_onPlacingAdOrder);
   }
 
   Future<void> _onFetchCart(event, emit) async {
@@ -180,6 +181,26 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result = await sl.get<DataRepository>().placeOrder(event.location);
+      // todo: send notification to admin (later when notifications feature is ready)
+      result.fold(
+          (l) => emit(state.copyWith(
+                status: CartStatus.placingfailure,
+                errorMessage: l.message,
+              )),
+          (r) => emit(state.copyWith(status: CartStatus.placingSuccess)));
+    } catch (e) {
+      emit(state.copyWith(
+        status: CartStatus.placingfailure,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onPlacingAdOrder(CartPlaceAdOrderEvent event, emit) async {
+    try {
+      emit(state.copyWith(status: CartStatus.onProgress));
+      final result =
+          await sl.get<DataRepository>().placeAdOrder(event.location);
       // todo: send notification to admin (later when notifications feature is ready)
       result.fold(
           (l) => emit(state.copyWith(
