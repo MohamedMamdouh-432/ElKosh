@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:models_repository/models_repository.dart';
 import 'package:pinput/pinput.dart';
 
 class OptScreen extends StatelessWidget {
@@ -56,7 +55,7 @@ class OptScreen extends StatelessWidget {
                   },
                   pinputAutovalidateMode: PinputAutovalidateMode.disabled,
                   showCursor: true,
-                  onCompleted: (pin) => log(pin),
+                  onCompleted: (pin) => AppLogs.info(pin),
                 ),
                 Gap(50.h),
                 CustomButtom(

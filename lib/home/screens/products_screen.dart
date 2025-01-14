@@ -31,6 +31,8 @@ class ProductsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        final params =
+            GoRouter.of(context).state?.extra as Map<String, dynamic>;
         return SafeArea(
           child: Container(
             decoration: const BoxDecoration(
@@ -61,10 +63,14 @@ class ProductsScreen extends StatelessWidget {
                     mainAxisSpacing: 10,
                     childAspectRatio: 7 / 12,
                   ),
-                  itemCount: state.products.length,
+                  itemCount: params['isRelated'] as bool
+                      ? state.relProducts.length
+                      : state.products.length,
                   itemBuilder: (context, index) => ProductCard(
-                    product: state.products[index],
-                    steps: GoRouter.of(context).state?.extra as int,
+                    product: params['isRelated'] as bool
+                        ? state.relProducts[index]
+                        : state.products[index],
+                    steps: params['steps'] as int,
                   ),
                 ),
               ),

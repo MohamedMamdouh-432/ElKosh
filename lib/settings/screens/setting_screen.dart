@@ -1,13 +1,16 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -180,6 +183,80 @@ class SettingScreen extends StatelessWidget {
                     context.go(RouteManager.loginRoute);
                   },
                 ),
+                const Gap(10),
+                const Row(
+                  children: [
+                    Expanded(
+                        child: Divider(height: 32, indent: 20, endIndent: 20)),
+                    Text('تواصل معنا', style: TextStyle(fontSize: 18)),
+                    Expanded(
+                        child: Divider(height: 32, indent: 20, endIndent: 20)),
+                  ],
+                ),
+                const Gap(10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 20,
+                  children: [
+                    Card(
+                      elevation: 5,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                        onPressed: () async {
+                          final Uri phoneUri = Uri(
+                            scheme: 'tel',
+                            path: "01063734753",
+                          );
+                          try {
+                            await launchUrl(phoneUri);
+                          } catch (e) {
+                            AppLogs.error(e.toString());
+                          }
+                        },
+                        iconSize: 40,
+                        color: Colors.green,
+                        icon: const Icon(CupertinoIcons.phone),
+                      ),
+                    ),
+                    Card(
+                      elevation: 5,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                        onPressed: () async {
+                          const String phoneNumber = "+201063734753";
+                          final Uri whatsappUri =
+                              Uri.parse('https://wa.me/$phoneNumber');
+                          try {
+                            await launchUrl(whatsappUri);
+                          } catch (e) {
+                            AppLogs.error(e.toString());
+                          }
+                        },
+                        iconSize: 40,
+                        color: Colors.green,
+                        icon: const Icon(FontAwesomeIcons.whatsapp),
+                      ),
+                    ),
+                    Card(
+                      elevation: 5,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                        onPressed: () async {
+                          final Uri facebookUri = Uri.parse(
+                              "https://www.facebook.com/share/g/1DDTGTQz5R/");
+                          try {
+                            await launchUrl(facebookUri);
+                          } catch (e) {
+                            AppLogs.error(e.toString());
+                          }
+                        },
+                        iconSize: 40,
+                        color: Colors.indigo,
+                        icon: const Icon(FontAwesomeIcons.facebook),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),

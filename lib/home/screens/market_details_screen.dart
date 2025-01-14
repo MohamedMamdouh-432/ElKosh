@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
@@ -39,122 +40,136 @@ class MarkettDetailsScreen extends StatelessWidget {
           ),
           child: Scaffold(
             backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                onPressed: () => context.pop(),
+                icon: const Icon(
+                  CupertinoIcons.back,
+                  size: 35,
+                  color: Colors.black,
+                ),
+              ),
+            ),
             body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
               builder: (context, state) {
                 bool isOpened = isMarketOpen(state.market);
                 return Skeletonizer(
                   enabled: state.status == LoadStatus.inProgress,
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        backgroundColor: const Color(0xffF2F3F2),
-                        leading: IconButton(
-                          onPressed: () => context.pop(),
-                          icon: const Icon(
-                            CupertinoIcons.back,
-                            size: 35,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SliverImageSection(imageUrl: state.market.imgUrl),
-                      SliverToBoxAdapter(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 15,
-                                  vertical: 2,
-                                ),
-                                decoration: BoxDecoration(
-                                  color:
-                                      isOpened ? Colors.green : Colors.blueGrey,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  isOpened ? 'مفتوح' : 'مغلق',
-                                  style: TextStyle(
-                                    fontSize: 15.sp,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      children: [
+                        ImageSection(imageUrl: state.market.imgUrl),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 15,
+                                    vertical: 2,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isOpened
+                                        ? Colors.green
+                                        : Colors.blueGrey,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    isOpened ? 'مفتوح' : 'مغلق',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      state.market.name,
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w500,
-                                        overflow: TextOverflow.ellipsis,
+                                const Spacer(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Card(
+                                      elevation: 5,
+                                      shape: const CircleBorder(),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          String phoneNumber =
+                                              "+2${state.market.hotline}";
+                                          final Uri whatsappUri = Uri.parse(
+                                              'https://wa.me/$phoneNumber');
+                                          try {
+                                            await launchUrl(whatsappUri);
+                                          } catch (e) {
+                                            AppLogs.error(e.toString());
+                                          }
+                                        },
+                                        iconSize: 30,
+                                        color: Colors.green,
+                                        icon: const Icon(
+                                            FontAwesomeIcons.whatsapp),
                                       ),
-                                      maxLines: 2,
-                                      softWrap: true,
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () async {
-                                      final Uri phoneUri = Uri(
-                                        scheme: 'tel',
-                                        path: state.market.hotline,
-                                      );
-                                      if (await canLaunchUrl(phoneUri)) {
-                                        await launchUrl(phoneUri);
-                                      } else {
-                                        throw 'Could not launch phone app for ${state.market.hotline}';
-                                      }
-                                    },
-                                    icon: const Icon(
-                                      CupertinoIcons.phone,
-                                      color: Colors.green,
-                                      size: 35,
+                                    Card(
+                                      elevation: 5,
+                                      shape: const CircleBorder(),
+                                      child: IconButton(
+                                        onPressed: () async {
+                                          final Uri phoneUri = Uri(
+                                            scheme: 'tel',
+                                            path: state.market.hotline,
+                                          );
+                                          try {
+                                            await launchUrl(phoneUri);
+                                          } catch (e) {
+                                            AppLogs.error(e.toString());
+                                          }
+                                        },
+                                        iconSize: 30,
+                                        color: Colors.green,
+                                        icon: const Icon(CupertinoIcons.phone),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const Gap(10),
-                              const Divider(),
-                              const Gap(10),
-                              const Text(
-                                "الوصف",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w500,
+                                  ],
                                 ),
-                                maxLines: 3,
+                              ],
+                            ),
+                            Text(
+                              state.market.name,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              const Gap(5),
-                              Text(
-                                state.market.desc,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
-                                ),
+                              maxLines: 2,
+                              softWrap: true,
+                            ),
+                            Text(
+                              state.market.desc,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
                               ),
-                              const Gap(10),
-                              const Divider(),
-                              const Gap(10),
-                              const Text(
-                                "اصناف المتجر",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            ),
+                            const Gap(10),
+                            const Divider(),
+                            const Gap(10),
+                            const Text(
+                              "اصناف المتجر",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              const Gap(10),
-                              const RelatedCategorysGrid(),
-                            ],
-                          ),
+                            ),
+                            const Gap(10),
+                            const RelatedCategorysGrid(),
+                          ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
