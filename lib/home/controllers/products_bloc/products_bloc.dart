@@ -68,7 +68,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
           status: LoadStatus.failure,
         )),
         (r) => emit(state.copyWith(
-          products: r,
+          relProducts: r,
           status: LoadStatus.success,
         )),
       );

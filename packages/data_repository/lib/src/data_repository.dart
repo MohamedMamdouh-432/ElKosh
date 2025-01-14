@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
@@ -91,7 +90,7 @@ class DataRepository {
       }
       return Right(marketsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -104,7 +103,7 @@ class DataRepository {
           .get();
       return marketDoc.data()?['active'];
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
@@ -144,7 +143,7 @@ class DataRepository {
         categoriesList.add(Category.fromDoc(doc.id, doc.data()));
       return Right(categoriesList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -187,7 +186,7 @@ class DataRepository {
       }
       return Right(productsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -232,7 +231,7 @@ class DataRepository {
       }
       return Right(productsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -245,7 +244,7 @@ class DataRepository {
           .get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -278,7 +277,7 @@ class DataRepository {
         'shopping': shoppingData,
       });
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء تحميل السله'));
     }
   }
@@ -294,7 +293,7 @@ class DataRepository {
         'shopping': const <Product, int>{},
       });
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء اعادة السله'));
     }
   }
@@ -313,7 +312,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
     }
   }
@@ -328,7 +327,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
     }
   }
@@ -346,7 +345,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
     }
   }
@@ -370,7 +369,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
     }
   }
@@ -408,7 +407,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -443,7 +442,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -456,7 +455,7 @@ class DataRepository {
           .update({'status': OrderStatus.delivered.name});
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -480,7 +479,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -502,7 +501,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -630,8 +629,8 @@ class DataRepository {
         'history': historyOrderList,
       });
     } catch (e) {
-      log(e.toString());
-      log(e.toString());
+      AppLogs.error(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -677,7 +676,7 @@ class DataRepository {
       }
       return Right(adsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -726,7 +725,7 @@ class DataRepository {
         searchProductList.add(Product.fromDoc(result.id, result.data()));
       return Right(searchProductList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }

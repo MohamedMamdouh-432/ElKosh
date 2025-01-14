@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/functions.dart';
@@ -76,7 +74,7 @@ class AdDeliveryLocationPickerScreen extends StatelessWidget {
             color: ColorManager.primary,
           ),
           showCurrentLocationPointer: false,
-          onError: (e) => log(e.toString()),
+          onError: (e) => AppLogs.error(e.toString()),
           onPicked: (pickedData) {
             final location = Location.fromMapPicker(
               pickedData.latLong.latitude,

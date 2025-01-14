@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
@@ -41,7 +40,7 @@ class UserRepository {
           ? Right(_user ?? User.empty)
           : const Left(Failure("المستخدم غير موجود"));
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }

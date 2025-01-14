@@ -1,5 +1,5 @@
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:models_repository/models_repository.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -10,6 +10,6 @@ class AppBlocObserver extends BlocObserver {
     Transition<dynamic, dynamic> transition,
   ) {
     super.onTransition(bloc, transition);
-    log(transition.nextState.toString());
+    AppLogs.info(transition.nextState.toString());
   }
 }

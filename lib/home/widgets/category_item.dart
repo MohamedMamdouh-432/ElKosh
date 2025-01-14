@@ -17,7 +17,13 @@ class CategoryItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<CategorysBloc>().add(CategorySelectedEvent(category));
-        context.push(RouteManager.productsRoute, extra: 3);
+        context.push(
+          RouteManager.productsRoute, 
+          extra: {
+            'isRelated': true,
+            'steps': 3,
+          },
+        );
         context.read<ProductsBloc>().add(ProductsRelatedLoadingEvent());
       },
       child: Card(
