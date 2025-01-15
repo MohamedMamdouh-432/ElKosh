@@ -104,7 +104,7 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: 5,
                     left: 20,
                     right: 20,
                     child: ElevatedButton(
@@ -115,6 +115,7 @@ class CartScreen extends StatelessWidget {
                                 context: context,
                                 elevation: 20,
                                 useSafeArea: true,
+                                isScrollControlled: true,
                                 showDragHandle: true,
                                 builder: (context) =>
                                     const PlaceOrderBottomSheet(),
