@@ -383,10 +383,10 @@ class DataRepository {
           .doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       Map<String, List> shoppingList = {};
-      _shopping.forEach((id, cnt) async {
-        final mappedProduct = await getProductById(id);
-        shoppingList.putIfAbsent(id, () => [cnt, mappedProduct.updatedPrice]);
-      });
+      for (MapEntry entry in _shopping.entries) {
+        final mappedProduct = await getProductById(entry.key);
+        shoppingList.putIfAbsent(entry.key, () => [entry.value, mappedProduct.updatedPrice]);
+      }
       final orderMap = {
         'total': _price,
         'code': seqIdVal,

@@ -5,7 +5,6 @@ import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:models_repository/models_repository.dart';
 
 class CartCard extends StatelessWidget {
@@ -21,9 +20,9 @@ class CartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 120.h,
+      height: 110.h,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -36,38 +35,39 @@ class CartCard extends StatelessWidget {
         ],
       ),
       child: Row(
+        spacing: 10,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: CachedNetworkImage(
-              imageUrl: product.imgUrl,
-              width: 80,
-              height: 80,
-              fit: BoxFit.fill,
+          SizedBox(
+            width: context.width * 0.18,
+            height: context.height * 0.09,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: product.imgUrl,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-          MaxGap(15.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: context.width * 0.38,
+              SizedBox.square(
                 child: Text(
                   product.name,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
               Text(
                 '${product.updatedPrice} جنيه',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 12.sp,
                 ),
               ),
             ],

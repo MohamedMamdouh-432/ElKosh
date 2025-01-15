@@ -36,7 +36,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 80),
                 child: Column(
                   children: [
                     const Gap(30),
