@@ -50,27 +50,31 @@ Future<File?> fetchImage() async {
   return file;
 }
 
-bool isMarketOpen(Market market) {
-  final curTime = DateTime.now();
+bool isMarketOpen(Market market, DateTime currentTime) {
   final todayOpenTime = DateTime(
-    curTime.year,
-    curTime.month,
-    curTime.day,
+    currentTime.year,
+    currentTime.month,
+    currentTime.day,
     market.beginTime.hour,
     market.beginTime.minute,
   );
   final todayCloseTime = DateTime(
-    curTime.year,
-    curTime.month,
-    curTime.day,
+    currentTime.year,
+    currentTime.month,
+    currentTime.day,
     market.endTime.hour,
     market.endTime.minute,
   );
 
   if (todayCloseTime.isBefore(todayOpenTime)) {
-    if (curTime.isAfter(todayOpenTime) || curTime.isBefore(todayCloseTime))
+    if (currentTime.isAfter(todayOpenTime) ||
+        currentTime.isBefore(todayCloseTime)) {
       return true;
-  } else if (curTime.isAfter(todayOpenTime) && curTime.isBefore(todayCloseTime))
+    }
+  } else if (currentTime.isAfter(todayOpenTime) &&
+      currentTime.isBefore(todayCloseTime)) {
     return true;
+  }
   return false;
 }
+

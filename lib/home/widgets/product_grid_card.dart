@@ -17,7 +17,12 @@ class ProductGridCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
-        context.push(RouteManager.productDetailsRoute, extra: 1);
+        context.push(
+          RouteManager.productDetailsRoute, 
+          extra: {
+            'steps': 1,
+            'isRelated': false,
+          });
       },
       splashColor: Colors.transparent,
       child: Stack(

@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/shared/services/context_media.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageSection extends StatelessWidget {
@@ -26,10 +26,9 @@ class ImageSection extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
-        child: CachedNetworkImage(
+        child: FancyShimmerImage(
+          boxFit: BoxFit.fill,
           imageUrl: imageUrl,
-          fit: BoxFit.fill,
-          filterQuality: FilterQuality.high,
           width: double.infinity,
           height: context.height * 0.4,
         ),

@@ -26,7 +26,12 @@ class ProductCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
-        context.push(RouteManager.productDetailsRoute, extra: steps);
+        context.push(
+          RouteManager.productDetailsRoute, 
+          extra: {
+            'steps': steps,
+            'isRelated': (GoRouter.of(context).state?.extra as Map<String, dynamic>)['isRelated'] ?? false,
+          });
       },
       splashColor: Colors.transparent,
       child: Card(

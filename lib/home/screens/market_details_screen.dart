@@ -3,6 +3,7 @@ import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/home/controllers/market_details_bloc/market_details_bloc.dart';
 import 'package:elkosh/home/widgets/image_section.dart';
 import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/shared/services/time_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,7 @@ class MarkettDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timeService = TimeService();
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => CategorysBloc()),
@@ -54,7 +56,6 @@ class MarkettDetailsScreen extends StatelessWidget {
             ),
             body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
               builder: (context, state) {
-                bool isOpened = isMarketOpen(state.market);
                 return Skeletonizer(
                   enabled: state.status == LoadStatus.inProgress,
                   child: SingleChildScrollView(
@@ -68,25 +69,34 @@ class MarkettDetailsScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 15,
-                                    vertical: 2,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isOpened
-                                        ? Colors.green
-                                        : Colors.blueGrey,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    isOpened ? 'مفتوح' : 'مغلق',
-                                    style: TextStyle(
-                                      fontSize: 15.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                StreamBuilder<DateTime>(
+                                  stream: timeService.curTimeStream,
+                                  builder: (_, timeValue) {
+                                    if (!timeValue.hasData)
+                                      return const SizedBox.shrink();
+                                    bool isOpened =
+                                        isMarketOpen(state.market, timeValue.data!);
+                                    return Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 15,
+                                        vertical: 2,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isOpened
+                                            ? Colors.green
+                                            : Colors.blueGrey,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        isOpened ? 'مفتوح' : 'مغلق',
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                                 const Spacer(),
                                 Row(

@@ -37,11 +37,11 @@ class CategorysState extends Equatable {
   @override
   String toString() {
     return '''Categorys State ::
-            Current Category: $curCategory
-            Status: ${status.name}
-            Error: $errMsg
-            Categories: ${categorys.length}
-          ''';
+      Current Category: ${curCategory.name}
+      Status: ${status.name}
+      Error: $errMsg
+      Categories: ${categorys.length}
+    ''';
   }
 
   @override
