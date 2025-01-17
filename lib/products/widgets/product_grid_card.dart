@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

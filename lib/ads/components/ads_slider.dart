@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
-import 'package:elkosh/home/widgets/ad_item.dart';
+import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/ads/widgets/ad_item.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

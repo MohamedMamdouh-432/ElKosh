@@ -66,6 +66,7 @@
     * search feature
 
 # Edits
+	- not available (red) , discount (green)
     - check on any text/image constraints
     - google maps
     - otp

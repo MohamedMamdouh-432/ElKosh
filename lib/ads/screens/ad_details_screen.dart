@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
-import 'package:elkosh/home/components/place_ad_order_bottom_sheet.dart';
-import 'package:elkosh/home/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/home/widgets/offer_item.dart';
+import 'package:elkosh/ads/components/place_ad_order_bottom_sheet.dart';
+import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
+import 'package:elkosh/ads/widgets/offer_item.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

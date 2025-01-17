@@ -11,11 +11,11 @@ class DataRepository {
   final FirebaseFirestore firestore;
   final FirebaseStorage fireStorage;
   final SharedPreferences sharedPref;
-  Market? _selctedMarket;
-  Category? _selectedCategory;
-  Product? _selectedProduct;
-  Ad? _selectedAd;
-  UserOrder? _selectedOrder;
+  Market? _curMarket;
+  Category? _curCategory;
+  Product? _curProduct;
+  Ad? _curAd;
+  UserOrder? _curOrder;
   double _price;
   Map<String, int> _shopping;
 
@@ -27,16 +27,16 @@ class DataRepository {
         _shopping = {};
 
   String getUserId() => sharedPref.getString('userId') ?? '';
-  Market? getCurMarket() => _selctedMarket;
-  Category? getCurCategory() => _selectedCategory;
-  Product? getCurProduct() => _selectedProduct;
-  Ad? getCurAd() => _selectedAd;
-  UserOrder? getCurOrder() => _selectedOrder;
-  void setCurMarket(Market market) => _selctedMarket = market;
-  void setCurCategory(Category category) => _selectedCategory = category;
-  void setCurProduct(Product product) => _selectedProduct = product;
-  void setCurAd(Ad ad) => _selectedAd = ad;
-  void setCurOrder(UserOrder order) => _selectedOrder = order;
+  Market? getCurMarket() => _curMarket;
+  Category? getCurCategory() => _curCategory;
+  Product? getCurProduct() => _curProduct;
+  Ad? getCurAd() => _curAd;
+  UserOrder? getCurOrder() => _curOrder;
+  void setCurMarket(Market market) => _curMarket = market;
+  void setCurCategory(Category category) => _curCategory = category;
+  void setCurProduct(Product product) => _curProduct = product;
+  void setCurAd(Ad ad) => _curAd = ad;
+  void setCurOrder(UserOrder order) => _curOrder = order;
 
   /*----- Market Operations -----*/
 
@@ -64,7 +64,7 @@ class DataRepository {
     try {
       final docRef = firestore
           .collection(ConstantManager.marketCollection)
-          .doc(_selctedMarket?.id);
+          .doc(_curMarket?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -114,7 +114,7 @@ class DataRepository {
     try {
       final query = firestore
           .collection(ConstantManager.categoryCollection)
-          .where('marketId', isEqualTo: _selctedMarket?.id)
+          .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId');
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
@@ -135,7 +135,7 @@ class DataRepository {
     try {
       final response = await firestore
           .collection(ConstantManager.categoryCollection)
-          .where('marketId', isEqualTo: _selctedMarket?.id)
+          .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId')
           .get();
       List<Category> categoriesList = [];
@@ -154,7 +154,7 @@ class DataRepository {
     try {
       final docRef = firestore
           .collection(ConstantManager.productCollection)
-          .doc(_selectedProduct?.id);
+          .doc(_curProduct?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -220,7 +220,7 @@ class DataRepository {
     try {
       final response = await firestore
           .collection(ConstantManager.productCollection)
-          .where('categoryId', isEqualTo: _selectedCategory?.id)
+          .where('categoryId', isEqualTo: _curCategory?.id)
           .get();
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
@@ -419,7 +419,7 @@ class DataRepository {
           .doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
       Map<String, List> shoppingList = {};
-      for (Offer offer in _selectedAd!.offers)
+      for (Offer offer in _curAd!.offers)
         shoppingList.putIfAbsent(
             offer.product.id, () => [offer.quantity, offer.price]);
       final orderMap = {
@@ -429,12 +429,12 @@ class DataRepository {
         'location': location.toJson(),
         'shopping': shoppingList,
         'status': OrderStatus.pending.name,
-        'total': _selectedAd?.total,
+        'total': _curAd?.total,
         'userId': getUserId(),
       };
       await firestore.collection('orders').add(orderMap);
       await seqIdDoc.set({'seqId': seqIdVal + 1});
-      for (var offer in _selectedAd!.offers) {
+      for (var offer in _curAd!.offers) {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(offer.product.id)
@@ -630,7 +630,6 @@ class DataRepository {
       });
     } catch (e) {
       AppLogs.error(e.toString());
-      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -685,7 +684,7 @@ class DataRepository {
     try {
       final docRef = firestore
           .collection(ConstantManager.adsCollection)
-          .doc(_selectedAd?.id);
+          .doc(_curAd?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)

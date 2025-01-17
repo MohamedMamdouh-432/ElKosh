@@ -2,8 +2,8 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/home/controllers/product_details_bloc/product_details_bloc.dart';
-import 'package:elkosh/home/widgets/image_section.dart';
+import 'package:elkosh/products/controllers/product_details_bloc/product_details_bloc.dart';
+import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';

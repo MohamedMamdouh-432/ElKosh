@@ -4,7 +4,7 @@ import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';

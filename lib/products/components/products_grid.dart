@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/home/widgets/product_grid_card.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,5 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/home/widgets/subtitle_text.dart';
 import 'package:flutter/material.dart';
 
 class EmptyCartView extends StatelessWidget {
@@ -17,19 +16,27 @@ class EmptyCartView extends StatelessWidget {
             height: context.height * 0.2,
             width: double.infinity,
           ),
-          const SubtitleTextWidget(
-            label: "الـسـله فارغة",
-            fontWeight: FontWeight.w600,
-            fontSize: 35,
-            color: Colors.red,
+          const Text(
+            "الـسـله فارغة",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 35,
+              color: Colors.red,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.none,
+            ),
           ),
           const Padding(
             padding: EdgeInsets.all(20),
-            child: SubtitleTextWidget(
-              label:
-                  'من الواضح انك لم تقم بالتسوق بعد . لذا يمكنك الانتقال الى الصفحة الرئيسية لتتصفح المنتجات و المتاجر المتاحه',
-              fontSize: 20,
-              fontWeight: FontWeight.w400,
+            child: Text(
+              'من الواضح انك لم تقم بالتسوق بعد . لذا يمكنك الانتقال الى الصفحة الرئيسية لتتصفح المنتجات و المتاجر المتاحه',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.red,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.none,
+              ),
             ),
           ),
         ],

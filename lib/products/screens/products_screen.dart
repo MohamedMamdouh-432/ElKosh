@@ -1,5 +1,5 @@
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/home/widgets/product_card.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

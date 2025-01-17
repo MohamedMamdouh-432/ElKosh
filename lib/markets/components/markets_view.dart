@@ -1,5 +1,5 @@
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
-import 'package:elkosh/home/widgets/market_item.dart';
+import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/markets/widgets/market_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
