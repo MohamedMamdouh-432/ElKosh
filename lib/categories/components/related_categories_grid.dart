@@ -1,5 +1,5 @@
-import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
-import 'package:elkosh/home/widgets/category_item.dart';
+import 'package:elkosh/categories/controllers/categorys_bloc/categorys_bloc.dart';
+import 'package:elkosh/categories/widgets/category_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';

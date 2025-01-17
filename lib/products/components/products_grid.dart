@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/home/widgets/product_grid_card.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +42,7 @@ class ProductsGrid extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15),
             margin: const EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: Colors.black12.withValues(alpha: 0.03),
+              color: Colors.black12.withValues(alpha: 0.02),
             ),
             child: Column(
               children: [
@@ -59,7 +59,7 @@ class ProductsGrid extends StatelessWidget {
                   maxCrossAxisExtent: 100,
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 15,
-                  childAspectRatio: 7 / 7.4,
+                  childAspectRatio: 7 / 7.5,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   children: [

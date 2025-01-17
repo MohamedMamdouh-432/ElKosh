@@ -1,11 +1,11 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/search/bloc/search_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';

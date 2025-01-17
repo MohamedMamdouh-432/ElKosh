@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +26,12 @@ class ProductCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
-        context.push(
-          RouteManager.productDetailsRoute, 
-          extra: {
-            'steps': steps,
-            'isRelated': (GoRouter.of(context).state?.extra as Map<String, dynamic>)['isRelated'] ?? false,
-          });
+        context.push(RouteManager.productDetailsRoute, extra: {
+          'steps': steps,
+          'isRelated': (GoRouter.of(context).state?.extra
+                  as Map<String, dynamic>)['isRelated'] ??
+              false,
+        });
       },
       splashColor: Colors.transparent,
       child: Card(
@@ -100,12 +100,22 @@ class ProductCard extends StatelessWidget {
                 top: 0,
                 left: 0,
                 child: CornerBanner(
-                  bannerColor: Colors.red,
+                  bannerColor:
+                      product.quantity.floor() == 0 ? Colors.red : Colors.green,
                   child: Text(
                     product.quantity.floor() == 0
                         ? 'غير متوفر'
                         : '${toArNumber((((product.price - product.updatedPrice) / product.price) * 100).toStringAsFixed(0))} %',
-                    style: TextStyle(fontSize: 10.sp, color: Colors.white),
+                    style: product.quantity.floor() == 0
+                        ? TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          )
+                        : TextStyle(
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
                   ),
                 ),
               ),

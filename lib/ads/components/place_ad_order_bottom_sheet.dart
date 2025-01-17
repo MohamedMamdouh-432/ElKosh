@@ -4,6 +4,7 @@ import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
@@ -18,47 +19,47 @@ class PlaceAdOrderBottomSheet extends StatelessWidget {
       builder: (context, state) {
         return Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          padding: EdgeInsets.symmetric(vertical: 5.sp, horizontal: 15.sp),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "تكلفة الطلب: \t\t\t${toArNumber(ad.total.toString())}",
-                style: const TextStyle(
-                  fontSize: 20,
+                style: TextStyle(
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               Text(
                 "مصاريف إضافيه: \t\t\t${toArNumber("10")}",
-                style: const TextStyle(
-                  fontSize: 20,
+                style: TextStyle(
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Text("-------------------------------------------"),
               Text(
                 "الإجمالى: \t\t\t${toArNumber((ad.total + 10).toString())}",
-                style: const TextStyle(
-                  fontSize: 20,
+                style: TextStyle(
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Gap(30),
+              Gap(20.sp),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () =>
                       context.push(RouteManager.adDeliveryLocationPickerRoute),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                    elevation: 15,
+                    padding: EdgeInsets.symmetric(horizontal: 40.sp),
+                    elevation: 10.sp,
                   ),
                   icon: const Icon(CupertinoIcons.placemark),
-                  label: const Text(
+                  label: Text(
                     "تأكيد طلب العرض",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 10.sp,
                       fontWeight: FontWeight.bold,
                       fontStyle: FontStyle.italic,
                     ),

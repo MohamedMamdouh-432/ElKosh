@@ -1,5 +1,5 @@
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
-import 'package:elkosh/home/widgets/market_item.dart';
+import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/markets/widgets/market_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -39,7 +39,7 @@ class MarketsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 15),
               margin: const EdgeInsets.only(top: 4),
               decoration: BoxDecoration(
-                color: Colors.black12.withValues(alpha: 0.03),
+                color: Colors.black12.withValues(alpha: 0.02),
               ),
               child: Column(
                 children: [

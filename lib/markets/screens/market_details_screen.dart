@@ -1,7 +1,7 @@
-import 'package:elkosh/home/components/related_categories_grid.dart';
-import 'package:elkosh/home/controllers/categorys_bloc/categorys_bloc.dart';
-import 'package:elkosh/home/controllers/market_details_bloc/market_details_bloc.dart';
-import 'package:elkosh/home/widgets/image_section.dart';
+import 'package:elkosh/categories/components/related_categories_grid.dart';
+import 'package:elkosh/categories/controllers/categorys_bloc/categorys_bloc.dart';
+import 'package:elkosh/markets/controllers/market_details_bloc/market_details_bloc.dart';
+import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/time_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,7 +62,10 @@ class MarkettDetailsScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        ImageSection(imageUrl: state.market.imgUrl),
+                        ImageSection(
+                          isReady: state.status != LoadStatus.inProgress,
+                          imageUrl: state.market.imgUrl,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
