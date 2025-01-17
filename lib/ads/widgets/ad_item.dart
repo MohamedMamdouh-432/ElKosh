@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
 import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -19,11 +19,14 @@ class AdItem extends StatelessWidget {
         context.read<AdDetailsBloc>().add(AdDetailsLoadingEvent());
         context.push(RouteManager.adDetailsRoute);
       },
-      child: CachedNetworkImage(
-        fit: BoxFit.cover,
-        width: double.infinity,
-        filterQuality: FilterQuality.high,
-        imageUrl: ad.imgUrl,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: CachedNetworkImage(
+          fit: BoxFit.fill,
+          width: double.infinity,
+          filterQuality: FilterQuality.high,
+          imageUrl: ad.imgUrl,
+        ),
       ),
     );
   }

@@ -3,9 +3,9 @@ import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/products/controllers/product_details_bloc/product_details_bloc.dart';
-import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +16,8 @@ import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:super_banners/super_banners.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   const ProductDetailsScreen({super.key});
@@ -67,176 +69,237 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    body: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Column(
-                        children: [
-                          ImageSection(imageUrl: productState.product.imgUrl),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                productState.product.name,
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Text(
-                                productState.product.unitDesc,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                              const Gap(10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        onPressed: !isInCart
-                                            ? null
-                                            : () => context.read<CartBloc>().add(
-                                                CartDecreasingProductQuantityEvent(
-                                                    productState.product)),
-                                        icon: Icon(
-                                          Icons.remove,
-                                          size: 35,
-                                          color: isInCart
-                                              ? ColorManager.primary
-                                              : Colors.grey,
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 15,
-                                          vertical: 10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                        ),
-                                        child: Text(
-                                          isInCart
-                                              ? (state.shopping[productState
-                                                          .product] ??
-                                                      0)
-                                                  .toString()
-                                              : "0",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => productState
-                                                    .product.quantity
-                                                    .toInt() >=
-                                                (state.shopping[productState
-                                                            .product] ??
-                                                        0) +
-                                                    1
-                                            ? context.read<CartBloc>().add(
-                                                CartIncreasingProductQuantityEvent(
-                                                    productState.product))
-                                            : QuickAlert.show(
-                                                context: context,
-                                                type: QuickAlertType.warning,
-                                                title: 'تحذير',
-                                                text:
-                                                    "الكمية الموجوده من المنتج حاليا لا تكفى",
-                                                borderRadius: 20,
-                                                animType:
-                                                    QuickAlertAnimType.scale,
-                                              ),
-                                        icon: Icon(
-                                          Icons.add,
-                                          size: 35,
-                                          color: ColorManager.primary,
-                                        ),
-                                      ),
-                                    ],
+                    body: Skeletonizer(
+                      enabled: productState.status == LoadStatus.inProgress,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: [
+                            Stack(
+                              children: [
+                                ImageSection(
+                                    isReady: productState.status != LoadStatus.inProgress,
+                                    imageUrl: productState.product.imgUrl,
                                   ),
-                                  const Gap(10),
-                                  ConditionalBuilder(
-                                    condition:
-                                        productState.product.updatedPrice ==
-                                                0 ||
-                                            productState.product.updatedPrice ==
-                                                productState.product.price,
-                                    builder: (_) => Text(
-                                      '${toArNumber(productState.product.updatedPrice.toStringAsFixed(2))} جنيه',
-                                      style: TextStyle(
-                                        fontSize: 14.sp,
-                                        fontWeight: FontWeight.bold,
+                                Visibility(
+                                  visible:
+                                      productState.product.quantity.floor() > 0 &&
+                                          productState.product.price !=
+                                              productState.product.updatedPrice,
+                                  child: Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: CornerBanner(
+                                      bannerColor: Colors.green,
+                                      child: Text(
+                                        productState.product.quantity.floor() == 0
+                                            ? 'غير متوفر'
+                                            : '${toArNumber((((productState.product.price - productState.product.updatedPrice) / productState.product.price) * 100).toStringAsFixed(0))} %',
+                                        style: TextStyle(
+                                          fontSize: 25.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
-                                    fallback: (_) => Row(
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      productState.product.name,
+                                      style: const TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible:
+                                          productState.product.quantity.floor() ==
+                                              0,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 15,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          "غير متوفر",
+                                          style: TextStyle(
+                                            fontSize: 15.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  productState.product.unitDesc,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const Gap(10),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
                                       children: [
-                                        Text(
-                                          productState.product.price.toString(),
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.bold,
-                                            decoration:
-                                                TextDecoration.lineThrough,
+                                        IconButton(
+                                          onPressed: !isInCart
+                                              ? null
+                                              : () => context.read<CartBloc>().add(
+                                                  CartDecreasingProductQuantityEvent(
+                                                      productState.product)),
+                                          icon: Icon(
+                                            Icons.remove,
+                                            size: 35,
+                                            color: isInCart
+                                                ? ColorManager.primary
+                                                : Colors.grey,
                                           ),
                                         ),
-                                        const Gap(10),
-                                        Text(
-                                          productState.product.updatedPrice
-                                              .toString(),
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.bold,
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 15,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border:
+                                                Border.all(color: Colors.grey),
+                                          ),
+                                          child: Text(
+                                            isInCart
+                                                ? (state.shopping[productState
+                                                            .product] ??
+                                                        0)
+                                                    .toString()
+                                                : "0",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
-                                        const Gap(10),
-                                        Text(
-                                          'جنيه',
-                                          style: TextStyle(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.bold,
+                                        IconButton(
+                                          onPressed: () => productState
+                                                      .product.quantity
+                                                      .toInt() >=
+                                                  (state.shopping[productState
+                                                              .product] ??
+                                                          0) +
+                                                      1
+                                              ? context.read<CartBloc>().add(
+                                                  CartIncreasingProductQuantityEvent(
+                                                      productState.product))
+                                              : QuickAlert.show(
+                                                  context: context,
+                                                  type: QuickAlertType.warning,
+                                                  title: 'تحذير',
+                                                  text:
+                                                      "الكمية الموجوده من المنتج حاليا لا تكفى",
+                                                  borderRadius: 20,
+                                                  animType:
+                                                      QuickAlertAnimType.scale,
+                                                ),
+                                          icon: Icon(
+                                            Icons.add,
+                                            size: 35,
+                                            color: ColorManager.primary,
                                           ),
                                         ),
                                       ],
                                     ),
+                                    const Gap(10),
+                                    ConditionalBuilder(
+                                      condition:
+                                          productState.product.updatedPrice ==
+                                                  0 ||
+                                              productState.product.updatedPrice ==
+                                                  productState.product.price,
+                                      builder: (_) => Text(
+                                        '${toArNumber(productState.product.updatedPrice.toStringAsFixed(2))} جنيه',
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      fallback: (_) => Row(
+                                        children: [
+                                          Text(
+                                            productState.product.price.toString(),
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.bold,
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          Text(
+                                            productState.product.updatedPrice
+                                                .toString(),
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const Gap(10),
+                                          Text(
+                                            'جنيه',
+                                            style: TextStyle(
+                                              fontSize: 15.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Gap(10),
+                                const Divider(),
+                                const Gap(10),
+                                const Text(
+                                  "الوصف",
+                                  style: TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
-                              const Gap(10),
-                              const Divider(),
-                              const Gap(10),
-                              const Text(
-                                "الوصف",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w500,
                                 ),
-                              ),
-                              const Gap(5),
-                              Text(
-                                productState.product.desc,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black54,
+                                const Gap(5),
+                                Text(
+                                  productState.product.desc,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                  ),
                                 ),
-                              ),
-                              const Gap(10),
-                              const Divider(),
-                            ],
-                          ),
-                        ],
+                                const Gap(10),
+                                const Divider(),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     floatingActionButtonLocation:
-                        FloatingActionButtonLocation.centerFloat,
+                        FloatingActionButtonLocation.centerDocked,
                     floatingActionButton: SizedBox(
                       width: context.width * 0.8,
                       child: ElevatedButton(

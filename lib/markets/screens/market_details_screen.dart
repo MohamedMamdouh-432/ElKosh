@@ -62,7 +62,10 @@ class MarkettDetailsScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: [
-                        ImageSection(imageUrl: state.market.imgUrl),
+                        ImageSection(
+                          isReady: state.status != LoadStatus.inProgress,
+                          imageUrl: state.market.imgUrl,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

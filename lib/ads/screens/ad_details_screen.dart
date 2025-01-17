@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/ads/components/place_ad_order_bottom_sheet.dart';
 import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
 import 'package:elkosh/ads/widgets/offer_item.dart';
+import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -89,31 +89,16 @@ class AdDetailsScreen extends StatelessWidget {
                     body: Skeletonizer(
                       enabled: state.status == LoadStatus.inProgress,
                       child: SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 60),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: double.infinity,
-                              height: context.height * 0.4,
-                              margin: const EdgeInsets.only(bottom: 20),
-                              padding: const EdgeInsets.all(30),
-                              clipBehavior: Clip.hardEdge,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(40),
-                                  bottomRight: Radius.circular(40),
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: CachedNetworkImage(
-                                  imageUrl: state.ad.imgUrl,
-                                  fit: BoxFit.fill,
-                                  filterQuality: FilterQuality.high,
-                                  width: double.infinity,
-                                  height: context.height * 0.4,
-                                ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: ImageSection(
+                                isReady: state.status != LoadStatus.inProgress,
+                                imageUrl: state.ad.imgUrl,
                               ),
                             ),
                             Padding(

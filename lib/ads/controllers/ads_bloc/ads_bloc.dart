@@ -16,6 +16,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
     on<AdSelectedEvent>(_onAdSelecting);
     on<AdsUpdatedEvent>(_onAdsUpdated);
 
+    _subscription?.cancel();
     _subscription = sl.get<DataRepository>().adsStream().listen(
         (result) => result.fold(
               (l) => addError(l.message),
@@ -58,6 +59,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
   }
 
   FutureOr<void> _onAdsUpdated(AdsUpdatedEvent event, emit) {
+    emit(state.copyWith(status: LoadStatus.updated));
     emit(state.copyWith(
       ads: event.ads,
       status: LoadStatus.success,

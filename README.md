@@ -66,10 +66,11 @@
     * search feature
 
 # Edits
-	- not available (red) , discount (green)
+	- contacts Info (need to be remote not local) (Profile Bloc)
     - check on any text/image constraints
     - google maps
     - otp
 
+	(?<!\w)\d+(\.\d+)?(?!\w)
 # Bugs
 	

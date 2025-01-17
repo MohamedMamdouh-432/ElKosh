@@ -42,7 +42,7 @@ class ProductsGrid extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15),
             margin: const EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: Colors.black12.withValues(alpha: 0.03),
+              color: Colors.black12.withValues(alpha: 0.02),
             ),
             child: Column(
               children: [
@@ -59,7 +59,7 @@ class ProductsGrid extends StatelessWidget {
                   maxCrossAxisExtent: 100,
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 15,
-                  childAspectRatio: 7 / 7.4,
+                  childAspectRatio: 7 / 7.5,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   children: [

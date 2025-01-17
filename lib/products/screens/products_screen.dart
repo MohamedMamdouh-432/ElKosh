@@ -58,7 +58,7 @@ class ProductsScreen extends StatelessWidget {
                     horizontal: 10,
                   ),
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 180,
+                    maxCrossAxisExtent: 120,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                     childAspectRatio: 7 / 12,

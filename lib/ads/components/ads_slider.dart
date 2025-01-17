@@ -4,6 +4,7 @@ import 'package:elkosh/ads/widgets/ad_item.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -25,7 +26,7 @@ class AdsSlider extends StatelessWidget {
               type: QuickAlertType.error,
               title: 'خطأ',
               text: 'حدث خطأ أثناء تحميل العروض',
-              borderRadius: 25,
+              borderRadius: 25.sp,
               barrierDismissible: false,
               confirmBtnText: "أعد المحاولة",
               onConfirmBtnTap: () {
@@ -37,9 +38,9 @@ class AdsSlider extends StatelessWidget {
         },
         builder: (context, state) {
           return Container(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: EdgeInsets.symmetric(vertical: 5.sp),
             decoration: BoxDecoration(
-              color: Colors.black12.withValues(alpha: 0.03),
+              color: Colors.black12.withValues(alpha: 0.02),
             ),
             child: Skeletonizer(
               enabled: state.status == LoadStatus.inProgress,

@@ -13,7 +13,7 @@ class OfferItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70.h,
+      height: 80.h,
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -63,15 +63,6 @@ class OfferItem extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    offer.product.updatedPrice.toString(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                  const Gap(10),
-                  Text(
                     offer.price.toString(),
                     style: const TextStyle(
                       fontSize: 16,
@@ -101,6 +92,15 @@ class OfferItem extends StatelessWidget {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
+                ),
+              ),
+              Text(
+                '${toArNumber((offer.product.price * offer.quantity).toString())} جنيه',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                  color: Colors.green,
+                  decoration: TextDecoration.lineThrough,
                 ),
               ),
               Text(

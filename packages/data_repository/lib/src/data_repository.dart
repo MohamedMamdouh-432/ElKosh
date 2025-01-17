@@ -385,7 +385,8 @@ class DataRepository {
       Map<String, List> shoppingList = {};
       for (MapEntry entry in _shopping.entries) {
         final mappedProduct = await getProductById(entry.key);
-        shoppingList.putIfAbsent(entry.key, () => [entry.value, mappedProduct.updatedPrice]);
+        shoppingList.putIfAbsent(
+            entry.key, () => [entry.value, mappedProduct.updatedPrice]);
       }
       final orderMap = {
         'total': _price,
@@ -637,6 +638,7 @@ class DataRepository {
   /*----- Ads Operations -----*/
 
   Stream<Either<Failure, List<Ad>>> adsStream() async* {
+    AppLogs.info('adsStream is called');
     try {
       final query = firestore.collection(ConstantManager.adsCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
@@ -644,9 +646,9 @@ class DataRepository {
           List<Ad> adsList = [];
           for (var adDoc in snapshot.docs) {
             List<Offer> offers = [];
-            for (var offerDoc in adDoc.data()['offers']) {
-              final offerProduct = await getProductById(offerDoc['productId']);
-              offers.add(Offer.fromDoc(offerDoc, offerProduct));
+            for (var offerObj in adDoc.data()['offers']) {
+              final offerProduct = await getProductById(offerObj['productId']);
+              offers.add(Offer.fromDoc(offerObj, offerProduct));
             }
             adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
           }
@@ -667,9 +669,9 @@ class DataRepository {
       List<Ad> adsList = [];
       for (var adDoc in response.docs) {
         List<Offer> offers = [];
-        for (var offerDoc in adDoc.data()['offers']) {
-          final offerProduct = await getProductById(offerDoc['productId']);
-          offers.add(Offer.fromDoc(offerDoc, offerProduct));
+        for (var offerObj in adDoc.data()['offers']) {
+          final offerProduct = await getProductById(offerObj['productId']);
+          offers.add(Offer.fromDoc(offerObj, offerProduct));
         }
         adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
       }
@@ -682,9 +684,8 @@ class DataRepository {
 
   Stream<Either<Failure, Ad>> adDetailsStream() async* {
     try {
-      final docRef = firestore
-          .collection(ConstantManager.adsCollection)
-          .doc(_curAd?.id);
+      final docRef =
+          firestore.collection(ConstantManager.adsCollection).doc(_curAd?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
