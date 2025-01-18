@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
@@ -40,7 +39,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         )),
       );
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
         status: LoadStatus.failure,
@@ -69,7 +68,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         )),
       );
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
         status: LoadStatus.failure,

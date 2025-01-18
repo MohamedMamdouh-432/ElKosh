@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:models_repository/models_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 String getAddress(Map<String, dynamic> addressMap) {
@@ -48,3 +49,32 @@ Future<File?> fetchImage() async {
   final file = await File(fetchedImage.path).copy(imgPath);
   return file;
 }
+
+bool isMarketOpen(Market market, DateTime currentTime) {
+  final todayOpenTime = DateTime(
+    currentTime.year,
+    currentTime.month,
+    currentTime.day,
+    market.beginTime.hour,
+    market.beginTime.minute,
+  );
+  final todayCloseTime = DateTime(
+    currentTime.year,
+    currentTime.month,
+    currentTime.day,
+    market.endTime.hour,
+    market.endTime.minute,
+  );
+
+  if (todayCloseTime.isBefore(todayOpenTime)) {
+    if (currentTime.isAfter(todayOpenTime) ||
+        currentTime.isBefore(todayCloseTime)) {
+      return true;
+    }
+  } else if (currentTime.isAfter(todayOpenTime) &&
+      currentTime.isBefore(todayCloseTime)) {
+    return true;
+  }
+  return false;
+}
+

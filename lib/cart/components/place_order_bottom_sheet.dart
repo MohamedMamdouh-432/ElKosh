@@ -1,5 +1,7 @@
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,39 +13,42 @@ class PlaceOrderBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
-      builder: (context, state) {
-        return Container(
-          height: 300,
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Column(
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(
+        left: 20,
+        right: 20,
+        bottom: context.bottomInsets,
+      ),
+      child: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Gap(15),
               Text(
-                "تكلفة الطلب: \t\t\t${state.price}",
+                "تكلفة الطلب: \t\t\t${toArNumber(state.price.toString())}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Text(
-                "مصاريف إضافيه: \t\t\t10",
-                style: TextStyle(
+              Text(
+                "مصاريف إضافيه: \t\t\t${toArNumber("10")}",
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const Text("-------------------------------------------"),
               Text(
-                "الإجمالى: \t\t\t${state.price + 10}",
+                "الإجمالى: \t\t\t${toArNumber((state.price + 10).toString())}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Gap(30),
+              const Gap(20),
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () =>
@@ -64,9 +69,9 @@ class PlaceOrderBottomSheet extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

@@ -53,6 +53,10 @@ dependencies:
   googleapis_auth: ^1.6.0
   app_settings: ^5.1.1
   firebase_messaging: ^15.1.6
+  font_awesome_flutter: ^10.8.0
+  super_banners: ^0.0.1
+  fancy_shimmer_image: ^2.0.3
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

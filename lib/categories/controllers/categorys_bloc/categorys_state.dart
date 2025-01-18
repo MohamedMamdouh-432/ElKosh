@@ -1,0 +1,49 @@
+part of 'categorys_bloc.dart';
+
+class CategorysState extends Equatable {
+  final List<Category> categorys;
+  final Category curCategory;
+  final String errMsg;
+  final LoadStatus status;
+
+  const CategorysState({
+    required this.categorys,
+    required this.curCategory,
+    required this.errMsg,
+    required this.status,
+  });
+
+  static CategorysState initial = CategorysState(
+    categorys: const [],
+    curCategory: Category.empty,
+    errMsg: '',
+    status: LoadStatus.initial,
+  );
+
+  CategorysState copyWith({
+    List<Category>? categorys,
+    Category? curCategory,
+    String? errMsg,
+    LoadStatus? status,
+  }) {
+    return CategorysState(
+      categorys: categorys ?? this.categorys,
+      curCategory: curCategory ?? this.curCategory,
+      errMsg: errMsg ?? this.errMsg,
+      status: status ?? this.status,
+    );
+  }
+
+  @override
+  String toString() {
+    return '''Categorys State ::
+      Current Category: ${curCategory.name}
+      Status: ${status.name}
+      Error: $errMsg
+      Categories: ${categorys.length}
+    ''';
+  }
+
+  @override
+  List<Object> get props => [categorys, curCategory, errMsg, status];
+}

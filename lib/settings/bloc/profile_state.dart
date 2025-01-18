@@ -31,7 +31,11 @@ class ProfileState extends Equatable {
   
   @override
   String toString() {
-    return 'ProfileState\nUser: \n$user\nStatus: ${status.name}\nError Message: $errMsg';
+    return '''Profile State ::
+      Name: ${user.name}
+      Status: ${status.name}
+      Error: $errMsg
+    ''';
   }
 
   @override

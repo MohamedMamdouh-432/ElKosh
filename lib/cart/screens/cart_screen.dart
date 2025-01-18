@@ -5,8 +5,8 @@ import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/notifications/notific2/send_notification_service.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -39,7 +39,7 @@ class CartScreen extends StatelessWidget {
               context: context,
               type: QuickAlertType.success,
               title: 'نجاح',
-              text: "تم طلب الاوردر بنجاح",
+              text: "تم تسجيل الطلب بنجاح",
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );
@@ -106,7 +106,7 @@ class CartScreen extends StatelessWidget {
                     ],
                   ),
                   Positioned(
-                    bottom: 20,
+                    bottom: 5,
                     left: 20,
                     right: 20,
                     child: ElevatedButton(
@@ -117,6 +117,7 @@ class CartScreen extends StatelessWidget {
                                 context: context,
                                 elevation: 20,
                                 useSafeArea: true,
+                                isScrollControlled: true,
                                 showDragHandle: true,
                                 builder: (context) =>
                                     const PlaceOrderBottomSheet(),

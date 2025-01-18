@@ -1,11 +1,11 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/home/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/home/controllers/ads_bloc/ads_bloc.dart';
-import 'package:elkosh/home/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/search/bloc/search_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
@@ -48,12 +48,12 @@ class ElKoshLauncher extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
+        statusBarColor: Color.fromARGB(255, 247, 234, 250),
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Color(0xffFFF3EC),
+        systemNavigationBarColor: Color.fromARGB(255, 246, 237, 233),
         systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Color(0xffFFF3EC),
+        systemNavigationBarDividerColor: Color.fromARGB(255, 246, 237, 233),
       ),
     );
 

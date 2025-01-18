@@ -53,3 +53,12 @@ class CartPlaceOrderEvent extends CartEvent {
   @override
   List<Object> get props => [location];
 }
+
+class CartPlaceAdOrderEvent extends CartEvent {
+  final Location location;
+
+  const CartPlaceAdOrderEvent(this.location);
+
+  @override
+  List<Object> get props => [location];
+}

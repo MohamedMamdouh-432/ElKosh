@@ -1,0 +1,33 @@
+import 'package:elkosh/categories/controllers/categorys_bloc/categorys_bloc.dart';
+import 'package:elkosh/categories/widgets/category_item.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:models_repository/models_repository.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+class RelatedCategorysGrid extends StatelessWidget {
+  const RelatedCategorysGrid({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CategorysBloc, CategorysState>(
+      builder: (context, categorysState) {
+        return Skeletonizer(
+          enabled: categorysState.status == LoadStatus.inProgress,
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 120,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 5,
+              childAspectRatio: 7 / 10.5,
+            ),
+            itemCount: categorysState.categorys.length,
+            itemBuilder: (_, i) => CategoryItem(categorysState.categorys[i]),
+          ),
+        );
+      },
+    );
+  }
+}

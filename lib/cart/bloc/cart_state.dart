@@ -34,8 +34,12 @@ class CartState extends Equatable {
       );
 
   @override
-  String toString() =>
-      "CartState ::\nPrice: $price\nStatus: ${status.name}\nShopping: $shopping\nErrorMessage: $errorMessage";
+  String toString() => '''CartState ::
+        Price: $price
+        Status: ${status.name}
+        Shopping: ${shopping.length}
+        Error: $errorMessage
+      ''';
 
   @override
   List<Object> get props => [

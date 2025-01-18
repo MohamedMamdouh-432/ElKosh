@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -90,7 +89,7 @@ class AuthRepository {
     String verificationCode = '';
     await _fireAuth.verifyPhoneNumber(
       phoneNumber: '+2$phone',
-      verificationFailed: (error) => log(error.message!),
+      verificationFailed: (error) => AppLogs.error(error.message!),
       codeSent: (code, token) => verificationCode = code,
       verificationCompleted: (c) {},
       codeAutoRetrievalTimeout: (code) {},
@@ -123,7 +122,7 @@ class AuthRepository {
       });
       await _sharedPref.setString('userId', userCredentials.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw Exception(CodeErrorGetter.epRegisterError(e.code));
     } catch (_) {
       throw Exception("حدث خطأ أثناء انشاء الحساب");
@@ -140,7 +139,7 @@ class AuthRepository {
       );
       await _fireAuth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw Exception(CodeErrorGetter.googleLoginError(e.code));
     } catch (_) {
       throw Exception("حدث خطأ اثناء تسجيل الدخول الى حساب جوجل");
@@ -166,10 +165,10 @@ class AuthRepository {
       await _sharedPref.setString('userId', _userId ?? '');
       return _userId ?? '';
     } on FirebaseAuthException catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw Exception(CodeErrorGetter.epLoginError(e.code));
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw Exception(e.toString());
     }
   }
@@ -195,7 +194,7 @@ class AuthRepository {
         _fireAuth.currentUser!.delete(),
       ]);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw Exception("حدث خطأ اثناء حذف حسابك");
     }
   }

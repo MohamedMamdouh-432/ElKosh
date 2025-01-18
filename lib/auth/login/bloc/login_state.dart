@@ -41,7 +41,13 @@ class LoginState extends Equatable {
 
   @override
   String toString() {
-    return 'LoginState\nEmail: ${email.value}\npassword: ${password.value}\nError: $errMsg\nInput Status: ${inputStatus.name}\nSubmission Status: ${submissionStatus.name}';
+    return '''LoginState ::
+      Email: ${email.value}
+      Password: ${password.value}
+      Error: $errMsg
+      Input Status: ${inputStatus.name}
+      Submission Status: ${submissionStatus.name}
+    ''';
   }
 
   @override

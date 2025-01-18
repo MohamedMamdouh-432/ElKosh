@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
@@ -12,11 +11,11 @@ class DataRepository {
   final FirebaseFirestore firestore;
   final FirebaseStorage fireStorage;
   final SharedPreferences sharedPref;
-  Market? _selctedMarket;
-  Category? _selectedCategory;
-  Product? _selectedProduct;
-  Ad? _selectedAd;
-  UserOrder? _selectedOrder;
+  Market? _curMarket;
+  Category? _curCategory;
+  Product? _curProduct;
+  Ad? _curAd;
+  UserOrder? _curOrder;
   double _price;
   Map<String, int> _shopping;
 
@@ -28,16 +27,16 @@ class DataRepository {
         _shopping = {};
 
   String getUserId() => sharedPref.getString('userId') ?? '';
-  Market? getCurMarket() => _selctedMarket;
-  Category? getCurCategory() => _selectedCategory;
-  Product? getCurProduct() => _selectedProduct;
-  Ad? getCurAd() => _selectedAd;
-  UserOrder? getCurOrder() => _selectedOrder;
-  void setCurMarket(Market market) => _selctedMarket = market;
-  void setCurCategory(Category category) => _selectedCategory = category;
-  void setCurProduct(Product product) => _selectedProduct = product;
-  void setCurAd(Ad ad) => _selectedAd = ad;
-  void setCurOrder(UserOrder order) => _selectedOrder = order;
+  Market? getCurMarket() => _curMarket;
+  Category? getCurCategory() => _curCategory;
+  Product? getCurProduct() => _curProduct;
+  Ad? getCurAd() => _curAd;
+  UserOrder? getCurOrder() => _curOrder;
+  void setCurMarket(Market market) => _curMarket = market;
+  void setCurCategory(Category category) => _curCategory = category;
+  void setCurProduct(Product product) => _curProduct = product;
+  void setCurAd(Ad ad) => _curAd = ad;
+  void setCurOrder(UserOrder order) => _curOrder = order;
 
   /*----- Market Operations -----*/
 
@@ -65,7 +64,7 @@ class DataRepository {
     try {
       final docRef = firestore
           .collection(ConstantManager.marketCollection)
-          .doc(_selctedMarket?.id);
+          .doc(_curMarket?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -91,7 +90,7 @@ class DataRepository {
       }
       return Right(marketsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -104,7 +103,7 @@ class DataRepository {
           .get();
       return marketDoc.data()?['active'];
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
@@ -115,7 +114,7 @@ class DataRepository {
     try {
       final query = firestore
           .collection(ConstantManager.categoryCollection)
-          .where('marketId', isEqualTo: _selctedMarket?.id)
+          .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId');
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
@@ -136,7 +135,7 @@ class DataRepository {
     try {
       final response = await firestore
           .collection(ConstantManager.categoryCollection)
-          .where('marketId', isEqualTo: _selctedMarket?.id)
+          .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId')
           .get();
       List<Category> categoriesList = [];
@@ -144,7 +143,7 @@ class DataRepository {
         categoriesList.add(Category.fromDoc(doc.id, doc.data()));
       return Right(categoriesList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -155,7 +154,7 @@ class DataRepository {
     try {
       final docRef = firestore
           .collection(ConstantManager.productCollection)
-          .doc(_selectedProduct?.id);
+          .doc(_curProduct?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -182,27 +181,29 @@ class DataRepository {
       for (var productDoc in response.docs) {
         final marketActive =
             await isMarketActive(productDoc.data()['marketId']);
-        if (!marketActive ||
-            productDoc.data()['quantity'].toDouble().floor() == 0) continue;
+        if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
       return Right(productsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
 
-  Stream<Either<Failure, List<Product>>> productsStream() async* {
+  Stream<Either<Failure, List<Product>>> productsStream(int? limits) async* {
     try {
-      final query = firestore.collection(ConstantManager.productCollection);
+      final query = limits != null
+          ? firestore
+              .collection(ConstantManager.productCollection)
+              .limit(limits)
+          : firestore.collection(ConstantManager.productCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Product> productsList = [];
           for (var doc in snapshot.docs) {
             final marketActive = await isMarketActive(doc.data()['marketId']);
-            if (!marketActive || doc.data()['quantity'].toDouble().floor() == 0)
-              continue;
+            if (!marketActive) continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
           return Right(productsList);
@@ -219,14 +220,18 @@ class DataRepository {
     try {
       final response = await firestore
           .collection(ConstantManager.productCollection)
-          .where('categoryId', isEqualTo: _selectedCategory?.id)
+          .where('categoryId', isEqualTo: _curCategory?.id)
           .get();
       List<Product> productsList = [];
-      for (var productDoc in response.docs)
+      for (var productDoc in response.docs) {
+        final marketActive =
+            await isMarketActive(productDoc.data()['marketId']);
+        if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
+      }
       return Right(productsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -239,7 +244,7 @@ class DataRepository {
           .get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -272,7 +277,7 @@ class DataRepository {
         'shopping': shoppingData,
       });
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء تحميل السله'));
     }
   }
@@ -288,7 +293,7 @@ class DataRepository {
         'shopping': const <Product, int>{},
       });
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء اعادة السله'));
     }
   }
@@ -307,7 +312,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
     }
   }
@@ -322,7 +327,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
     }
   }
@@ -340,7 +345,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
     }
   }
@@ -364,7 +369,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
     }
   }
@@ -377,10 +382,17 @@ class DataRepository {
           .collection(ConstantManager.ordersCollection)
           .doc(ConstantManager.orderSeqIdDoc);
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+      Map<String, List> shoppingList = {};
+      for (MapEntry entry in _shopping.entries) {
+        final mappedProduct = await getProductById(entry.key);
+        shoppingList.putIfAbsent(
+            entry.key, () => [entry.value, mappedProduct.updatedPrice]);
+      }
       final orderMap = {
         'total': _price,
         'code': seqIdVal,
-        'shopping': _shopping,
+        'shopping': shoppingList,
+        'isAd': false,
         'userId': getUserId(),
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
@@ -396,7 +408,42 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  Future<Either<Failure, Null>> placeAdOrder(Location location) async {
+    try {
+      final seqIdDoc = firestore
+          .collection(ConstantManager.ordersCollection)
+          .doc(ConstantManager.orderSeqIdDoc);
+      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+      Map<String, List> shoppingList = {};
+      for (Offer offer in _curAd!.offers)
+        shoppingList.putIfAbsent(
+            offer.product.id, () => [offer.quantity, offer.price]);
+      final orderMap = {
+        'code': seqIdVal,
+        'createdAt': DateTime.now(),
+        'isAd': true,
+        'location': location.toJson(),
+        'shopping': shoppingList,
+        'status': OrderStatus.pending.name,
+        'total': _curAd?.total,
+        'userId': getUserId(),
+      };
+      await firestore.collection('orders').add(orderMap);
+      await seqIdDoc.set({'seqId': seqIdVal + 1});
+      for (var offer in _curAd!.offers) {
+        await firestore
+            .collection(ConstantManager.productCollection)
+            .doc(offer.product.id)
+            .update({'quantity': FieldValue.increment(-offer.quantity)});
+      }
+      return const Right(null);
+    } catch (e) {
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -409,7 +456,7 @@ class DataRepository {
           .update({'status': OrderStatus.delivered.name});
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -433,7 +480,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -455,7 +502,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -486,11 +533,10 @@ class DataRepository {
             final List<UserOrder> historyOrderList = [];
             for (var doc in ongoingSnapshot.docs) {
               if (doc.data()['seqId'] != null) continue;
-              Map<Product, int> shopping = {};
-              for (MapEntry<String, dynamic> entry
-                  in doc.data()['shopping'].entries) {
+              List<ShoppingItem> shopping = [];
+              for (MapEntry entry in doc.data()['shopping'].entries) {
                 final mappedProduct = await getProductById(entry.key);
-                shopping[mappedProduct] = entry.value as int;
+                shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
               }
               ongoingOrderList.add(UserOrder.fromDoc(
                 doc.data(),
@@ -501,13 +547,12 @@ class DataRepository {
 
             for (var doc in historySnapshot.docs) {
               if (doc.data()['seqId'] != null) continue;
-              Map<Product, int> shopping = {};
-              for (MapEntry<String, dynamic> entry
-                  in doc.data()['shopping'].entries) {
+              List<ShoppingItem> shopping = [];
+              for (MapEntry entry in doc.data()['shopping'].entries) {
                 final mappedProduct = await getProductById(entry.key);
-                shopping[mappedProduct] = entry.value as int;
+                shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
               }
-              historyOrderList.add(UserOrder.fromDoc(
+              ongoingOrderList.add(UserOrder.fromDoc(
                 doc.data(),
                 shopping,
                 doc.id,
@@ -554,11 +599,11 @@ class DataRepository {
 
       for (var orderDoc in ongoingOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
-        Map<Product, int> shopping = {};
-        orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await getProductById(id);
-          shopping.putIfAbsent(mappedProduct, () => countVal);
-        });
+        List<ShoppingItem> shopping = [];
+        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
+          final mappedProduct = await getProductById(entry.key);
+          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
+        }
         ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
@@ -568,12 +613,12 @@ class DataRepository {
 
       for (var orderDoc in historyOrders.docs) {
         if (orderDoc.data()['seqId'] != null) continue;
-        Map<Product, int> shopping = {};
-        orderDoc.data()['shopping'].forEach((id, countVal) async {
-          final mappedProduct = await getProductById(id);
-          shopping.putIfAbsent(mappedProduct, () => countVal);
-        });
-        historyOrderList.add(UserOrder.fromDoc(
+        List<ShoppingItem> shopping = [];
+        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
+          final mappedProduct = await getProductById(entry.key);
+          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
+        }
+        ongoingOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
@@ -585,8 +630,7 @@ class DataRepository {
         'history': historyOrderList,
       });
     } catch (e) {
-      log(e.toString());
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
@@ -594,6 +638,7 @@ class DataRepository {
   /*----- Ads Operations -----*/
 
   Stream<Either<Failure, List<Ad>>> adsStream() async* {
+    AppLogs.info('adsStream is called');
     try {
       final query = firestore.collection(ConstantManager.adsCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
@@ -601,9 +646,9 @@ class DataRepository {
           List<Ad> adsList = [];
           for (var adDoc in snapshot.docs) {
             List<Offer> offers = [];
-            for (var offerDoc in adDoc.data()['offers']) {
-              final offerProduct = await getProductById(offerDoc['productId']);
-              offers.add(Offer.fromDoc(offerDoc, offerProduct));
+            for (var offerObj in adDoc.data()['offers']) {
+              final offerProduct = await getProductById(offerObj['productId']);
+              offers.add(Offer.fromDoc(offerObj, offerProduct));
             }
             adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
           }
@@ -624,24 +669,23 @@ class DataRepository {
       List<Ad> adsList = [];
       for (var adDoc in response.docs) {
         List<Offer> offers = [];
-        for (var offerDoc in adDoc.data()['offers']) {
-          final offerProduct = await getProductById(offerDoc['productId']);
-          offers.add(Offer.fromDoc(offerDoc, offerProduct));
+        for (var offerObj in adDoc.data()['offers']) {
+          final offerProduct = await getProductById(offerObj['productId']);
+          offers.add(Offer.fromDoc(offerObj, offerProduct));
         }
         adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
       }
       return Right(adsList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }
 
   Stream<Either<Failure, Ad>> adDetailsStream() async* {
     try {
-      final docRef = firestore
-          .collection(ConstantManager.adsCollection)
-          .doc(_selectedAd?.id);
+      final docRef =
+          firestore.collection(ConstantManager.adsCollection).doc(_curAd?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
           if (!snapshot.exists)
@@ -681,7 +725,7 @@ class DataRepository {
         searchProductList.add(Product.fromDoc(result.id, result.data()));
       return Right(searchProductList);
     } catch (e) {
-      log(e.toString());
+      AppLogs.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }

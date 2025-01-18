@@ -1,14 +1,8 @@
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:models_repository/models_repository.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
-
-  @override
-  void onEvent(Bloc<dynamic, dynamic> bloc, Object? event) {
-    super.onEvent(bloc, event);
-    log("Current Event: $event");
-  }
 
   @override
   void onTransition(
@@ -16,6 +10,6 @@ class AppBlocObserver extends BlocObserver {
     Transition<dynamic, dynamic> transition,
   ) {
     super.onTransition(bloc, transition);
-    log(transition.nextState.toString());
+    AppLogs.info(transition.nextState.toString());
   }
 }
