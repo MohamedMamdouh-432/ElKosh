@@ -9,8 +9,27 @@ import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../notifications/notific2/notification_services.dart';
+
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  NotificationServices notificationServices = NotificationServices();
+
+  @override
+  void initState() {
+    super.initState();
+    notificationServices.getDeviceToken();
+    notificationServices.requestNotificationPermission();
+    notificationServices.initFirebaseNotification(context);
+    notificationServices.setupInteractedMessage(context);
+    //notificationServices.saveUserTokenToFirebase();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -17,6 +17,7 @@ class User extends Equatable {
   final String phone;
   final bool active;
   final UserType userType;
+  final String token;
 
   const User({
     required this.id,
@@ -25,6 +26,7 @@ class User extends Equatable {
     required this.phone,
     required this.userType,
     required this.active,
+    required this.token,
   });
 
   static const empty = User(
@@ -34,6 +36,7 @@ class User extends Equatable {
     phone: '',
     active: true,
     userType: UserType.consumer,
+    token: '',
   );
 
   bool get isEmpty => this == User.empty;
@@ -47,6 +50,7 @@ class User extends Equatable {
       phone: userDoc['phone'],
       active: userDoc['active'],
       userType: getUserType(userDoc['userType'] ?? 'consumer'),
+      token: userDoc['token'] ?? '',
     );
   }
 
@@ -57,6 +61,7 @@ class User extends Equatable {
     String? phone,
     bool? active,
     UserType? userType,
+    String? deviceToken,
   }) {
     return User(
       id: id ?? this.id,
@@ -65,12 +70,13 @@ class User extends Equatable {
       phone: phone ?? this.phone,
       active: active ?? this.active,
       userType: userType ?? this.userType,
+      token: token ?? token,
     );
   }
 
   @override
   String toString() {
-    return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\nActive: $active';
+    return 'Id: $id\nName: $name\nEmail: $email\nPhone: $phone\nUser Type: $userType\nActive: $active\nDevice Token: $token';
   }
 
   @override
@@ -81,5 +87,32 @@ class User extends Equatable {
         phone,
         active,
         userType,
+        token,
       ];
+
+  //from map
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'] ?? '',
+      email: map['email'] ?? '',
+      name: map['name'] ?? '',
+      phone: map['phone'] ?? '',
+      active: map['active'] ?? false,
+      userType: getUserType(map['userType'] ?? 'consumer'),
+      token: map['token'] ?? '',
+    );
+  }
+
+  //to map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'phone': phone,
+      'active': active,
+      'userType': userType.toString().split('.').last,
+      'token': token,
+    };
+  }
 }

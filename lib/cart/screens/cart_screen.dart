@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
@@ -5,6 +6,7 @@ import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/home/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/notifications/notific2/send_notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -110,7 +112,7 @@ class CartScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: state.shopping.isEmpty
                           ? null
-                          : () {
+                          : () async {
                               showModalBottomSheet(
                                 context: context,
                                 elevation: 20,
@@ -119,6 +121,35 @@ class CartScreen extends StatelessWidget {
                                 builder: (context) =>
                                     const PlaceOrderBottomSheet(),
                               );
+                              Future<List<String?>> getAdminTokens() async {
+                                QuerySnapshot querySnapshot =
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .where('userType', isEqualTo: 'admin')
+                                        .get();
+
+                                List<String> adminTokens = [];
+                                for (var doc in querySnapshot.docs) {
+                                  String? token = doc['token'];
+                                  if (token != null) {
+                                    adminTokens.add(token);
+                                  }
+                                }
+
+                                return adminTokens;
+                              }
+
+                              Future<void> sendNotificationsToAdmins() async {}
+
+                              List<String?> adminTokens =
+                                  await getAdminTokens();
+
+                              await SendNotificationService
+                                  .sendNotificationUsingApi(
+                                      title: 'طلب جديد',
+                                      token: adminTokens[0],
+                                      body: 'طلب جديد ادخل شوفه ',
+                                      data: {'type': 'orders'});
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 5),

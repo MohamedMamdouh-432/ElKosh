@@ -23,7 +23,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
         initZoom: 12,
         mapLanguage: 'ar',
         trackMyPosition: true,
-        initPosition: const LatLong(23, 89),
+        initPosition: const LatLong(31, 30),
         // selected location button
         selectLocationButtonWidth: context.width * 0.8,
         selectLocationButtonText: 'تحديد الموقع الحالى',

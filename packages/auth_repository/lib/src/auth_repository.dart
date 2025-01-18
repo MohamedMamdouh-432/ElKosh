@@ -119,6 +119,7 @@ class AuthRepository {
         'email': email,
         'userType': "consumer",
         'active': true,
+        'token': '',
       });
       await _sharedPref.setString('userId', userCredentials.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
