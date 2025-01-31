@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:elkosh/notifications/notific2/send_notification_service.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -182,6 +184,33 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result = await sl.get<DataRepository>().placeOrder(event.location);
       // todo: send notification to admin (later when notifications feature is ready)
+      Future<List<String?>> getAdminTokens() async {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where('userType', isEqualTo: 'admin')
+            .get();
+
+        List<String> adminTokens = [];
+        for (var doc in querySnapshot.docs) {
+          String? token = doc['token'];
+          if (token != null) {
+            adminTokens.add(token);
+          }
+        }
+
+        return adminTokens;
+      }
+
+      Future<void> sendNotificationsToAdmins() async {}
+
+      List<String?> adminTokens = await getAdminTokens();
+
+      await SendNotificationService.sendNotificationUsingApi(
+          title: 'طلب جديد',
+          token: adminTokens[0],
+          body: 'طلب جديد ادخل شوفه ',
+          data: {'type': 'orders'});
+
       result.fold(
           (l) => emit(state.copyWith(
                 status: CartStatus.placingfailure,

@@ -120,35 +120,6 @@ class CartScreen extends StatelessWidget {
                                 builder: (context) =>
                                     const PlaceOrderBottomSheet(),
                               );
-                              // Future<List<String?>> getAdminTokens() async {
-                              //   QuerySnapshot querySnapshot =
-                              //       await FirebaseFirestore.instance
-                              //           .collection('users')
-                              //           .where('userType', isEqualTo: 'admin')
-                              //           .get();
-
-                              //   List<String> adminTokens = [];
-                              //   for (var doc in querySnapshot.docs) {
-                              //     String? token = doc['token'];
-                              //     if (token != null) {
-                              //       adminTokens.add(token);
-                              //     }
-                              //   }
-
-                              //   return adminTokens;
-                              // }
-
-                              // Future<void> sendNotificationsToAdmins() async {}
-
-                              // List<String?> adminTokens =
-                              //     await getAdminTokens();
-
-                              // await SendNotificationService
-                              //     .sendNotificationUsingApi(
-                              //         title: 'طلب جديد',
-                              //         token: adminTokens[0],
-                              //         body: 'طلب جديد ادخل شوفه ',
-                              //         data: {'type': 'orders'});
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 5),
