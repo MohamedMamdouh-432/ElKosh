@@ -7,4 +7,6 @@ class ConstantManager {
   static const String adsCollection = 'ads';
   static const String ordersCollection = 'orders';
   static const String userCollection = 'users';
+  static const mapboxkey =
+      'pk.eyJ1IjoibW9oYW5hZDUxNSIsImEiOiJjbTZqeDJ4NDgwNmhhMmpzaG15Y3Q0eGZwIn0.cS1JfP8F6PIfbmEZVBP8ew';
 }

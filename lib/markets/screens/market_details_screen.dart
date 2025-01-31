@@ -1,9 +1,9 @@
 import 'package:elkosh/categories/components/related_categories_grid.dart';
 import 'package:elkosh/categories/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/markets/controllers/market_details_bloc/market_details_bloc.dart';
-import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/time_service.dart';
+import 'package:elkosh/shared/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,8 +77,8 @@ class MarkettDetailsScreen extends StatelessWidget {
                                   builder: (_, timeValue) {
                                     if (!timeValue.hasData)
                                       return const SizedBox.shrink();
-                                    bool isOpened =
-                                        isMarketOpen(state.market, timeValue.data!);
+                                    bool isOpened = isMarketOpen(
+                                        state.market, timeValue.data!);
                                     return Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 15,
