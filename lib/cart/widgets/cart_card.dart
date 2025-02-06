@@ -20,7 +20,7 @@ class CartCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 110.h,
+      height: 120.h,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
@@ -35,10 +35,10 @@ class CartCard extends StatelessWidget {
         ],
       ),
       child: Row(
-        spacing: 10,
+        spacing: context.width * 0.0015,
         children: [
           SizedBox(
-            width: context.width * 0.18,
+            width: context.width * 0.19,
             height: context.height * 0.09,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),

@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   data_repository:
     path: packages/data_repository
+  device_preview: ^1.2.0
   either_dart: ^1.0.0
   equatable: ^2.0.5
   fancy_shimmer_image: ^2.0.3
@@ -53,6 +54,7 @@ dependencies:
   shared_preferences: ^2.3.2
   shimmer: ^3.0.0
   skeletonizer: ^1.4.2
+  supabase_flutter: ^2.8.3
   super_banners: ^0.0.1
   url_launcher: ^6.3.1
   user_repository:

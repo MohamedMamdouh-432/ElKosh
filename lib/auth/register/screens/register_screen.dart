@@ -7,6 +7,7 @@ import 'package:elkosh/shared/widgets/auth_form_field.dart';
 import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -200,7 +201,7 @@ class RegisterScreen extends StatelessWidget {
                               }
                             : null,
                       ),
-                      const Gap(10),
+                      const Gap(5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -209,6 +210,24 @@ class RegisterScreen extends StatelessWidget {
                             onPressed: () => context.pop(),
                             child: Text(
                               "تسجيل الدخول",
+                              style: TextStyle(
+                                color: ColorManager.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('بتسجيل الحساب فانك توافق علي ',
+                              style: TextStyle(fontSize: 12.sp)),
+                          TextButton(
+                            onPressed: () =>
+                                context.push(RouteManager.privacyPolicyRoute),
+                            child: Text(
+                              "سيـاسة الخصـوصية",
                               style: TextStyle(
                                 color: ColorManager.primary,
                                 fontWeight: FontWeight.bold,

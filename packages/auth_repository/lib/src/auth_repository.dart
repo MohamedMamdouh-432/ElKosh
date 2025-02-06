@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CodeErrorGetter {
   static String epRegisterError(String code) {
@@ -85,16 +86,9 @@ class AuthRepository {
     return _userId;
   }
 
-  Future<String> sendVerifyCode(String phone) async {
-    String verificationCode = '';
-    await _fireAuth.verifyPhoneNumber(
-      phoneNumber: '+2$phone',
-      verificationFailed: (error) => AppLogs.error(error.message!),
-      codeSent: (code, token) => verificationCode = code,
-      verificationCompleted: (c) {},
-      codeAutoRetrievalTimeout: (code) {},
-    );
-    return verificationCode;
+  Future<void> sendVerifyCode(String phone) async {
+    final supabase = Supabase.instance.client;
+    await supabase.auth.signInWithOtp(phone: "+2$phone");
   }
 
   Future<void> registerWithEmailAndPassword({

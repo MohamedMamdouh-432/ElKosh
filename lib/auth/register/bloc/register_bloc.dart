@@ -109,7 +109,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     try {
       final code =
           await sl.get<AuthRepository>().sendVerifyCode(state.phone.value);
-      emit(state.copyWith(verifyCode: code));
+      emit(state.copyWith());
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),

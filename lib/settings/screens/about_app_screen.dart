@@ -43,7 +43,7 @@ class AboutAppScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () {
-                    // Handle "talabat pay" tap
+                    context.push(RouteManager.privacyPolicyRoute2);
                   },
                 ),
                 ListTile(
@@ -56,7 +56,7 @@ class AboutAppScreen extends StatelessWidget {
                     'سياسة الخصوصية',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () => context.push(RouteManager.aboutAppRoute),
+                  onTap: () => context.push(RouteManager.privacyPolicyRoute),
                 ),
               ],
             ),

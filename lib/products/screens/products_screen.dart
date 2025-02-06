@@ -61,7 +61,8 @@ class ProductsScreen extends StatelessWidget {
                     maxCrossAxisExtent: 120,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
-                    childAspectRatio: 7 / 12,
+                    childAspectRatio:
+                        7 / 12, // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                   ),
                   itemCount: params['isRelated'] as bool
                       ? state.relProducts.length
