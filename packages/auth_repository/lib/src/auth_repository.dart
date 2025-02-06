@@ -65,6 +65,7 @@ class AuthRepository {
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
   final SharedPreferences _sharedPref;
+  final SupabaseClient _supabase;
   String? _userId;
 
   AuthRepository({
@@ -72,8 +73,10 @@ class AuthRepository {
     GoogleSignIn? googleSignIn,
     required FirebaseFirestore firestore,
     required SharedPreferences sharedPreferences,
+    required SupabaseClient supabase,
   })  : _fireAuth = firebaseAuth,
         _firestore = firestore,
+        _supabase = supabase,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
         _sharedPref = sharedPreferences;
 
@@ -86,9 +89,30 @@ class AuthRepository {
     return _userId;
   }
 
-  Future<void> sendVerifyCode(String phone) async {
-    final supabase = Supabase.instance.client;
-    await supabase.auth.signInWithOtp(phone: "+2$phone");
+  Future<void> sendOTPMessage(String phone) async {
+    try {
+      AppLogs.debug("Starting to send OTP Message ...");
+      await _supabase.auth.signInWithOtp(phone: '+2$phone');
+      AppLogs.debug("OTP Message sent successfully...");
+    } catch (e) {
+      AppLogs.error(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+  
+  Future<void> verifyOTPPin(String phone, String pin) async {
+    try {
+      AppLogs.debug("Starting to verify OTP Pin ...");
+      final res = await _supabase.auth.verifyOTP(
+        token: pin,
+        phone: '+2$phone',
+        type: OtpType.sms,
+      );
+      AppLogs.debug("OTP Verification Result: $res");
+    } catch (e) {
+      AppLogs.error(e.toString());
+      throw Exception(e.toString());
+    }
   }
 
   Future<void> registerWithEmailAndPassword({

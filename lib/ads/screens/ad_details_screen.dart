@@ -23,7 +23,7 @@ class AdDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, cartState) {
-        if (cartState.status == CartStatus.placingfailure)
+        if (cartState.status == CartStatus.adPlacingfailure)
           QuickAlert.show(
             context: context,
             type: QuickAlertType.warning,
@@ -32,7 +32,7 @@ class AdDetailsScreen extends StatelessWidget {
             borderRadius: 20,
             animType: QuickAlertAnimType.scale,
           );
-        else if (cartState.status == CartStatus.placingSuccess) {
+        else if (cartState.status == CartStatus.adPlacingSuccess) {
           QuickAlert.show(
             context: context,
             type: QuickAlertType.success,

@@ -14,13 +14,14 @@ part 'cart_state.dart';
 class CartBloc extends Bloc<CartEvent, CartState> {
   CartBloc() : super(CartState.initial) {
     on<CartFetchingEvent>(_onFetchCart);
-    on<CartResetEvent>(_onResetCart);
     on<CartAddingProductEvent>(_onAddProductToCart);
     on<CartRemovingProductEvent>(_onRemoveProductFromCart);
     on<CartIncreasingProductQuantityEvent>(_onIncreaseProductQuantityInCart);
     on<CartDecreasingProductQuantityEvent>(_onDecreaseProductQuantityInCart);
     on<CartPlaceOrderEvent>(_onPlacingOrder);
     on<CartPlaceAdOrderEvent>(_onPlacingAdOrder);
+    on<CartResetEvent>(_onResetCart);
+    on<CartAdResetEvent>(_onResetAdCart);
   }
 
   Future<void> _onFetchCart(event, emit) async {
@@ -47,25 +48,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onResetCart(event, emit) async {
-    try {
-      emit(state.copyWith(status: CartStatus.loading));
-      final result = await sl.get<DataRepository>().resetCart();
-      result.fold(
-        (left) => emit(state.copyWith(
-          status: CartStatus.failure,
-          errorMessage: left.message,
-        )),
-        (right) => emit(CartState.initial),
-      );
-    } catch (e) {
-      emit(state.copyWith(
-        status: CartStatus.failure,
-        errorMessage: e.toString(),
-      ));
-    }
-  }
-
   Future<void> _onAddProductToCart(CartAddingProductEvent event, emit) async {
     final result =
         await sl.get<DataRepository>().addProductToCart(event.product);
@@ -78,7 +60,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         final updatedShopping = Map<Product, int>.of(state.shopping);
         updatedShopping.update(
           event.product,
-          (count) => count + 1,
+          (cnt) => cnt + 1,
           ifAbsent: () => 1,
         );
         emit(state.copyWith(
@@ -240,6 +222,44 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     } catch (e) {
       emit(state.copyWith(
         status: CartStatus.placingfailure,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onResetCart(event, emit) async {
+    try {
+      emit(state.copyWith(status: CartStatus.loading));
+      final result = await sl.get<DataRepository>().resetCart();
+      result.fold(
+        (left) => emit(state.copyWith(
+          status: CartStatus.failure,
+          errorMessage: left.message,
+        )),
+        (right) => emit(CartState.initial),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: CartStatus.failure,
+        errorMessage: e.toString(),
+      ));
+    }
+  }
+
+  Future<void> _onResetAdCart(event, emit) async {
+    try {
+      emit(state.copyWith(status: CartStatus.loading));
+      final result = await sl.get<DataRepository>().resetCart();
+      result.fold(
+        (left) => emit(state.copyWith(
+          status: CartStatus.failure,
+          errorMessage: left.message,
+        )),
+        (right) => emit(state.copyWith(status: CartStatus.initial)),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        status: CartStatus.failure,
         errorMessage: e.toString(),
       ));
     }

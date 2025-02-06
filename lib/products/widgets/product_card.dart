@@ -28,7 +28,7 @@ class ProductCard extends StatelessWidget {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
         context.push(RouteManager.productDetailsRoute, extra: {
           'steps': steps,
-          'isRelated': (GoRouter.of(context).state?.extra
+          'isRelated': (GoRouter.of(context).state.extra
                   as Map<String, dynamic>)['isRelated'] ??
               false,
         });

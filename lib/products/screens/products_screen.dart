@@ -32,7 +32,7 @@ class ProductsScreen extends StatelessWidget {
       },
       builder: (context, state) {
         final params =
-            GoRouter.of(context).state?.extra as Map<String, dynamic>;
+            GoRouter.of(context).state.extra as Map<String, dynamic>;
         return SafeArea(
           child: Container(
             decoration: const BoxDecoration(
