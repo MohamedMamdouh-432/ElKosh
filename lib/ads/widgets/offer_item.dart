@@ -21,15 +21,15 @@ class OfferItem extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade500,
-            spreadRadius: 4,
-            blurRadius: 4,
+            spreadRadius: 3,
+            blurRadius: 3,
           ),
         ],
       ),
       child: Row(
         children: [
           SizedBox(
-            width: context.width * 0.2,
+            width: context.width * 0.18,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: CachedNetworkImage(

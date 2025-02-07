@@ -36,7 +36,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 80),
+                padding: const EdgeInsets.fromLTRB(10, 20, 10, 80),
                 child: Column(
                   children: [
                     const Gap(30),
@@ -62,15 +62,15 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                         text: TextSpan(
                             text: ' إجمالى التكلفة:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                             children: [
                               TextSpan(
                                 text:
-                                    '${toArNumber((state.curOrder.total).toStringAsFixed(2))} جنيه',
+                                    '${toArNumber((state.curOrder.total + 10).toStringAsFixed(2))} جنيه',
                                 style: TextStyle(
-                                  fontSize: 18.sp,
+                                  fontSize: 15.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -86,7 +86,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                           Text(
                             ' حالة الطلب:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                           ),
@@ -120,7 +120,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                         text: TextSpan(
                             text: ' موقع التوصيل:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                             children: [
@@ -138,7 +138,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                     const OrderSection(sectionTitle: "سلة المشتريات"),
                     const Gap(20),
                     ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: shopping.length,
@@ -153,7 +153,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
               ),
             ),
             floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+                FloatingActionButtonLocation.centerDocked,
             floatingActionButton: SizedBox(
               width: context.width * 0.8,
               child: Row(
@@ -166,10 +166,10 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                             .add(OrderDeleveringingEvent(state.curOrder));
                         context.pop();
                       },
-                      child: const Text(
+                      child: Text(
                         "إستلام",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -184,10 +184,10 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                             .add(OrderCancellingEvent(state.curOrder));
                         context.pop();
                       },
-                      child: const Text(
+                      child: Text(
                         "إلغاء",
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -202,11 +202,11 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                             .add(OrderRefusingEvent(state.curOrder));
                         context.pop();
                       },
-                      child: const Text(
+                      child: Text(
                         "رفض الاستلام",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 10.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -66,11 +66,8 @@
     * search feature
 
 # Edits
-	- when adding ad => reset request may reset cart also (forget it)
 	- contacts Info (need to be remote not local) (Profile Bloc)
     - check on any text/image constraints
-    - google maps
-    - otp
 
 	(?<!\w)\d+(\.\d+)?(?!\w)
 # Bugs
