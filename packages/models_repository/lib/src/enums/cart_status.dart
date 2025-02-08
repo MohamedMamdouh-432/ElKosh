@@ -5,5 +5,7 @@ enum CartStatus {
   success,
   failure,
   placingSuccess,
-  placingfailure
+  placingfailure,
+  adPlacingSuccess,
+  adPlacingfailure
 }

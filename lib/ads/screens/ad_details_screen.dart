@@ -23,7 +23,7 @@ class AdDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
       listener: (context, cartState) {
-        if (cartState.status == CartStatus.placingfailure)
+        if (cartState.status == CartStatus.adPlacingfailure)
           QuickAlert.show(
             context: context,
             type: QuickAlertType.warning,
@@ -32,7 +32,7 @@ class AdDetailsScreen extends StatelessWidget {
             borderRadius: 20,
             animType: QuickAlertAnimType.scale,
           );
-        else if (cartState.status == CartStatus.placingSuccess) {
+        else if (cartState.status == CartStatus.adPlacingSuccess) {
           QuickAlert.show(
             context: context,
             type: QuickAlertType.success,
@@ -41,7 +41,6 @@ class AdDetailsScreen extends StatelessWidget {
             borderRadius: 20,
             animType: QuickAlertAnimType.scale,
           );
-          // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
           context.read<CartBloc>().add(CartResetEvent());
           context.pop();
         } else if (cartState.status == CartStatus.failure)
@@ -113,19 +112,15 @@ class AdDetailsScreen extends StatelessWidget {
                               ),
                             ),
                             const Gap(10),
-                            Padding(
+                            ListView.separated(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
-                              child: ListView.separated(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                itemCount: state.ad.offers.length,
-                                itemBuilder: (_, i) =>
-                                    OfferItem(state.ad.offers[i]),
-                                separatorBuilder: (_, i) => const Gap(10),
-                              ),
+                              itemCount: state.ad.offers.length,
+                              itemBuilder: (_, i) =>
+                                  OfferItem(state.ad.offers[i]),
+                              separatorBuilder: (_, i) => const Gap(10),
                             ),
                           ],
                         ),
@@ -133,22 +128,25 @@ class AdDetailsScreen extends StatelessWidget {
                     ),
                     floatingActionButtonLocation:
                         FloatingActionButtonLocation.centerDocked,
-                    floatingActionButton: SizedBox(
-                      width: context.width * 0.8,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            elevation: 20,
-                            useSafeArea: true,
-                            showDragHandle: true,
-                            builder: (context) =>
-                                PlaceAdOrderBottomSheet(state.ad),
-                          );
-                        },
-                        child: const Text(
-                          "أطلب العرض",
-                          textScaler: TextScaler.linear(1.8),
+                    floatingActionButton: Visibility(
+                      visible: state.ad.offers.isNotEmpty,
+                      child: SizedBox(
+                        width: context.width * 0.8,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              elevation: 20,
+                              useSafeArea: true,
+                              showDragHandle: true,
+                              builder: (context) =>
+                                  PlaceAdOrderBottomSheet(state.ad),
+                            );
+                          },
+                          child: const Text(
+                            "أطلب العرض",
+                            textScaler: TextScaler.linear(1.8),
+                          ),
                         ),
                       ),
                     ),

@@ -61,7 +61,7 @@ class User extends Equatable {
     String? phone,
     bool? active,
     UserType? userType,
-    String? deviceToken,
+    String? token,
   }) {
     return User(
       id: id ?? this.id,
@@ -70,7 +70,7 @@ class User extends Equatable {
       phone: phone ?? this.phone,
       active: active ?? this.active,
       userType: userType ?? this.userType,
-      token: token ?? token,
+      token: token ?? this.token,
     );
   }
 

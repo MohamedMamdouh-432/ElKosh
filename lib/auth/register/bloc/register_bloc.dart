@@ -18,8 +18,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     on<RegisterEmailChanged>(_onEmailChanged);
     on<RegisterPasswordChanged>(_onPsswordChanged);
     on<FormRegisterRequested>(_onRegisterWithEmailAndPassword);
+    on<RegisterSendOTPEvent>(_onRegisterSendOTP);
+    on<RegisterVerifyOTPEvent>(_onRegisterVerifyOTP);
     on<RegisterStateReset>(_onRegisterStateReset);
-    on<RegisterSendVerificationCode>(_onRegisterSendVerificationCode);
+    on<RegisterVerifyStateComplete>(_onRegisterVerifyStateCompleted);
+    on<RegisterVerifyStateReset>(_onRegisterVerifyStateReset);
+    on<RegisterFormReset>(_onRegisterFormReset);
   }
 
   FutureOr<void> _onNameChanged(RegisterNameChanged event, emit) {
@@ -84,7 +88,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   FutureOr<void> _onRegisterWithEmailAndPassword(event, emit) async {
     if (state.inputStatus == FormInputStatus.invalid) return;
-    emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
+    emit(state.copyWith(submitStatus: FormzSubmissionStatus.inProgress));
     try {
       await sl.get<AuthRepository>().registerWithEmailAndPassword(
             email: state.email.value,
@@ -92,29 +96,57 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
             name: state.name.value,
             phone: state.phone.value,
           );
-      emit(state.copyWith(submissionStatus: FormzSubmissionStatus.success));
+      emit(state.copyWith(submitStatus: FormzSubmissionStatus.success));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
-        submissionStatus: FormzSubmissionStatus.failure,
+        submitStatus: FormzSubmissionStatus.failure,
       ));
     }
+  }
+
+  FutureOr<void> _onRegisterSendOTP(event, emit) async {
+    try {
+      emit(state.copyWith(verifyStatus: VerifyStatus.otpInProgress));
+      await sl.get<AuthRepository>().sendOTPMessage(state.phone.value);
+      emit(state.copyWith(verifyStatus: VerifyStatus.otpSent));
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        verifyStatus: VerifyStatus.otpNotSent,
+      ));
+    }
+  }
+
+  FutureOr<void> _onRegisterVerifyOTP(
+      RegisterVerifyOTPEvent event, emit) async {
+    try {
+      emit(state.copyWith(verifyStatus: VerifyStatus.verifyingInProgress));
+      await sl
+          .get<AuthRepository>()
+          .verifyOTPPin(state.phone.value, event.code);
+      emit(state.copyWith(verifyStatus: VerifyStatus.verified));
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        verifyStatus: VerifyStatus.notVerified,
+      ));
+    }
+  }
+
+  FutureOr<void> _onRegisterVerifyStateCompleted(event, emit) {
+    emit(state.copyWith(verifyStatus: VerifyStatus.completed));
   }
 
   FutureOr<void> _onRegisterStateReset(event, emit) {
-    emit(state.copyWith(submissionStatus: FormzSubmissionStatus.initial));
+    emit(state.copyWith(submitStatus: FormzSubmissionStatus.initial));
   }
 
-  FutureOr<void> _onRegisterSendVerificationCode(event, emit) async {
-    try {
-      final code =
-          await sl.get<AuthRepository>().sendVerifyCode(state.phone.value);
-      emit(state.copyWith());
-    } catch (e) {
-      emit(state.copyWith(
-        errMsg: e.toString(),
-        submissionStatus: FormzSubmissionStatus.failure,
-      ));
-    }
+  FutureOr<void> _onRegisterVerifyStateReset(event, emit) {
+    emit(state.copyWith(verifyStatus: VerifyStatus.initial));
+  }
+  
+  FutureOr<void> _onRegisterFormReset(event, emit) {
+    emit(RegisterState.initial);
   }
 }

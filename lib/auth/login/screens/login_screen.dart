@@ -1,10 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/auth/login/bloc/login_bloc.dart';
+import 'package:elkosh/auth/widgets/auth_button.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';
-import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -149,7 +149,7 @@ class LoginScreen extends StatelessWidget {
                                                       : null,
                         ),
                         const Gap(40),
-                        CustomButtom(
+                        AuthButton(
                           text: 'تسجيل الدخول',
                           ontap: state.inputStatus == FormInputStatus.valid
                               ? () => context

@@ -13,6 +13,8 @@ class CartRequestEvent extends CartEvent {}
 
 class CartResetEvent extends CartEvent {}
 
+class CartAdResetEvent extends CartEvent {}
+
 class CartAddingProductEvent extends CartEvent {
   final Product product;
   const CartAddingProductEvent(this.product);

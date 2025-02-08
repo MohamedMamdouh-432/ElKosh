@@ -40,8 +40,22 @@ class RegisterPhoneChanged extends RegisterEvent {
   List<Object> get props => [phone];
 }
 
-class RegisterSendVerificationCode extends RegisterEvent {}
+class RegisterSendOTPEvent extends RegisterEvent {}
+
+class RegisterVerifyOTPEvent extends RegisterEvent {
+  final String code;
+  const RegisterVerifyOTPEvent(this.code);
+  
+  @override
+  List<Object> get props => [code];
+}
 
 class FormRegisterRequested extends RegisterEvent {}
 
 class RegisterStateReset extends RegisterEvent {}
+
+class RegisterVerifyStateComplete extends RegisterEvent {}
+
+class RegisterVerifyStateReset extends RegisterEvent {}
+
+class RegisterFormReset extends RegisterEvent {}

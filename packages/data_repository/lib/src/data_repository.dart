@@ -638,7 +638,6 @@ class DataRepository {
   /*----- Ads Operations -----*/
 
   Stream<Either<Failure, List<Ad>>> adsStream() async* {
-    AppLogs.info('adsStream is called');
     try {
       final query = firestore.collection(ConstantManager.adsCollection);
       yield* query.snapshots().asyncMap((snapshot) async {

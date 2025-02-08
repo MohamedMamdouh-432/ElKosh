@@ -12,7 +12,13 @@ enum LoadStatus {
   updated,
 }
 
-enum VerificationStatus {
+enum VerifyStatus {
+  initial,
+  otpInProgress,
+  otpSent,
+  otpNotSent,
+  verifyingInProgress,
   verified,
   notVerified,
+  completed,
 }

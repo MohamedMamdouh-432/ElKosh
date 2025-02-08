@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 class AppLogs {
@@ -10,6 +11,7 @@ class AppLogs {
       log(
         '\x1B[32m✅ $message\x1B[0m',
         level: 0,
+        name: '',
       );
     }
   }
@@ -20,6 +22,7 @@ class AppLogs {
       log(
         '\x1B[37m🕷️ $message\x1B[0m',
         level: 1,
+        name: '',
       );
     }
   }
@@ -30,6 +33,7 @@ class AppLogs {
       log(
         '\x1B[33m📣 $message\x1B[0m',
         level: 2,
+        name: '',
       );
     }
   }
@@ -40,6 +44,7 @@ class AppLogs {
       log(
         '\x1B[31m❌ $message\x1B[0m',
         level: 3,
+        name: '',
       );
     }
   }

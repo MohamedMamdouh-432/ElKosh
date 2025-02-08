@@ -1,11 +1,11 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class CustomButtom extends StatelessWidget {
+class AuthButton extends StatelessWidget {
   final String text;
   final VoidCallback? ontap;
 
-  const CustomButtom({
+  const AuthButton({
     super.key,
     this.ontap,
     required this.text,

@@ -1,10 +1,8 @@
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
-import 'package:elkosh/auth/register/widgets/tip_text.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/auth/widgets/auth_button.dart';
+import 'package:elkosh/auth/widgets/tip_text.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';
-import 'package:elkosh/shared/widgets/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +11,6 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
-import 'package:quickalert/quickalert.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -36,42 +33,10 @@ class RegisterScreen extends StatelessWidget {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: BlocConsumer<RegisterBloc, RegisterState>(
-            listener: (context, state) {
-              if (state.submissionStatus.isFailure) {
-                String msg = state.errMsg;
-                if (msg.startsWith("Exception:"))
-                  msg = msg.substring(msg.indexOf(":") + 1);
-                QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.error,
-                  title: 'خطأ',
-                  text: msg,
-                  borderRadius: 20,
-                  animType: QuickAlertAnimType.scale,
-                );
-                context.read<RegisterBloc>().add(RegisterStateReset());
-              } else if (state.submissionStatus.isSuccess) {
-                QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.success,
-                  title: 'نجاح',
-                  text: "تم إنشاء حسابك بنجاح",
-                  borderRadius: 20,
-                  animType: QuickAlertAnimType.scale,
-                );
-                context.read<ProfileBloc>().add(ProfileLoadingEvent());
-                context.read<RegisterBloc>().add(RegisterStateReset());
-                context.read<CartBloc>().add(CartFetchingEvent());
-                Future.delayed(
-                  const Duration(seconds: 2),
-                  () => context.go(RouteManager.navbarRoute),
-                );
-              }
-            },
+          body: BlocBuilder<RegisterBloc, RegisterState>(
             builder: (context, state) {
               return ModalProgressHUD(
-                inAsyncCall: state.submissionStatus.isInProgress,
+                inAsyncCall: state.submitStatus.isInProgress,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
@@ -190,13 +155,13 @@ class RegisterScreen extends StatelessWidget {
                           tip:
                               "يجب ان تحتوى كلمة المرور على حروف كبيره و صغيره"),
                       const Gap(40),
-                      CustomButtom(
+                      AuthButton(
                         text: 'تسجيل الحساب',
                         ontap: state.inputStatus == FormInputStatus.valid
-                            ? () {
+                            ? () async {
                                 context
                                     .read<RegisterBloc>()
-                                    .add(RegisterSendVerificationCode());
+                                    .add(RegisterSendOTPEvent());
                                 context.push(RouteManager.optRoute);
                               }
                             : null,

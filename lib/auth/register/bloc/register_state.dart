@@ -7,9 +7,8 @@ class RegisterState extends Equatable {
   final Password password;
   final String errMsg;
   final FormInputStatus inputStatus;
-  final FormzSubmissionStatus submissionStatus;
-  final String verifyCode;
-  final VerificationStatus verificationStatus;
+  final FormzSubmissionStatus submitStatus;
+  final VerifyStatus verifyStatus;
 
   const RegisterState({
     required this.name,
@@ -18,9 +17,8 @@ class RegisterState extends Equatable {
     required this.password,
     required this.errMsg,
     required this.inputStatus,
-    required this.submissionStatus,
-    required this.verifyCode,
-    required this.verificationStatus,
+    required this.submitStatus,
+    required this.verifyStatus,
   });
 
   static RegisterState initial = const RegisterState(
@@ -30,9 +28,8 @@ class RegisterState extends Equatable {
     phone: Phone.pure(),
     password: Password.pure(),
     inputStatus: FormInputStatus.initial,
-    submissionStatus: FormzSubmissionStatus.initial,
-    verifyCode: '',
-    verificationStatus: VerificationStatus.notVerified,
+    submitStatus: FormzSubmissionStatus.initial,
+    verifyStatus: VerifyStatus.notVerified,
   );
 
   RegisterState copyWith({
@@ -42,9 +39,8 @@ class RegisterState extends Equatable {
     Password? password,
     String? errMsg,
     FormInputStatus? inputStatus,
-    FormzSubmissionStatus? submissionStatus,
-    String? verifyCode,
-    VerificationStatus? verificationStatus,
+    FormzSubmissionStatus? submitStatus,
+    VerifyStatus? verifyStatus,
   }) {
     return RegisterState(
       name: name ?? this.name,
@@ -53,9 +49,8 @@ class RegisterState extends Equatable {
       password: password ?? this.password,
       errMsg: errMsg ?? this.errMsg,
       inputStatus: inputStatus ?? this.inputStatus,
-      submissionStatus: submissionStatus ?? this.submissionStatus,
-      verifyCode: verifyCode ?? this.verifyCode,
-      verificationStatus: verificationStatus ?? this.verificationStatus,
+      submitStatus: submitStatus ?? this.submitStatus,
+      verifyStatus: verifyStatus ?? this.verifyStatus,
     );
   }
 
@@ -68,7 +63,8 @@ class RegisterState extends Equatable {
       Password: ${password.value}
       Error: $errMsg
       Input Status: ${inputStatus.name}
-      Submission Status: ${submissionStatus.name}
+      Verify Status: ${verifyStatus.name}
+      Submission Status: ${submitStatus.name}
     ''';
   }
 
@@ -81,9 +77,8 @@ class RegisterState extends Equatable {
       password,
       errMsg,
       inputStatus,
-      submissionStatus,
-      verifyCode,
-      verificationStatus,
+      submitStatus,
+      verifyStatus,
     ];
   }
 }

@@ -78,7 +78,7 @@ class ProductDetailsScreen extends StatelessWidget {
                             Stack(
                               children: [
                                 ImageSection(
-                                    isReady: productState.status != LoadStatus.inProgress,
+                                    isReady: productState.product.imgUrl.isNotEmpty,
                                     imageUrl: productState.product.imgUrl,
                                   ),
                                 Visibility(
@@ -304,7 +304,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       width: context.width * 0.8,
                       child: ElevatedButton(
                         onPressed: () {
-                          int steps = (GoRouter.of(context).state?.extra
+                          int steps = (GoRouter.of(context).state.extra
                               as Map<String, dynamic>)['steps'] as int;
                           context.read<NavProvider>().navToPage(1);
                           while (steps-- > 0) context.pop();
