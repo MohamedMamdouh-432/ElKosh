@@ -6,7 +6,6 @@ import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:super_banners/super_banners.dart';
@@ -35,14 +34,14 @@ class ProductCard extends StatelessWidget {
       },
       splashColor: Colors.transparent,
       child: Card(
-        elevation: 40,
+        elevation: 60,
         color: Colors.transparent,
         clipBehavior: Clip.hardEdge,
         child: Stack(
           children: [
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
+              padding: const EdgeInsets.symmetric(vertical: 3),
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 242, 240, 240),
                 borderRadius: BorderRadius.circular(10),
@@ -59,18 +58,18 @@ class ProductCard extends StatelessWidget {
                             imageUrl: product.imgUrl,
                             fit: BoxFit.fill,
                             filterQuality: FilterQuality.high,
-                            height: context.height * 0.11,
+                            height: context.height * 0.1,
                           ),
                         ),
                       ),
-                      const Gap(5),
+                      const Spacer(),
                       SizedBox(
                         width: 80.w,
                         child: Text(
                           product.name,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
-                          textScaler: const TextScaler.linear(1.1),
+                          textScaler: const TextScaler.linear(0.9),
                           maxLines: 2,
                           softWrap: true,
                         ),
@@ -84,8 +83,10 @@ class ProductCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                           softWrap: true,
-                          style: const TextStyle(
-                              fontSize: 17, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
                         ),
                       ),
                     ],
@@ -108,12 +109,12 @@ class ProductCard extends StatelessWidget {
                         : '${toArNumber((((product.price - product.updatedPrice) / product.price) * 100).toStringAsFixed(0))} %',
                     style: product.quantity.floor() == 0
                         ? TextStyle(
-                            fontSize: 14.sp,
+                            fontSize: 12.sp,
                             color: Colors.white,
                             fontWeight: FontWeight.normal,
                           )
                         : TextStyle(
-                            fontSize: 15.sp,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
                           ),
                   ),

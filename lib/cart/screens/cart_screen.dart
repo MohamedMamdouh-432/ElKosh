@@ -7,6 +7,7 @@ import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
@@ -70,8 +71,7 @@ class CartScreen extends StatelessWidget {
                     children: [
                       AppBar(
                         title: const Text("سلة التسوق"),
-                        leading:
-                            const Icon(Icons.shopping_bag_outlined, size: 35),
+                        leading: Icon(Icons.shopping_bag_outlined, size: 30.sp),
                         actions: [
                           IconButton(
                             padding: const EdgeInsets.only(left: 20),
@@ -80,9 +80,9 @@ class CartScreen extends StatelessWidget {
                                 : () => context
                                     .read<CartBloc>()
                                     .add(CartResetEvent()),
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.cleaning_services_sharp,
-                              size: 32,
+                              size: 30.sp,
                             ),
                           ),
                         ],
@@ -92,7 +92,7 @@ class CartScreen extends StatelessWidget {
                           condition: state.shopping.isEmpty,
                           builder: (context) => const EmptyCartView(),
                           fallback: (context) => ListView.builder(
-                            padding: const EdgeInsets.only(bottom: 60),
+                            padding: EdgeInsets.only(bottom: 60.sp),
                             itemCount: state.shopping.length,
                             itemBuilder: (context, index) => CartCard(
                               product: state.shopping.keys.elementAt(index),

@@ -2,6 +2,7 @@ import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/products/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
@@ -31,8 +32,7 @@ class ProductsScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final params =
-            GoRouter.of(context).state.extra as Map<String, dynamic>;
+        final params = GoRouter.of(context).state.extra as Map<String, dynamic>;
         return SafeArea(
           child: Container(
             decoration: const BoxDecoration(
@@ -53,16 +53,16 @@ class ProductsScreen extends StatelessWidget {
               body: Skeletonizer(
                 enabled: state.status == LoadStatus.inProgress,
                 child: GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 10,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 10.w,
                   ),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 120,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio:
-                        7 / 12, // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                    crossAxisSpacing: 10.sp,
+                    mainAxisSpacing: 10.sp,
+                    childAspectRatio: 6.8.sp /
+                        12.sp, // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                   ),
                   itemCount: params['isRelated'] as bool
                       ? state.relProducts.length

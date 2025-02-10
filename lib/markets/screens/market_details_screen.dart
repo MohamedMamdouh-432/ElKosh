@@ -152,9 +152,9 @@ class MarkettDetailsScreen extends StatelessWidget {
                             ),
                             Text(
                               state.market.name,
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w800,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               maxLines: 2,
@@ -162,8 +162,8 @@ class MarkettDetailsScreen extends StatelessWidget {
                             ),
                             Text(
                               state.market.desc,
-                              style: const TextStyle(
-                                fontSize: 16,
+                              style: TextStyle(
+                                fontSize: 14.sp,
                                 color: Colors.black54,
                               ),
                             ),
@@ -177,7 +177,6 @@ class MarkettDetailsScreen extends StatelessWidget {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            const Gap(10),
                             const RelatedCategorysGrid(),
                           ],
                         ),

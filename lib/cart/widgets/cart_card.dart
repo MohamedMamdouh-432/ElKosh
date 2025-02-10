@@ -28,9 +28,9 @@ class CartCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.8),
+            color: Colors.grey.withValues(alpha: 0.4),
             spreadRadius: 5,
-            blurRadius: 5,
+            blurRadius: 8,
           ),
         ],
       ),
@@ -38,7 +38,7 @@ class CartCard extends StatelessWidget {
         spacing: context.width * 0.0015,
         children: [
           SizedBox(
-            width: context.width * 0.19,
+            width: context.width * 0.15,
             height: context.height * 0.09,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -59,7 +59,7 @@ class CartCard extends StatelessWidget {
                   maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 12.sp,
+                    fontSize: 10.sp,
                   ),
                 ),
               ),
@@ -89,7 +89,7 @@ class CartCard extends StatelessWidget {
               CartProductQuantityCounter(quantity: quantity, product: product),
               Text(
                 'الإجمالى: ${quantity * product.updatedPrice} جنيه',
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 14.sp, color: Colors.green),
               ),
             ],
           ),
