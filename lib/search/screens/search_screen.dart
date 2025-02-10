@@ -2,6 +2,7 @@ import 'package:elkosh/products/widgets/product_card.dart';
 import 'package:elkosh/search/bloc/search_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -61,15 +62,14 @@ class SearchScreen extends StatelessWidget {
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(
+                        padding: EdgeInsets.symmetric(
                           vertical: 10,
-                          horizontal: 20,
+                          horizontal: 2.w,
                         ),
-                        gridDelegate:
-                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           crossAxisSpacing: 5,
                           maxCrossAxisExtent: 110,
-                          childAspectRatio: 7 / 10,
+                          childAspectRatio: 5.1.w / 10.2.h,
                         ),
                         itemCount: state.products.length,
                         itemBuilder: (context, index) => ProductCard(
