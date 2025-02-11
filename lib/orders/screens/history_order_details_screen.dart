@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:models_repository/models_repository.dart';
 
 class HistoryOrderDetailsScreen extends StatelessWidget {
   const HistoryOrderDetailsScreen({super.key});
@@ -98,12 +97,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              state.curOrder.status == OrderStatus.delivered
-                                  ? "تم توصيل الطلب"
-                                  : state.curOrder.status ==
-                                          OrderStatus.cancelled
-                                      ? "تم الغاء الطلب"
-                                      : "تم رفض استلام الطلب",
+                              state.curOrder.content,
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: Colors.white,

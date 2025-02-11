@@ -62,6 +62,16 @@ class UserOrder extends Equatable {
                   ? Colors.deepPurple
                   : Colors.red;
 
+  String get content => status == OrderStatus.pending
+      ? 'تم تسجيل الطلب'
+      : status == OrderStatus.shipped
+          ? 'تم شحن الطلب'
+          : status == OrderStatus.delivered
+              ? 'تم تسليم الطلب'
+              : status == OrderStatus.refused
+                  ? 'تم رفض استلام الطلب'
+                  : 'تم الغاء الطلب';
+
   factory UserOrder.fromDoc(
     Map<String, dynamic> map,
     List<ShoppingItem> shoppingList,

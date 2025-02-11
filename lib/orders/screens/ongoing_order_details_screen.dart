@@ -9,7 +9,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:models_repository/models_repository.dart';
 
 class OngoingOrderDetailsScreen extends StatelessWidget {
   const OngoingOrderDetailsScreen({super.key});
@@ -100,9 +99,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              state.curOrder.status == OrderStatus.pending
-                                  ? "تم تسجيل الطلب"
-                                  : "تم شحن الطلب",
+                              state.curOrder.content,
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: Colors.white,
