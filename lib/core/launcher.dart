@@ -1,12 +1,12 @@
+import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
-import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:elkosh/search/bloc/search_bloc.dart';
 import 'package:elkosh/settings/bloc/profile_bloc.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class ElKoshApp extends StatelessWidget {
@@ -65,6 +66,7 @@ class ElKoshLauncher extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routerConfig: RouteManager.router,
         theme: ThemeData(
+          textTheme: GoogleFonts.tajawalTextTheme(),
           useMaterial3: true,
           colorSchemeSeed: const Color(0xffFF6100),
           scaffoldBackgroundColor: Colors.white,

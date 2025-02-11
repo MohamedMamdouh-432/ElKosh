@@ -99,7 +99,7 @@ class AuthRepository {
       throw Exception(e.toString());
     }
   }
-  
+
   Future<void> verifyOTPPin(String phone, String pin) async {
     try {
       AppLogs.debug("Starting to verify OTP Pin ...");
@@ -115,6 +115,29 @@ class AuthRepository {
     }
   }
 
+  Future<bool> isUserBlockedByEmailOrPhone(
+      String email, String phoneNumber) async {
+    try {
+      // Check if the email is blocked
+      final emailQuery = await _firestore
+          .collection('blockedUsers')
+          .where('email', isEqualTo: email)
+          .get();
+
+      // Check if the phone number is blocked
+      final phoneQuery = await _firestore
+          .collection('blockedUsers')
+          .where('phoneNumber', isEqualTo: phoneNumber)
+          .get();
+
+      // If either email or phone number is blocked, return true
+      return emailQuery.docs.isNotEmpty || phoneQuery.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking blocked user: $e');
+      throw Exception("حدث خطأ أثناء التحقق من حالة الحظر");
+    }
+  }
+
   Future<void> registerWithEmailAndPassword({
     required String name,
     required String phone,
@@ -122,6 +145,11 @@ class AuthRepository {
     required String password,
   }) async {
     try {
+      bool isBlocked = await isUserBlockedByEmailOrPhone(email, phone);
+      if (isBlocked) {
+        throw Exception("الحساب محظور بسبب البريد الإلكتروني أو رقم الهاتف");
+      }
+
       UserCredential userCredentials =
           await _fireAuth.createUserWithEmailAndPassword(
         email: email,

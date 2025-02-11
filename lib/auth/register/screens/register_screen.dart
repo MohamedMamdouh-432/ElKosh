@@ -184,15 +184,15 @@ class RegisterScreen extends StatelessWidget {
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('بتسجيل الحساب فانك توافق علي ',
-                              style: TextStyle(fontSize: 12.sp)),
+                              style: TextStyle(fontSize: 10.sp)),
                           TextButton(
                             onPressed: () =>
                                 context.push(RouteManager.privacyPolicyRoute),
                             child: Text(
-                              "سيـاسة الخصـوصية",
+                              "سياسة الخصوصية",
                               style: TextStyle(
                                 color: ColorManager.primary,
                                 fontWeight: FontWeight.bold,
