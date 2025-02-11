@@ -18,6 +18,7 @@ dependencies:
   data_repository:
     path: packages/data_repository
   device_preview: ^1.2.0
+  dio: ^5.8.0+1
   either_dart: ^1.0.0
   equatable: ^2.0.5
   fancy_shimmer_image: ^2.0.3

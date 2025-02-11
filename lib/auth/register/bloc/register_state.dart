@@ -6,6 +6,7 @@ class RegisterState extends Equatable {
   final Phone phone;
   final Password password;
   final String errMsg;
+  final String otp;
   final FormInputStatus inputStatus;
   final FormzSubmissionStatus submitStatus;
   final VerifyStatus verifyStatus;
@@ -16,6 +17,7 @@ class RegisterState extends Equatable {
     required this.phone,
     required this.password,
     required this.errMsg,
+    required this.otp,
     required this.inputStatus,
     required this.submitStatus,
     required this.verifyStatus,
@@ -27,6 +29,7 @@ class RegisterState extends Equatable {
     email: Email.pure(),
     phone: Phone.pure(),
     password: Password.pure(),
+    otp: '',
     inputStatus: FormInputStatus.initial,
     submitStatus: FormzSubmissionStatus.initial,
     verifyStatus: VerifyStatus.notVerified,
@@ -38,6 +41,7 @@ class RegisterState extends Equatable {
     Phone? phone,
     Password? password,
     String? errMsg,
+    String? otp,
     FormInputStatus? inputStatus,
     FormzSubmissionStatus? submitStatus,
     VerifyStatus? verifyStatus,
@@ -46,6 +50,7 @@ class RegisterState extends Equatable {
       name: name ?? this.name,
       email: email ?? this.email,
       phone: phone ?? this.phone,
+      otp: otp ?? this.otp,
       password: password ?? this.password,
       errMsg: errMsg ?? this.errMsg,
       inputStatus: inputStatus ?? this.inputStatus,
@@ -61,6 +66,7 @@ class RegisterState extends Equatable {
       Email: ${email.value}
       Phone: ${phone.value}
       Password: ${password.value}
+      OTP: $otp
       Error: $errMsg
       Input Status: ${inputStatus.name}
       Verify Status: ${verifyStatus.name}
@@ -75,6 +81,7 @@ class RegisterState extends Equatable {
       email,
       phone,
       password,
+      otp,
       errMsg,
       inputStatus,
       submitStatus,

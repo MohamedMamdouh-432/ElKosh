@@ -60,7 +60,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                         text: TextSpan(
                             text: ' إجمالى التكلفة:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                             children: [
@@ -68,7 +68,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                                 text:
                                     '${toArNumber((state.curOrder.total).toStringAsFixed(2))} جنيه',
                                 style: TextStyle(
-                                  fontSize: 18.sp,
+                                  fontSize: 15.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -84,7 +84,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                           Text(
                             ' حالة الطلب:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                           ),
@@ -105,7 +105,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                                       ? "تم الغاء الطلب"
                                       : "تم رفض استلام الطلب",
                               style: TextStyle(
-                                fontSize: 15.sp,
+                                fontSize: 12.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -121,7 +121,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                         text: TextSpan(
                             text: ' موقع التوصيل:  ',
                             style: TextStyle(
-                              fontSize: 18.sp,
+                              fontSize: 15.sp,
                               color: Colors.black,
                             ),
                             children: [

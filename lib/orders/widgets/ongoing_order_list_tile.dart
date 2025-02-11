@@ -33,8 +33,11 @@ class OngoingOrderListTile extends StatelessWidget {
         ),
       ),
       title: Text("رقم الطلب: ${toArNumber(order.code.toString())}"),
-      subtitle: Text('السعر ${order.total} جنيه'),
-      trailing: Text(DateFormat("yyyy-MM-dd").format(order.createdAt)),
+      subtitle: Text('السعر ${toArNumber((order.total + 10).toString())} جنيه'),
+      trailing: Text(
+        toArNumber(DateFormat("yyyy/MM/dd").format(order.createdAt)),
+        textScaler: const TextScaler.linear(2),
+      ),
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CodeErrorGetter {
   static String epRegisterError(String code) {
@@ -65,7 +65,7 @@ class AuthRepository {
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
   final SharedPreferences _sharedPref;
-  final SupabaseClient _supabase;
+  final Dio _dio;
   String? _userId;
 
   AuthRepository({
@@ -73,10 +73,10 @@ class AuthRepository {
     GoogleSignIn? googleSignIn,
     required FirebaseFirestore firestore,
     required SharedPreferences sharedPreferences,
-    required SupabaseClient supabase,
+    required Dio dio,
   })  : _fireAuth = firebaseAuth,
         _firestore = firestore,
-        _supabase = supabase,
+        _dio = dio,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
         _sharedPref = sharedPreferences;
 
@@ -89,26 +89,28 @@ class AuthRepository {
     return _userId;
   }
 
-  Future<void> sendOTPMessage(String phone) async {
+  Future<String> sendOTPMessage(String phone) async {
     try {
       AppLogs.debug("Starting to send OTP Message ...");
-      await _supabase.auth.signInWithOtp(phone: '+2$phone');
-      AppLogs.debug("OTP Message sent successfully...");
-    } catch (e) {
-      AppLogs.error(e.toString());
-      throw Exception(e.toString());
-    }
-  }
-
-  Future<void> verifyOTPPin(String phone, String pin) async {
-    try {
-      AppLogs.debug("Starting to verify OTP Pin ...");
-      final res = await _supabase.auth.verifyOTP(
-        token: pin,
-        phone: '+2$phone',
-        type: OtpType.sms,
+      Response response = await _dio.post(
+        'https://beon.chat/api/send/message/otp',
+        options: Options(headers: {'beon-token': 'Ps7u2Fufv4sa0ibEaH9L'}),
+        data: FormData.fromMap({
+          'phoneNumber': '+2$phone',
+          'name': 'Elkosh',
+          'type': 'sms',
+          'otp_length': '6',
+          'lang': 'ar',
+          'reference': '123',
+        }),
       );
-      AppLogs.debug("OTP Verification Result: $res");
+      if (response.data['status'] == 200) {
+        AppLogs.success("OTP Message sent successfully...");
+        return response.data['data'];
+      } else {
+        AppLogs.error("OTP Message sent failed...");
+        throw Exception(response.data['message']);
+      }
     } catch (e) {
       AppLogs.error(e.toString());
       throw Exception(e.toString());

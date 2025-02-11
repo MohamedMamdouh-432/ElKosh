@@ -2,6 +2,7 @@ import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/markets/widgets/market_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
@@ -36,12 +37,13 @@ class MarketsView extends StatelessWidget {
           return Skeletonizer(
             enabled: state.status == LoadStatus.inProgress,
             child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 15),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               margin: const EdgeInsets.only(top: 4),
               decoration: BoxDecoration(
                 color: Colors.black12.withValues(alpha: 0.02),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
                     "استكشف المتاجر",
@@ -50,6 +52,7 @@ class MarketsView extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const Gap(20),
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -59,7 +62,6 @@ class MarketsView extends StatelessWidget {
                       thickness: 0.5,
                       color: Colors.black38,
                     ),
-                    padding: const EdgeInsets.only(right: 16),
                   ),
                 ],
               ),

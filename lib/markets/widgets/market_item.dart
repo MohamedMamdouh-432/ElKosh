@@ -7,6 +7,7 @@ import 'package:elkosh/shared/services/time_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 
@@ -50,8 +51,8 @@ class MarketItem extends StatelessWidget {
                     width: context.width * 0.6,
                     child: Text(
                       market.name,
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: TextStyle(
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.bold,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -79,6 +80,7 @@ class MarketItem extends StatelessWidget {
                       );
                     },
                   ),
+                  const Gap(10),
                   SizedBox(
                     width: context.width * 0.5,
                     height: context.height * 0.05,

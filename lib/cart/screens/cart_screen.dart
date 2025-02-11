@@ -42,7 +42,6 @@ class CartScreen extends StatelessWidget {
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );
-            // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
             context.read<CartBloc>().add(CartResetEvent());
           } else if (state.status == CartStatus.failure)
             QuickAlert.show(

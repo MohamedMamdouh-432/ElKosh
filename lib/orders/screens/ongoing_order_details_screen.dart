@@ -104,7 +104,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                                   ? "تم تسجيل الطلب"
                                   : "تم شحن الطلب",
                               style: TextStyle(
-                                fontSize: 15.sp,
+                                fontSize: 13.sp,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
