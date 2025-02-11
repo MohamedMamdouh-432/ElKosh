@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {
   final String text;
+  final Color? color;
   final VoidCallback? ontap;
 
   const AuthButton({
     super.key,
     this.ontap,
     required this.text,
+    this.color,
   });
 
   @override
@@ -19,7 +21,7 @@ class AuthButton extends StatelessWidget {
         width: double.infinity,
         height: 50,
         decoration: BoxDecoration(
-          color: ColorManager.primary,
+          color: color ?? ColorManager.primary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Center(

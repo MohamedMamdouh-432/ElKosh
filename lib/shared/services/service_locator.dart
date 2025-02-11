@@ -1,6 +1,7 @@
 import 'package:auth_repository/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/data_repository.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -23,7 +24,7 @@ Future<void> setup() async {
     firebaseAuth: FirebaseAuth.instance,
     firestore: sl.get<FirebaseFirestore>(),
     sharedPreferences: sl.get<SharedPreferences>(),
-    supabase: sl.get<SupabaseClient>(),
+    dio: Dio(),
   ));
   sl.registerSingleton<UserRepository>(UserRepository(
     firestore: sl.get<FirebaseFirestore>(),

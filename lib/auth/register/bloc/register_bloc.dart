@@ -108,8 +108,12 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   FutureOr<void> _onRegisterSendOTP(event, emit) async {
     try {
       emit(state.copyWith(verifyStatus: VerifyStatus.otpInProgress));
-      await sl.get<AuthRepository>().sendOTPMessage(state.phone.value);
-      emit(state.copyWith(verifyStatus: VerifyStatus.otpSent));
+      final sentOtp =
+          await sl.get<AuthRepository>().sendOTPMessage(state.phone.value);
+      emit(state.copyWith(
+        otp: sentOtp,
+        verifyStatus: VerifyStatus.otpSent,
+      ));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
@@ -122,10 +126,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       RegisterVerifyOTPEvent event, emit) async {
     try {
       emit(state.copyWith(verifyStatus: VerifyStatus.verifyingInProgress));
-      await sl
-          .get<AuthRepository>()
-          .verifyOTPPin(state.phone.value, event.code);
-      emit(state.copyWith(verifyStatus: VerifyStatus.verified));
+      emit(state.copyWith(
+        verifyStatus: event.code == state.otp
+            ? VerifyStatus.verified
+            : VerifyStatus.notVerified,
+      ));
     } catch (e) {
       emit(state.copyWith(
         errMsg: e.toString(),
@@ -145,7 +150,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   FutureOr<void> _onRegisterVerifyStateReset(event, emit) {
     emit(state.copyWith(verifyStatus: VerifyStatus.initial));
   }
-  
+
   FutureOr<void> _onRegisterFormReset(event, emit) {
     emit(RegisterState.initial);
   }

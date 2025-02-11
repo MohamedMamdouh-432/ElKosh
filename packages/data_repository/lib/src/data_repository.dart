@@ -376,6 +376,21 @@ class DataRepository {
 
   /*----- Order Operations -----*/
 
+  Future<List<String?>> getAdminTokens() async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(ConstantManager.userCollection)
+        .where('userType', isEqualTo: 'admin')
+        .get();
+    List<String> adminTokens = [];
+    for (var doc in querySnapshot.docs) {
+      String? token = doc['token'];
+      if (token != null) {
+        adminTokens.add(token);
+      }
+    }
+    return adminTokens;
+  }
+
   Future<Either<Failure, Null>> placeOrder(Location location) async {
     try {
       final seqIdDoc = firestore

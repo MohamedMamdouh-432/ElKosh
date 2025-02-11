@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/notifications/notific2/send_notification_service.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
@@ -165,40 +164,33 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result = await sl.get<DataRepository>().placeOrder(event.location);
-      // todo: send notification to admin (later when notifications feature is ready)
-      Future<List<String?>> getAdminTokens() async {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('users')
-            .where('userType', isEqualTo: 'admin')
-            .get();
-
-        List<String> adminTokens = [];
-        for (var doc in querySnapshot.docs) {
-          String? token = doc['token'];
-          if (token != null) {
-            adminTokens.add(token);
-          }
-        }
-
-        return adminTokens;
-      }
-
-      Future<void> sendNotificationsToAdmins() async {}
-
-      List<String?> adminTokens = await getAdminTokens();
-
+      List<String?> adminTokens =
+          await sl.get<DataRepository>().getAdminTokens();
       await SendNotificationService.sendNotificationUsingApi(
-          title: 'طلب جديد',
-          token: adminTokens[0],
-          body: 'طلب جديد ادخل شوفه ',
-          data: {'type': 'orders'});
-
+        title: 'طلب جديد',
+        token: adminTokens[0],
+        body: 'تم استلام طلب جديد',
+        data: {'type': 'orders'},
+      );
       result.fold(
-          (l) => emit(state.copyWith(
-                status: CartStatus.placingfailure,
-                errorMessage: l.message,
-              )),
-          (r) => emit(state.copyWith(status: CartStatus.placingSuccess)));
+        (l) => emit(state.copyWith(
+          status: CartStatus.placingfailure,
+          errorMessage: l.message,
+        )),
+        (r) async {
+          state.shopping.forEach((p, c) async {
+            if (p.quantity - c <= 7) {
+              await SendNotificationService.sendNotificationUsingApi(
+                title: 'منتج على وشك النفاذ',
+                token: adminTokens[0],
+                body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                data: {'type': 'orders'},
+              );
+            }
+          });
+          emit(state.copyWith(status: CartStatus.placingSuccess));
+        },
+      );
     } catch (e) {
       emit(state.copyWith(
         status: CartStatus.placingfailure,
@@ -212,13 +204,35 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result =
           await sl.get<DataRepository>().placeAdOrder(event.location);
-      // todo: send notification to admin (later when notifications feature is ready)
+      List<String?> adminTokens =
+          await sl.get<DataRepository>().getAdminTokens();
+      await SendNotificationService.sendNotificationUsingApi(
+        title: 'طلب جديد',
+        token: adminTokens[0],
+        body: 'تم استلام طلب جديد',
+        data: {'type': 'orders'},
+      );
       result.fold(
-          (l) => emit(state.copyWith(
-                status: CartStatus.placingfailure,
-                errorMessage: l.message,
-              )),
-          (r) => emit(state.copyWith(status: CartStatus.placingSuccess)));
+        (l) => emit(
+          state.copyWith(
+            status: CartStatus.placingfailure,
+            errorMessage: l.message,
+          ),
+        ),
+        (r) async {
+          state.shopping.forEach((p, c) async {
+            if (p.quantity - c <= 7) {
+              await SendNotificationService.sendNotificationUsingApi(
+                title: 'منتج على وشك النفاذ',
+                token: adminTokens[0],
+                body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                data: {'type': 'orders'},
+              );
+            }
+          });
+          emit(state.copyWith(status: CartStatus.placingSuccess));
+        },
+      );
     } catch (e) {
       emit(state.copyWith(
         status: CartStatus.placingfailure,

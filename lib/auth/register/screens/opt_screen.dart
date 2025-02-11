@@ -125,6 +125,9 @@ class OptScreen extends StatelessWidget {
                       Gap(50.h),
                       AuthButton(
                         text: 'التحقق و تسجيل الدخول',
+                        color: state.verifyStatus != VerifyStatus.completed
+                            ? Colors.grey
+                            : null,
                         ontap: state.verifyStatus != VerifyStatus.completed
                             ? null
                             : () => context
