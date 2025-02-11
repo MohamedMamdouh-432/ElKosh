@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/auth/widgets/auth_button.dart';
 import 'package:elkosh/auth/widgets/tip_text.dart';
@@ -11,6 +12,8 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -159,10 +162,50 @@ class RegisterScreen extends StatelessWidget {
                         text: 'تسجيل الحساب',
                         ontap: state.inputStatus == FormInputStatus.valid
                             ? () async {
-                                context
-                                    .read<RegisterBloc>()
-                                    .add(RegisterSendOTPEvent());
-                                context.push(RouteManager.optRoute);
+                                Future<bool> isUserBlockedByEmailOrPhone(
+                                    String email, String phoneNumber) async {
+                                  final firestore = FirebaseFirestore.instance;
+                                  try {
+                                    // Check if the email is blocked
+                                    final emailQuery = await firestore
+                                        .collection('blockedUsers')
+                                        .where('email', isEqualTo: email)
+                                        .get();
+
+                                    // Check if the phone number is blocked
+                                    final phoneQuery = await firestore
+                                        .collection('blockedUsers')
+                                        .where('phoneNumber',
+                                            isEqualTo: phoneNumber)
+                                        .get();
+
+                                    // If either email or phone number is blocked, return true
+                                    return emailQuery.docs.isNotEmpty ||
+                                        phoneQuery.docs.isNotEmpty;
+                                  } catch (e) {
+                                    print('Error checking blocked user: $e');
+                                    throw Exception(
+                                        "حدث خطأ أثناء التحقق من حالة الحظر");
+                                  }
+                                }
+
+                                if (await isUserBlockedByEmailOrPhone(
+                                    state.email.value, state.phone.value)) {
+                                  print("User is blocked");
+                                  QuickAlert.show(
+                                    confirmBtnText: 'حسنا',
+                                    title: ' خطأ',
+                                    context: context,
+                                    type: QuickAlertType.warning,
+                                    text:
+                                        "الحساب محظور بسبب البريد الإلكتروني أو رقم الهاتف",
+                                  );
+                                } else {
+                                  context
+                                      .read<RegisterBloc>()
+                                      .add(RegisterSendOTPEvent());
+                                  context.push(RouteManager.optRoute);
+                                }
                               }
                             : null,
                       ),
