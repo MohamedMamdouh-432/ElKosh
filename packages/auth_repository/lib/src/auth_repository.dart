@@ -94,7 +94,7 @@ class AuthRepository {
       AppLogs.debug("Starting to send OTP Message ...");
       Response response = await _dio.post(
         'https://beon.chat/api/send/message/otp',
-        options: Options(headers: {'beon-token': 'Ps7u2Fufv4sa0ibEaH9L'}),
+        options: Options(headers: {'beon-token': 'l059YhFIxnufsItml977'}),
         data: FormData.fromMap({
           'phoneNumber': '+2$phone',
           'name': 'Elkosh',

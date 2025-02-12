@@ -24,6 +24,7 @@ Future<void> main() async {
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6aGtrdm13ZGR3dHp6dGRwemtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2MDcwODIsImV4cCI6MjA1NDE4MzA4Mn0.hOzF33nhSx1DYEvYQWHQ3Kf3nHPNJ0OJooHPWZIyTXs',
   );
+
   Bloc.observer = const AppBlocObserver();
   await setup();
 
