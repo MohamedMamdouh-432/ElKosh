@@ -36,20 +36,19 @@ class SearchScreen extends StatelessWidget {
                   children: [
                     const Gap(20),
                     SearchBar(
-                      hintText: 'إبحث عن خضروات و أطعمة و مشروبات',
+                      hintText: 'ابحث من هنا',
                       leading: const Icon(Icons.search, size: 26),
                       elevation: const WidgetStatePropertyAll(0),
-                      hintStyle: const WidgetStatePropertyAll(
+                      hintStyle: WidgetStatePropertyAll(
                         TextStyle(
                           color: Colors.black54,
-                          fontSize: 16,
+                          fontSize: 10.sp,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       padding: const WidgetStatePropertyAll(
-                        EdgeInsets.symmetric(horizontal: 20),
-                      ),
+                          EdgeInsets.symmetric(horizontal: 10)),
                       onChanged: (value) => context
                           .read<SearchBloc>()
                           .add(SearchQueryChanged(value)),
@@ -63,14 +62,11 @@ class SearchScreen extends StatelessWidget {
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 2.w,
-                        ),
                         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          crossAxisSpacing: 5,
-                          maxCrossAxisExtent: 110,
-                          childAspectRatio: 5.1.w / 10.2.h,
+                          maxCrossAxisExtent: 120,
+                          crossAxisSpacing: 10.sp,
+                          mainAxisSpacing: 10.sp,
+                          childAspectRatio: 2.sp / 3.5.sp,
                         ),
                         itemCount: state.products.length,
                         itemBuilder: (context, index) => ProductCard(
