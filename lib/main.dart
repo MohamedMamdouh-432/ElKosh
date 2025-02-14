@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:elkosh/core/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -22,5 +21,5 @@ Future<void> main() async {
   Bloc.observer = const AppBlocObserver();
   await setup();
 
-  runApp(DevicePreview(builder: (BuildContext context) => const ElKoshApp()));
+  runApp(const ElKoshApp());
 }

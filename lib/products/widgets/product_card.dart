@@ -28,8 +28,8 @@ class ProductCard extends StatelessWidget {
         context.read<ProductsBloc>().add(ProductSelectedEvent(product));
         context.push(RouteManager.productDetailsRoute, extra: {
           'steps': steps,
-          'isRelated': (GoRouter.of(context).state.extra
-                  as Map<String, dynamic>)['isRelated'] ??
+          'isRelated': ((GoRouter.of(context).state.extra ?? {})
+                  as Map<dynamic, dynamic>)['isRelated'] ??
               false,
         });
       },
@@ -76,6 +76,7 @@ class ProductCard extends StatelessWidget {
                           textScaler: const TextScaler.linear(0.9),
                           maxLines: 2,
                           softWrap: true,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                       ),
                       const Gap(5),
