@@ -19,6 +19,8 @@ class AdsSlider extends StatelessWidget {
     return BlocProvider(
       create: (context) => AdsBloc(),
       child: BlocConsumer<AdsBloc, AdsState>(
+        buildWhen: (p, c) => p != c,
+        listenWhen: (p, c) => p != c,
         listener: (context, state) {
           if (state.status == LoadStatus.failure) {
             QuickAlert.show(

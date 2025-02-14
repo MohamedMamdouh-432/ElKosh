@@ -13,6 +13,7 @@ class CustomAppBar extends StatelessWidget {
     BuildContext context,
   ) {
     return BlocBuilder<ProfileBloc, ProfileState>(
+      buildWhen: (p, c) => p != c,
       builder: (context, state) {
         return Container(
           width: double.infinity,

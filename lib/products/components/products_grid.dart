@@ -18,6 +18,8 @@ class ProductsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProductsBloc, ProductsState>(
+      buildWhen: (p, c) => p != c,
+      listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status == LoadStatus.failure) {
           QuickAlert.show(

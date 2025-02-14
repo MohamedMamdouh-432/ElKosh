@@ -1,5 +1,6 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +10,11 @@ class OrderCard extends StatelessWidget {
   final bool isAd;
   final ShoppingItem shoppingItem;
 
-  const OrderCard({super.key, required this.shoppingItem, required this.isAd});
+  const OrderCard({
+    super.key,
+    required this.shoppingItem,
+    required this.isAd,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,7 @@ class OrderCard extends StatelessWidget {
       children: [
         Container(
           height: 70.h,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -33,7 +38,7 @@ class OrderCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
+                  horizontal: 10,
                   vertical: 2,
                 ),
                 decoration: BoxDecoration(
@@ -56,12 +61,16 @@ class OrderCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    shoppingItem.product.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                  SizedBox(
+                    width: context.width * 0.45,
+                    child: Text(
+                      shoppingItem.product.name,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.sp,
+                      ),
                     ),
                   ),
                   Text(

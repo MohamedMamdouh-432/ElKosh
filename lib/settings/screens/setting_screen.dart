@@ -18,6 +18,8 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileState>(
+      buildWhen: (p, c) => p != c,
+      listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status == ProfileStatus.userNotFound) {
           String msg = state.errMsg;
@@ -238,7 +240,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(phoneUri);
                           } catch (e) {
-                            AppLogs.error(e.toString());
+                            AppLogs.error('Setting Phone Error: $e');
                           }
                         },
                         iconSize: 40,
@@ -257,7 +259,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(whatsappUri);
                           } catch (e) {
-                            AppLogs.error(e.toString());
+                            AppLogs.error('Setting Whatsapp Error: $e');
                           }
                         },
                         iconSize: 40,
@@ -275,7 +277,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(facebookUri);
                           } catch (e) {
-                            AppLogs.error(e.toString());
+                            AppLogs.error('Setting Facebook Error: $e');
                           }
                         },
                         iconSize: 40,

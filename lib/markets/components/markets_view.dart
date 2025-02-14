@@ -16,6 +16,8 @@ class MarketsView extends StatelessWidget {
     return BlocProvider(
       create: (context) => MarketsBloc(),
       child: BlocConsumer<MarketsBloc, MarketsState>(
+        buildWhen: (p, c) => p != c,
+        listenWhen: (p, c) => p != c,
         listener: (context, state) {
           if (state.status == LoadStatus.failure) {
             QuickAlert.show(

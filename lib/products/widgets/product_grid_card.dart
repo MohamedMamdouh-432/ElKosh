@@ -41,7 +41,7 @@ class ProductGridCard extends StatelessWidget {
                 ),
               ],
               image: DecorationImage(
-                fit: BoxFit.fill,
+                fit: BoxFit.contain,
                 filterQuality: FilterQuality.high,
                 image: CachedNetworkImageProvider(product.imgUrl),
               ),

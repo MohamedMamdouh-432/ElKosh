@@ -48,6 +48,7 @@ class ProductCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: BlocBuilder<ProductsBloc, ProductsState>(
+                buildWhen: (p, c) => p != c,
                 builder: (context, state) {
                   return Column(
                     children: [

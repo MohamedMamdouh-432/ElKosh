@@ -160,34 +160,41 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onPlacingOrder(CartPlaceOrderEvent event, emit) async {
+  Future<void> _onPlacingOrder(
+      CartPlaceOrderEvent event, Emitter<CartState> emit) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result = await sl.get<DataRepository>().placeOrder(event.location);
       List<String?> adminTokens =
           await sl.get<DataRepository>().getAdminTokens();
-      await SendNotificationService.sendNotificationUsingApi(
-        title: 'طلب جديد',
-        token: adminTokens[0],
-        body: 'تم استلام طلب جديد',
-        data: {'type': 'orders'},
-      );
       result.fold(
         (l) => emit(state.copyWith(
           status: CartStatus.placingfailure,
           errorMessage: l.message,
         )),
         (r) async {
-          state.shopping.forEach((p, c) async {
-            if (p.quantity - c <= 7) {
+          Future.wait([
+            Future.delayed(Duration.zero, () async {
+              state.shopping.forEach((p, c) async {
+                if (p.quantity - c <= 7) {
+                  await SendNotificationService.sendNotificationUsingApi(
+                    title: 'منتج على وشك النفاذ',
+                    token: adminTokens[0],
+                    body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                    data: {'type': 'orders'},
+                  );
+                }
+              });
+            }),
+            Future.delayed(Duration.zero, () async {
               await SendNotificationService.sendNotificationUsingApi(
-                title: 'منتج على وشك النفاذ',
+                title: 'طلب جديد',
                 token: adminTokens[0],
-                body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                body: 'تم استلام طلب جديد',
                 data: {'type': 'orders'},
               );
-            }
-          });
+            })
+          ]);
           emit(state.copyWith(status: CartStatus.placingSuccess));
         },
       );
@@ -206,12 +213,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await sl.get<DataRepository>().placeAdOrder(event.location);
       List<String?> adminTokens =
           await sl.get<DataRepository>().getAdminTokens();
-      await SendNotificationService.sendNotificationUsingApi(
-        title: 'طلب جديد',
-        token: adminTokens[0],
-        body: 'تم استلام طلب جديد',
-        data: {'type': 'orders'},
-      );
       result.fold(
         (l) => emit(
           state.copyWith(
@@ -220,16 +221,28 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           ),
         ),
         (r) async {
-          state.shopping.forEach((p, c) async {
-            if (p.quantity - c <= 7) {
+          Future.wait([
+            Future.delayed(Duration.zero, () async {
+              state.shopping.forEach((p, c) async {
+                if (p.quantity - c <= 7) {
+                  await SendNotificationService.sendNotificationUsingApi(
+                    title: 'منتج على وشك النفاذ',
+                    token: adminTokens[0],
+                    body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                    data: {'type': 'orders'},
+                  );
+                }
+              });
+            }),
+            Future.delayed(Duration.zero, () async {
               await SendNotificationService.sendNotificationUsingApi(
-                title: 'منتج على وشك النفاذ',
+                title: 'طلب جديد',
                 token: adminTokens[0],
-                body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                body: 'تم استلام طلب جديد',
                 data: {'type': 'orders'},
               );
-            }
-          });
+            })
+          ]);
           emit(state.copyWith(status: CartStatus.placingSuccess));
         },
       );

@@ -22,6 +22,8 @@ class AdDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CartBloc, CartState>(
+      buildWhen: (p, c) => p != c,
+      listenWhen: (p, c) => p != c,
       listener: (context, cartState) {
         if (cartState.status == CartStatus.adPlacingfailure)
           QuickAlert.show(
@@ -55,6 +57,7 @@ class AdDetailsScreen extends StatelessWidget {
       },
       builder: (context, cartState) {
         return BlocBuilder<AdDetailsBloc, AdDetailsState>(
+          buildWhen: (p, c) => p != c,
           builder: (context, state) {
             return SafeArea(
               child: Container(

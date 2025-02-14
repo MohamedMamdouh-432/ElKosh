@@ -36,6 +36,8 @@ class LoginScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: BlocConsumer<LoginBloc, LoginState>(
+            buildWhen: (p, c) => p != c,
+            listenWhen: (p, c) => p != c,
             listener: (context, state) {
               if (state.submissionStatus.isFailure) {
                 String msg = state.errMsg;
