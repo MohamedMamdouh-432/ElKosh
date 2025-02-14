@@ -14,6 +14,8 @@ class ProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProductsBloc, ProductsState>(
+      buildWhen: (p, c) => p != c,
+      listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status == LoadStatus.failure) {
           QuickAlert.show(
@@ -60,9 +62,8 @@ class ProductsScreen extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 120,
                     crossAxisSpacing: 10.sp,
-                    mainAxisSpacing: 2.sp,
-                    childAspectRatio: 7.5.sp /
-                        12.sp, // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                    mainAxisSpacing: 10.sp,
+                    childAspectRatio: 2.sp / 3.5.sp,
                   ),
                   itemCount: params['isRelated'] as bool
                       ? state.relProducts.length

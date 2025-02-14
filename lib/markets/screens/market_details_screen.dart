@@ -55,6 +55,7 @@ class MarkettDetailsScreen extends StatelessWidget {
               ),
             ),
             body: BlocBuilder<MarketDetailsBloc, MarketDetailsState>(
+              buildWhen: (p, c) => p != c,
               builder: (context, state) {
                 return Skeletonizer(
                   enabled: state.status == LoadStatus.inProgress,
@@ -117,7 +118,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                                           try {
                                             await launchUrl(whatsappUri);
                                           } catch (e) {
-                                            AppLogs.error(e.toString());
+                                            AppLogs.error('Market Whatsapp Error: $e');
                                           }
                                         },
                                         iconSize: 30,
@@ -138,7 +139,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                                           try {
                                             await launchUrl(phoneUri);
                                           } catch (e) {
-                                            AppLogs.error(e.toString());
+                                            AppLogs.error('Market Phone Error: $e');
                                           }
                                         },
                                         iconSize: 30,

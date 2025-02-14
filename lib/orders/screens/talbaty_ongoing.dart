@@ -14,6 +14,8 @@ class TalbatyOngoing extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OrdersBloc, OrdersState>(
+      buildWhen: (p, c) => p != c,
+      listenWhen: (p, c) => p != c,
       listener: (context, state) {
         if (state.status == OrdersStatus.fetchFailure) {
           QuickAlert.show(

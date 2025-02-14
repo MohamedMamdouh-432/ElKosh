@@ -23,6 +23,8 @@ class CartScreen extends StatelessWidget {
           context.read<CartBloc>().add(CartFetchingEvent());
       },
       child: BlocConsumer<CartBloc, CartState>(
+        buildWhen: (p, c) => p != c,
+        listenWhen: (p, c) => p != c,
         listener: (context, state) {
           if (state.status == CartStatus.placingfailure)
             QuickAlert.show(

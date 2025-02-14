@@ -39,7 +39,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         )),
       );
     } catch (e) {
-      AppLogs.error(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
         status: LoadStatus.failure,
@@ -68,7 +67,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         )),
       );
     } catch (e) {
-      AppLogs.error(e.toString());
       emit(state.copyWith(
         errMsg: e.toString(),
         status: LoadStatus.failure,

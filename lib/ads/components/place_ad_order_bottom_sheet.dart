@@ -16,6 +16,7 @@ class PlaceAdOrderBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
+      buildWhen: (p, c) => p != c,
       builder: (context, state) {
         return Container(
           width: double.infinity,

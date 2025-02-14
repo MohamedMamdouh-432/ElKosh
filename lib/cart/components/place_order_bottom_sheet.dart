@@ -2,9 +2,9 @@ import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,9 +17,10 @@ class PlaceOrderBottomSheet extends StatelessWidget {
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
-        bottom: context.bottomInsets,
+        bottom: context.bottomInsets + 10.sp,
       ),
       child: BlocBuilder<CartBloc, CartState>(
+        buildWhen: (p, c) => p != c,
         builder: (context, state) {
           return Column(
             mainAxisSize: MainAxisSize.min,
@@ -54,16 +55,16 @@ class PlaceOrderBottomSheet extends StatelessWidget {
                   onPressed: () =>
                       context.push(RouteManager.deliveryLocationPickerRoute),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 100),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     elevation: 15,
                   ),
-                  icon: const Icon(CupertinoIcons.placemark),
-                  label: const Text(
+                  iconAlignment: IconAlignment.end,
+                  icon: const Icon(Icons.done_all, size: 25),
+                  label: Text(
                     "تأكيد الطلب",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
                     ),
                   ),
                 ),

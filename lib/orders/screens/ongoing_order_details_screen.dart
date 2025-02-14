@@ -1,13 +1,13 @@
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/orders/widgets/order_card.dart';
 import 'package:elkosh/orders/widgets/order_section.dart';
+import 'package:elkosh/orders/widgets/order_selector.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class OngoingOrderDetailsScreen extends StatelessWidget {
@@ -16,6 +16,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrdersBloc, OrdersState>(
+      buildWhen: (p, c) => p != c,
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
         return Container(
@@ -155,59 +156,25 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
               width: context.width * 0.8,
               child: Row(
                 children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<OrdersBloc>()
-                            .add(OrderDeleveringingEvent(state.curOrder));
-                        context.pop();
-                      },
-                      child: Text(
-                        "إستلام",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  OrderSelector(
+                    content: 'إستلام',
+                    onTap: () => context
+                        .read<OrdersBloc>()
+                        .add(OrderDeleveringingEvent(state.curOrder)),
                   ),
                   const Gap(10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<OrdersBloc>()
-                            .add(OrderCancellingEvent(state.curOrder));
-                        context.pop();
-                      },
-                      child: Text(
-                        "إلغاء",
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  OrderSelector(
+                    content: 'إالغاء',
+                    onTap: () => context
+                        .read<OrdersBloc>()
+                        .add(OrderCancellingEvent(state.curOrder)),
                   ),
                   const Gap(10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context
-                            .read<OrdersBloc>()
-                            .add(OrderRefusingEvent(state.curOrder));
-                        context.pop();
-                      },
-                      child: Text(
-                        "رفض الاستلام",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  OrderSelector(
+                    content: 'رفض',
+                    onTap: () => context
+                        .read<OrdersBloc>()
+                        .add(OrderRefusingEvent(state.curOrder)),
                   ),
                 ],
               ),

@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:user_repository/user_repository.dart';
 
 final GetIt sl = GetIt.instance;
@@ -17,7 +16,6 @@ Future<void> setup() async {
   sl.registerSingleton<FirebaseStorage>(FirebaseStorage.instance);
   sl.registerSingleton<SharedPreferences>(
       await SharedPreferences.getInstance());
-  sl.registerSingleton<SupabaseClient>(Supabase.instance.client);
 
   //* Repositories Dependencies
   sl.registerSingleton<AuthRepository>(AuthRepository(

@@ -36,6 +36,8 @@ class OptScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: BlocConsumer<RegisterBloc, RegisterState>(
+            buildWhen: (p, c) => p != c,
+            listenWhen: (p, c) => p != c,
             listener: (context, state) {
               if (state.submitStatus.isFailure) {
                 String msg = state.errMsg;

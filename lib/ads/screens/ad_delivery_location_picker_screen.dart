@@ -74,7 +74,7 @@ class AdDeliveryLocationPickerScreen extends StatelessWidget {
             color: ColorManager.primary,
           ),
           showCurrentLocationPointer: false,
-          onError: (e) => AppLogs.error(e.toString()),
+          onError: (e) => AppLogs.error('Ad Delivery Location Picker Error: $e'),
           onPicked: (pickedData) {
             final location = Location.fromMapPicker(
               pickedData.latLong.latitude,

@@ -28,6 +28,8 @@ class ProductDetailsScreen extends StatelessWidget {
       create: (context) => ProductDetailsBloc(),
       child: SafeArea(
         child: BlocConsumer<CartBloc, CartState>(
+          buildWhen: (p, c) => p != c,
+          listenWhen: (p, c) => p != c,
           listener: (context, state) {
             if (state.status == CartStatus.failure) {
               QuickAlert.show(
@@ -41,6 +43,7 @@ class ProductDetailsScreen extends StatelessWidget {
           },
           builder: (context, state) {
             return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
+              buildWhen: (p, c) => p != c,
               builder: (context, productState) {
                 bool isInCart =
                     state.shopping.containsKey(productState.product);

@@ -37,6 +37,7 @@ class RegisterScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: BlocBuilder<RegisterBloc, RegisterState>(
+            buildWhen: (p, c) => p != c,
             builder: (context, state) {
               return ModalProgressHUD(
                 inAsyncCall: state.submitStatus.isInProgress,

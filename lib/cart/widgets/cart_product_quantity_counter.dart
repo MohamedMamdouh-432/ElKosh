@@ -9,7 +9,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 class CartProductQuantityCounter extends StatelessWidget {
   final int quantity;
   final Product product;
-  
+
   const CartProductQuantityCounter({
     super.key,
     required this.quantity,
@@ -34,12 +34,12 @@ class CartProductQuantityCounter extends StatelessWidget {
             icon: const Icon(
               Icons.remove,
               color: Colors.black,
-              size: 28,
+              size: 25,
             ),
           ),
           Text(
             '$quantity',
-            style: const TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 18),
           ),
           IconButton(
             onPressed: () => product.quantity.toInt() >= quantity + 1
@@ -57,7 +57,7 @@ class CartProductQuantityCounter extends StatelessWidget {
             icon: const Icon(
               Icons.add,
               color: Colors.black,
-              size: 28,
+              size: 25,
             ),
           ),
         ],

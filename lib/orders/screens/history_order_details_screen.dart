@@ -14,6 +14,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrdersBloc, OrdersState>(
+      buildWhen: (p, c) => p != c,
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
         return Container(
@@ -33,7 +34,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
                     const Gap(30),
@@ -168,7 +169,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                     ),
                     const Gap(20),
                     ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: shopping.length,

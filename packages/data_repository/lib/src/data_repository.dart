@@ -90,12 +90,12 @@ class DataRepository {
       }
       return Right(marketsList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Markets Loading Error: $e');
       return Left(Failure(e.toString()));
     }
   }
 
-  Future<bool> isMarketActive(String id) async {
+  Future<bool> isMarketActive(String id, [String? pId]) async {
     try {
       final marketDoc = await firestore
           .collection(ConstantManager.marketCollection)
@@ -103,7 +103,7 @@ class DataRepository {
           .get();
       return marketDoc.data()?['active'];
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @isMarketActive: $e');
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
@@ -143,7 +143,7 @@ class DataRepository {
         categoriesList.add(Category.fromDoc(doc.id, doc.data()));
       return Right(categoriesList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Categories Loading Error: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -180,13 +180,13 @@ class DataRepository {
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
         final marketActive =
-            await isMarketActive(productDoc.data()['marketId']);
+            await isMarketActive(productDoc.data()['marketId'], productDoc.id);
         if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
       return Right(productsList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Products Loading Limiting Error: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -202,7 +202,8 @@ class DataRepository {
         try {
           List<Product> productsList = [];
           for (var doc in snapshot.docs) {
-            final marketActive = await isMarketActive(doc.data()['marketId']);
+            final marketActive =
+                await isMarketActive(doc.data()['marketId'], doc.id);
             if (!marketActive) continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
@@ -231,7 +232,7 @@ class DataRepository {
       }
       return Right(productsList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @fetchCategoryRelatedProducts: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -244,7 +245,7 @@ class DataRepository {
           .get();
       return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @getProductById: $e');
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -277,7 +278,7 @@ class DataRepository {
         'shopping': shoppingData,
       });
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @fetchCart: $e');
       return const Left(Failure('حدث خطأ أثناء تحميل السله'));
     }
   }
@@ -293,7 +294,7 @@ class DataRepository {
         'shopping': const <Product, int>{},
       });
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @resetCart: $e');
       return const Left(Failure('حدث خطأ أثناء اعادة السله'));
     }
   }
@@ -312,7 +313,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @addProductToCart: $e');
       return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
     }
   }
@@ -327,7 +328,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @removeProductFromCart: $e');
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
     }
   }
@@ -345,7 +346,7 @@ class DataRepository {
       await sharedPref.setString('shopping', json.encode(_shopping));
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @increaseProductQuantityInCart: $e');
       return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
     }
   }
@@ -369,7 +370,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @decreaseProductQuantityFromCart: $e');
       return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
     }
   }
@@ -423,7 +424,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @placeOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -458,7 +459,7 @@ class DataRepository {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @placeAdOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -471,7 +472,7 @@ class DataRepository {
           .update({'status': OrderStatus.delivered.name});
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @confirmDeliveryOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -495,7 +496,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @cancelOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -517,7 +518,7 @@ class DataRepository {
       });
       return const Right(null);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @refuseOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -567,7 +568,7 @@ class DataRepository {
                 final mappedProduct = await getProductById(entry.key);
                 shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
               }
-              ongoingOrderList.add(UserOrder.fromDoc(
+              historyOrderList.add(UserOrder.fromDoc(
                 doc.data(),
                 shopping,
                 doc.id,
@@ -595,13 +596,18 @@ class DataRepository {
         firestore
             .collection('orders')
             .where('userId', isEqualTo: getUserId())
-            .where('status', whereIn: ['pending', 'shipped'])
+            .where('status',
+                whereIn: [OrderStatus.pending.name, OrderStatus.shipped.name])
             .orderBy('createdAt', descending: true)
             .get(),
         firestore
             .collection('orders')
             .where('userId', isEqualTo: getUserId())
-            .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
+            .where('status', whereIn: [
+              OrderStatus.cancelled.name,
+              OrderStatus.delivered.name,
+              OrderStatus.refused.name
+            ])
             .orderBy('createdAt', descending: true)
             .get(),
       ]);
@@ -633,7 +639,7 @@ class DataRepository {
           final mappedProduct = await getProductById(entry.key);
           shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
         }
-        ongoingOrderList.add(UserOrder.fromDoc(
+        historyOrderList.add(UserOrder.fromDoc(
           orderDoc.data(),
           shopping,
           orderDoc.id,
@@ -645,7 +651,7 @@ class DataRepository {
         'history': historyOrderList,
       });
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @fetchOrders: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -691,7 +697,7 @@ class DataRepository {
       }
       return Right(adsList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @fetchAds: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -739,7 +745,7 @@ class DataRepository {
         searchProductList.add(Product.fromDoc(result.id, result.data()));
       return Right(searchProductList);
     } catch (e) {
-      AppLogs.error(e.toString());
+      AppLogs.error('Error @searchForProductByName: $e');
       return Left(Failure(e.toString()));
     }
   }

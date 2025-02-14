@@ -12,6 +12,7 @@ class RelatedCategorysGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategorysBloc, CategorysState>(
+      buildWhen: (p, c) => p != c,
       builder: (context, categorysState) {
         return Skeletonizer(
           enabled: categorysState.status == LoadStatus.inProgress,

@@ -28,6 +28,7 @@ class SearchScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: BlocBuilder<SearchBloc, SearchState>(
+            buildWhen: (p, c) => p != c,
             builder: (context, state) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

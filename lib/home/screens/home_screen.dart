@@ -54,6 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 .read<ProductsBloc>()
                 .add(const ProductsLoadingEvent(10)),
           ),
+          Future.delayed(
+            Duration.zero,
+            () => context
+                .read<ProductsBloc>()
+                .add(const ProductsLoadingEvent()),
+          ),
         ]);
       },
       child: const SingleChildScrollView(
