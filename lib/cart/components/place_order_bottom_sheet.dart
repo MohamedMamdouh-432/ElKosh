@@ -34,7 +34,7 @@ class PlaceOrderBottomSheet extends StatelessWidget {
                 ),
               ),
               Text(
-                "مصاريف إضافيه: \t\t\t${toArNumber("10")}",
+                "رسوم توصيل: \t\t\t${toArNumber("10")}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

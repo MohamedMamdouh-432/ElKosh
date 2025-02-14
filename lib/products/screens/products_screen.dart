@@ -60,8 +60,8 @@ class ProductsScreen extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 120,
                     crossAxisSpacing: 10.sp,
-                    mainAxisSpacing: 10.sp,
-                    childAspectRatio: 6.8.sp /
+                    mainAxisSpacing: 2.sp,
+                    childAspectRatio: 7.5.sp /
                         12.sp, // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                   ),
                   itemCount: params['isRelated'] as bool

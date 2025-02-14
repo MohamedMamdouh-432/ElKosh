@@ -44,15 +44,19 @@ class CartCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: CachedNetworkImage(
                 imageUrl: product.imgUrl,
-                fit: BoxFit.fill,
+                fit: BoxFit.fitHeight,
               ),
             ),
+          ),
+          SizedBox(
+            width: 10.sp,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox.square(
+              SizedBox(
+                width: 100.sp,
                 child: Text(
                   product.name,
                   overflow: TextOverflow.ellipsis,

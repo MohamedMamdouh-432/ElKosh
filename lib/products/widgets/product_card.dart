@@ -6,6 +6,7 @@ import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:super_banners/super_banners.dart';
@@ -62,7 +63,9 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Spacer(),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       SizedBox(
                         width: 80.w,
                         child: Text(
@@ -74,7 +77,7 @@ class ProductCard extends StatelessWidget {
                           softWrap: true,
                         ),
                       ),
-                      const Spacer(),
+                      const Gap(5),
                       SizedBox(
                         width: 80.w,
                         child: Text(

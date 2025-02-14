@@ -164,8 +164,23 @@ class SettingScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () async {
-                    context.read<ProfileBloc>().add(ProfileSigningOutEvent());
-                    context.go(RouteManager.loginRoute);
+                    QuickAlert.show(
+                      confirmBtnText: 'حسنا',
+                      cancelBtnText: ' لا ',
+                      title: ' 😲 تحذير',
+                      context: context,
+                      type: QuickAlertType.warning,
+                      text: "هل انت متاكد من  تسجيل الخرج",
+                      onCancelBtnTap: () {
+                        context.pop();
+                      },
+                      onConfirmBtnTap: () {
+                        context
+                            .read<ProfileBloc>()
+                            .add(ProfileSigningOutEvent());
+                        context.go(RouteManager.loginRoute);
+                      },
+                    );
                   },
                 ),
                 ListTile(
@@ -179,8 +194,21 @@ class SettingScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () async {
-                    context.read<ProfileBloc>().add(ProfileDeletingEvent());
-                    context.go(RouteManager.loginRoute);
+                    QuickAlert.show(
+                      confirmBtnText: 'حسنا',
+                      cancelBtnText: '😍 لا ',
+                      title: ' 😲 تحذير',
+                      context: context,
+                      type: QuickAlertType.warning,
+                      text: "هل انت متاكد من حذف الحساب",
+                      onCancelBtnTap: () {
+                        context.pop();
+                      },
+                      onConfirmBtnTap: () {
+                        context.read<ProfileBloc>().add(ProfileDeletingEvent());
+                        context.go(RouteManager.loginRoute);
+                      },
+                    );
                   },
                 ),
                 const Gap(10),
