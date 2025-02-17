@@ -167,12 +167,16 @@ class SettingScreen extends StatelessWidget {
                   ),
                   onTap: () async {
                     QuickAlert.show(
+                      animType: QuickAlertAnimType.rotate,
                       confirmBtnText: 'حسنا',
                       cancelBtnText: ' لا ',
                       title: ' 😲 تحذير',
                       context: context,
                       type: QuickAlertType.warning,
                       text: "هل انت متاكد من  تسجيل الخرج",
+                      showCancelBtn: true,
+                      cancelBtnTextStyle: const TextStyle(
+                          fontWeight: FontWeight.w800, fontSize: 18),
                       onCancelBtnTap: () {
                         context.pop();
                       },
@@ -201,6 +205,7 @@ class SettingScreen extends StatelessWidget {
                       cancelBtnText: '😍 لا ',
                       title: ' 😲 تحذير',
                       context: context,
+                      showCancelBtn: true,
                       type: QuickAlertType.warning,
                       text: "هل انت متاكد من حذف الحساب",
                       onCancelBtnTap: () {

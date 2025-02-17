@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
@@ -36,7 +35,7 @@ class LocalNotificationService {
       priority: Priority.high,
       playSound: true,
     );
-    var user = FirebaseAuth.instance.currentUser;
+
     NotificationDetails details = NotificationDetails(
       android: android,
     );

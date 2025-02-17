@@ -57,7 +57,7 @@ abstract class RouteManager {
       ),
       GoRoute(
         path: registerRoute,
-        builder: (_, __) => const RegisterScreen(),
+        builder: (_, __) => RegisterScreen(),
       ),
       GoRoute(
         path: optRoute,
@@ -67,7 +67,7 @@ abstract class RouteManager {
         path: loginRoute,
         builder: (_, __) => BlocProvider(
           create: (___) => LoginBloc()..add(LoginRecognizeRequested()),
-          child: const LoginScreen(),
+          child: LoginScreen(),
         ),
       ),
       GoRoute(
