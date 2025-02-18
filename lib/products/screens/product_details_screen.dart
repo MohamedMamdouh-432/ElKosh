@@ -81,12 +81,14 @@ class ProductDetailsScreen extends StatelessWidget {
                             Stack(
                               children: [
                                 ImageSection(
-                                    isReady: productState.product.imgUrl.isNotEmpty,
-                                    imageUrl: productState.product.imgUrl,
-                                  ),
+                                  isReady:
+                                      productState.product.imgUrl.isNotEmpty,
+                                  imageUrl: productState.product.imgUrl,
+                                ),
                                 Visibility(
                                   visible:
-                                      productState.product.quantity.floor() > 0 &&
+                                      productState.product.quantity.floor() >
+                                              0 &&
                                           productState.product.price !=
                                               productState.product.updatedPrice,
                                   child: Positioned(
@@ -95,7 +97,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                     child: CornerBanner(
                                       bannerColor: Colors.green,
                                       child: Text(
-                                        productState.product.quantity.floor() == 0
+                                        productState.product.quantity.floor() ==
+                                                0
                                             ? 'غير متوفر'
                                             : '${toArNumber((((productState.product.price - productState.product.updatedPrice) / productState.product.price) * 100).toStringAsFixed(0))} %',
                                         style: TextStyle(
@@ -115,17 +118,20 @@ class ProductDetailsScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      productState.product.name,
-                                      style: const TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w500,
+                                    SizedBox(
+                                      width: 200.sp,
+                                      child: Text(
+                                        productState.product.name,
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                     Visibility(
-                                      visible:
-                                          productState.product.quantity.floor() ==
-                                              0,
+                                      visible: productState.product.quantity
+                                              .floor() ==
+                                          0,
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 15,
@@ -133,12 +139,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                         ),
                                         decoration: BoxDecoration(
                                           color: Colors.red,
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                         ),
                                         child: Text(
                                           "غير متوفر",
                                           style: TextStyle(
-                                            fontSize: 15.sp,
+                                            fontSize: 10.sp,
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -149,8 +156,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                                 Text(
                                   productState.product.unitDesc,
-                                  style: const TextStyle(
-                                    fontSize: 18,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
                                     color: Colors.black54,
                                   ),
                                 ),
@@ -230,11 +237,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                     ),
                                     const Gap(10),
                                     ConditionalBuilder(
-                                      condition:
+                                      condition: productState
+                                                  .product.updatedPrice ==
+                                              0 ||
                                           productState.product.updatedPrice ==
-                                                  0 ||
-                                              productState.product.updatedPrice ==
-                                                  productState.product.price,
+                                              productState.product.price,
                                       builder: (_) => Text(
                                         '${toArNumber(productState.product.updatedPrice.toStringAsFixed(2))} جنيه',
                                         style: TextStyle(
@@ -245,7 +252,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                       fallback: (_) => Row(
                                         children: [
                                           Text(
-                                            productState.product.price.toString(),
+                                            productState.product.price
+                                                .toString(),
                                             style: TextStyle(
                                               fontSize: 15.sp,
                                               fontWeight: FontWeight.bold,

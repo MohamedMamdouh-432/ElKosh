@@ -50,7 +50,8 @@ class OfferItem extends StatelessWidget {
                 child: Text(
                   offer.product.name,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w600),
                 ),
               ),
               Text(
@@ -59,25 +60,6 @@ class OfferItem extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 17,
                 ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    offer.price.toString(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Gap(10),
-                  const Text(
-                    'جنيه',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
               ),
             ],
           ),

@@ -15,7 +15,8 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class RegisterScreen extends StatelessWidget {
-  const RegisterScreen({super.key});
+  final ValueNotifier<bool> isPasswordObscured = ValueNotifier<bool>(true);
+  RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +72,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const Gap(20),
                       InputFormField(
+                        isObscured: isPasswordObscured,
                         labelText: 'الأسم',
                         onChange: (data) => context
                             .read<RegisterBloc>()
@@ -93,6 +95,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const Gap(15),
                       InputFormField(
+                        isObscured: isPasswordObscured,
                         labelText: 'رقم الهاتف',
                         inputType: TextInputType.phone,
                         onChange: (data) => context
@@ -112,6 +115,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const Gap(15),
                       InputFormField(
+                        isObscured: isPasswordObscured,
                         onChange: (data) => context
                             .read<RegisterBloc>()
                             .add(RegisterEmailChanged(data)),
@@ -127,6 +131,7 @@ class RegisterScreen extends StatelessWidget {
                       ),
                       const Gap(15),
                       InputFormField(
+                        isObscured: isPasswordObscured,
                         obsecured: true,
                         labelText: 'كلمة المرور',
                         onChange: (data) => context

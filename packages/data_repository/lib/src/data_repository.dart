@@ -438,7 +438,7 @@ class DataRepository {
       final seqIdDoc = firestore
           .collection(ConstantManager.ordersCollection)
           .doc(ConstantManager.orderSeqIdDoc);
-      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'] ?? 0;
       Map<String, List> shoppingList = {};
       for (MapEntry entry in _shopping.entries) {
         final mappedProduct = await getProductById(entry.key);

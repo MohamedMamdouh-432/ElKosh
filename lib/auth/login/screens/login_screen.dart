@@ -15,7 +15,8 @@ import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  final ValueNotifier<bool> isPasswordObscured = ValueNotifier<bool>(true);
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +106,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const Gap(30),
                         InputFormField(
+                          isObscured: isPasswordObscured,
                           onChange: (data) => context
                               .read<LoginBloc>()
                               .add(LoginEmailChanged(data)),
@@ -120,6 +122,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                         const Gap(15),
                         InputFormField(
+                          isObscured: isPasswordObscured,
                           obsecured: true,
                           labelText: 'كلمة المرور',
                           onChange: (data) => context
