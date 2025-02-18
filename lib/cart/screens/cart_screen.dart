@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
-import 'package:elkosh/core/utils/color_manager.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -112,15 +115,33 @@ class CartScreen extends StatelessWidget {
                       onPressed: state.shopping.isEmpty
                           ? null
                           : () async {
-                              showModalBottomSheet(
-                                context: context,
-                                elevation: 20,
-                                useSafeArea: true,
-                                isScrollControlled: true,
-                                showDragHandle: true,
-                                builder: (context) =>
-                                    const PlaceOrderBottomSheet(),
-                              );
+                              final userData = await sl
+                                  .get<FirebaseFirestore>()
+                                  .collection(ConstantManager.userCollection)
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .get();
+                              if (userData['active'] == false)
+                                QuickAlert.show(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  disableBackBtn: true,
+                                  type: QuickAlertType.warning,
+                                  title: 'خطأ',
+                                  text: 'الحساب موقوف لذا لا يمكنك الطلب',
+                                  borderRadius: 20,
+                                  animType: QuickAlertAnimType.scale,
+                                  confirmBtnText: 'حسنا',
+                                );
+                              else
+                                showModalBottomSheet(
+                                  context: context,
+                                  elevation: 20,
+                                  useSafeArea: true,
+                                  isScrollControlled: true,
+                                  showDragHandle: true,
+                                  builder: (context) =>
+                                      const PlaceOrderBottomSheet(),
+                                );
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 5),

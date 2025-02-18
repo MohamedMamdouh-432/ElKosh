@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elkosh/ads/components/place_ad_order_bottom_sheet.dart';
 import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
 import 'package:elkosh/ads/widgets/offer_item.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/shared/services/service_locator.dart';
 import 'package:elkosh/shared/widgets/image_section.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -136,7 +139,24 @@ class AdDetailsScreen extends StatelessWidget {
                       child: SizedBox(
                         width: context.width * 0.8,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final userData = await sl
+                                .get<FirebaseFirestore>()
+                                .collection(ConstantManager.userCollection)
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .get();
+                            if (userData['active'] == false)
+                              QuickAlert.show(
+                                context: context,
+                                barrierDismissible: false,
+                                disableBackBtn: true,
+                                type: QuickAlertType.warning,
+                                title: 'خطأ',
+                                text: 'الحساب موقوف لذا لا يمكنك الطلب',
+                                borderRadius: 20,
+                                animType: QuickAlertAnimType.scale,
+                                confirmBtnText: 'حسنا',
+                              );
                             showModalBottomSheet(
                               context: context,
                               elevation: 20,

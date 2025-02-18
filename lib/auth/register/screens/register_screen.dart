@@ -7,7 +7,6 @@ import 'package:elkosh/shared/widgets/auth_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -36,11 +35,18 @@ class RegisterScreen extends StatelessWidget {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: BlocBuilder<RegisterBloc, RegisterState>(
+          body: BlocConsumer<RegisterBloc, RegisterState>(
             buildWhen: (p, c) => p != c,
+            listenWhen: (p, c) => p != c,
+            listener: (context, state) {
+              if (state.verifyStatus == VerifyStatus.otpSent) {
+                context.push(RouteManager.otpRoute);
+                context.read<RegisterBloc>().add(RegisterVerifyStateReset());
+              }
+            },
             builder: (context, state) {
               return ModalProgressHUD(
-                inAsyncCall: state.submitStatus.isInProgress,
+                inAsyncCall: state.verifyStatus == VerifyStatus.otpInProgress,
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Column(
@@ -134,35 +140,18 @@ class RegisterScreen extends StatelessWidget {
                                 : state.password.error ==
                                         PasswordValidationError.tooShort
                                     ? "يجب الا تقل كلمة المرور عن ٥ حرف"
-                                    : state.password.error ==
-                                            PasswordValidationError.lacksDigit
-                                        ? "يجب ان تحتوى كلمة المرور على الاقل على رقم واحد"
-                                        : state.password.error ==
-                                                PasswordValidationError
-                                                    .lacksLowercase
-                                            ? "يجب ان تحتوى كلمة المرور على الاقل على حرف صغير واحد"
-                                            : state.password.error ==
-                                                    PasswordValidationError
-                                                        .lacksUppercase
-                                                ? "يجب ان تحتوى كلمة المرور على الاقل على حرف كبير واحد"
-                                                : state.password.error ==
-                                                        PasswordValidationError
-                                                            .lacksSpecialChar
-                                                    ? "يجب ان تحتوى كلمة المرور على الاقل على حرف خاص واحد"
-                                                    : null,
+                                    : null,
                       ),
                       const Gap(10),
                       const TipText(
                           tip: "يجب ان تتكون كلمة المرور من ٥ احرف فأكثر"),
-                      const TipText(tip: "يجب ان تحتوى كلمة المرور على ارقام"),
-                      const TipText(
-                          tip:
-                              "يجب ان تحتوى كلمة المرور على حروف كبيره و صغيره"),
                       const Gap(40),
                       AuthButton(
                         text: 'تسجيل الحساب',
-                        ontap: state.inputStatus == FormInputStatus.valid
-                            ? () async {
+                        ontap: state.inputStatus != FormInputStatus.valid ||
+                                state.verifyStatus == VerifyStatus.otpInProgress
+                            ? null
+                            : () async {
                                 Future<bool> isUserBlockedByEmailOrPhone(
                                     String email, String phoneNumber) async {
                                   final firestore = FirebaseFirestore.instance;
@@ -202,13 +191,13 @@ class RegisterScreen extends StatelessWidget {
                                         "الحساب محظور بسبب البريد الإلكتروني أو رقم الهاتف",
                                   );
                                 } else {
+                                  if (state.verifyStatus ==
+                                      VerifyStatus.otpInProgress) return;
                                   context
                                       .read<RegisterBloc>()
                                       .add(RegisterSendOTPEvent());
-                                  context.push(RouteManager.optRoute);
                                 }
-                              }
-                            : null,
+                              },
                       ),
                       const Gap(5),
                       Row(

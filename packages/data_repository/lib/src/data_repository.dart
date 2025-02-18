@@ -18,6 +18,8 @@ class DataRepository {
   UserOrder? _curOrder;
   double _price;
   Map<String, int> _shopping;
+  String? _lastId;
+  int? _lastIdVal;
 
   DataRepository({
     required this.firestore,
@@ -101,6 +103,10 @@ class DataRepository {
           .collection(ConstantManager.marketCollection)
           .doc(id)
           .get();
+      if (!marketDoc.exists) {
+        AppLogs.debug('Market $id Not Found');
+        return false;
+      }
       return marketDoc.data()?['active'];
     } catch (e) {
       AppLogs.error('Error @isMarketActive: $e');
@@ -169,14 +175,32 @@ class DataRepository {
     }
   }
 
-  Future<Either<Failure, List<Product>>> fetchProducts(int? limits) async {
+  Future<Either<Failure, Map<String, List<Product>>>> fetchProducts() async {
+    if (_lastId != null) {
+      if (_lastIdVal == 0)
+        _lastIdVal = 1;
+      else
+        return Right({
+          'p': [],
+          'still': [Product.empty],
+        });
+    }
     try {
-      final response = limits != null
+      final response = _lastId == null
           ? await firestore
               .collection(ConstantManager.productCollection)
-              .limit(limits)
+              .limit(10)
               .get()
-          : await firestore.collection(ConstantManager.productCollection).get();
+          : await firestore
+              .collection(ConstantManager.productCollection)
+              .startAfterDocument(
+                await firestore
+                    .collection(ConstantManager.productCollection)
+                    .doc(_lastId)
+                    .get(),
+              )
+              .limit(10)
+              .get();
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
         final marketActive =
@@ -184,20 +208,35 @@ class DataRepository {
         if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
-      return Right(productsList);
+      _lastId = productsList.last.id;
+      _lastIdVal = 0;
+      return Right({
+        'p': productsList,
+        'still': productsList.isEmpty ? [] : [Product.empty],
+      });
     } catch (e) {
       AppLogs.error('Products Loading Limiting Error: $e');
       return Left(Failure(e.toString()));
     }
   }
 
-  Stream<Either<Failure, List<Product>>> productsStream(int? limits) async* {
+  Stream<Either<Failure, List<Product>>> productsStream() async* {
+    if (_lastId != null) {
+      if (_lastIdVal == 0)
+        _lastIdVal = 1;
+      else
+        yield const Right([]);
+    }
     try {
-      final query = limits != null
-          ? firestore
+      final query = _lastId == null
+          ? firestore.collection(ConstantManager.productCollection).limit(10)
+          : firestore
               .collection(ConstantManager.productCollection)
-              .limit(limits)
-          : firestore.collection(ConstantManager.productCollection);
+              .startAfterDocument(await firestore
+                  .collection(ConstantManager.productCollection)
+                  .doc(_lastId)
+                  .get())
+              .limit(10);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Product> productsList = [];
@@ -207,6 +246,8 @@ class DataRepository {
             if (!marketActive) continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
+          _lastId = productsList.last.id;
+          _lastIdVal = 0;
           return Right(productsList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -488,11 +529,11 @@ class DataRepository {
           .collection('orders')
           .doc(orderId)
           .update({'status': OrderStatus.cancelled.name});
-      orderData['shopping'].forEach((id, taken) async {
+      orderData['shopping'].forEach((id, takenObj) async {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(id)
-            .update({'quantity': FieldValue.increment(taken)});
+            .update({'quantity': FieldValue.increment(takenObj[0])});
       });
       return const Right(null);
     } catch (e) {
@@ -510,11 +551,11 @@ class DataRepository {
           .collection('orders')
           .doc(orderId)
           .update({'status': OrderStatus.refused.name});
-      orderData['shopping'].forEach((id, taken) async {
+      orderData['shopping'].forEach((id, takenObj) async {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(id)
-            .update({'quantity': FieldValue.increment(taken)});
+            .update({'quantity': FieldValue.increment(takenObj[0])});
       });
       return const Right(null);
     } catch (e) {

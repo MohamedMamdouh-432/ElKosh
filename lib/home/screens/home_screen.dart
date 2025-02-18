@@ -1,10 +1,10 @@
-import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/ads/components/ads_slider.dart';
+import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/home/components/custom_app_bar.dart';
 import 'package:elkosh/markets/components/markets_view.dart';
-import 'package:elkosh/products/components/products_grid.dart';
-import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
 import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/products/components/products_grid.dart';
 import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,13 +52,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Duration.zero,
             () => context
                 .read<ProductsBloc>()
-                .add(const ProductsLoadingEvent(10)),
+                .add(const ProductsFetchingEvent(10)),
           ),
           Future.delayed(
             Duration.zero,
-            () => context
-                .read<ProductsBloc>()
-                .add(const ProductsLoadingEvent()),
+            () =>
+                context.read<ProductsBloc>().add(const ProductsFetchingEvent()),
           ),
         ]);
       },

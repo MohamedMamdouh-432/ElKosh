@@ -177,22 +177,26 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             Future.delayed(Duration.zero, () async {
               state.shopping.forEach((p, c) async {
                 if (p.quantity - c <= 7) {
-                  await SendNotificationService.sendNotificationUsingApi(
-                    title: 'منتج على وشك النفاذ',
-                    token: adminTokens[0],
-                    body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
-                    data: {'type': 'orders'},
-                  );
+                  for (var token in adminTokens.take(2)) {
+                    await SendNotificationService.sendNotificationUsingApi(
+                      title: 'منتج على وشك النفاذ',
+                      token: token,
+                      body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                      data: {'type': 'orders'},
+                    );
+                  }
                 }
               });
             }),
             Future.delayed(Duration.zero, () async {
-              await SendNotificationService.sendNotificationUsingApi(
-                title: 'طلب جديد',
-                token: adminTokens[0],
-                body: 'تم استلام طلب جديد',
-                data: {'type': 'orders'},
-              );
+              for (var token in adminTokens.take(2)) {
+                await SendNotificationService.sendNotificationUsingApi(
+                  title: 'طلب جديد',
+                  token: token,
+                  body: 'تم استلام طلب جديد',
+                  data: {'type': 'orders'},
+                );
+              }
             })
           ]);
           emit(state.copyWith(status: CartStatus.placingSuccess));
@@ -225,22 +229,26 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             Future.delayed(Duration.zero, () async {
               state.shopping.forEach((p, c) async {
                 if (p.quantity - c <= 7) {
-                  await SendNotificationService.sendNotificationUsingApi(
-                    title: 'منتج على وشك النفاذ',
-                    token: adminTokens[0],
-                    body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
-                    data: {'type': 'orders'},
-                  );
+                  for (var token in adminTokens.take(2)) {
+                    await SendNotificationService.sendNotificationUsingApi(
+                      title: 'منتج على وشك النفاذ',
+                      token: token,
+                      body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+                      data: {'type': 'orders'},
+                    );
+                  }
                 }
               });
             }),
             Future.delayed(Duration.zero, () async {
-              await SendNotificationService.sendNotificationUsingApi(
-                title: 'طلب جديد',
-                token: adminTokens[0],
-                body: 'تم استلام طلب جديد',
-                data: {'type': 'orders'},
-              );
+              for (var token in adminTokens.take(2)) {
+                await SendNotificationService.sendNotificationUsingApi(
+                  title: 'طلب جديد',
+                  token: token,
+                  body: 'تم استلام طلب جديد',
+                  data: {'type': 'orders'},
+                );
+              }
             })
           ]);
           emit(state.copyWith(status: CartStatus.placingSuccess));

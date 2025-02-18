@@ -107,6 +107,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   FutureOr<void> _onRegisterSendOTP(event, emit) async {
     try {
+      if (state.verifyStatus == VerifyStatus.otpInProgress) return;
       emit(state.copyWith(verifyStatus: VerifyStatus.otpInProgress));
       final sentOtp =
           await sl.get<AuthRepository>().sendOTPMessage(state.phone.value);

@@ -2,7 +2,7 @@ import 'package:elkosh/ads/screens/ad_delivery_location_picker_screen.dart';
 import 'package:elkosh/ads/screens/ad_details_screen.dart';
 import 'package:elkosh/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/auth/login/screens/login_screen.dart';
-import 'package:elkosh/auth/register/screens/opt_screen.dart';
+import 'package:elkosh/auth/register/screens/otp_screen.dart';
 import 'package:elkosh/auth/register/screens/register_screen.dart';
 import 'package:elkosh/cart/screens/delivery_location_picker_screen.dart';
 import 'package:elkosh/home/screens/home_screen.dart';
@@ -23,7 +23,7 @@ import 'package:go_router/go_router.dart';
 abstract class RouteManager {
   static const String loginRoute = '/';
   static const String registerRoute = '/register';
-  static const String optRoute = '/opt';
+  static const String otpRoute = '/opt';
   static const String navbarRoute = '/navbar';
   static const String homeRoute = '/home';
   static const String searchRoute = '/search';
@@ -60,8 +60,8 @@ abstract class RouteManager {
         builder: (_, __) => const RegisterScreen(),
       ),
       GoRoute(
-        path: optRoute,
-        builder: (_, __) => const OptScreen(),
+        path: otpRoute,
+        builder: (_, __) => const OtpScreen(),
       ),
       GoRoute(
         path: loginRoute,

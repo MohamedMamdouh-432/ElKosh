@@ -67,8 +67,5 @@
 
 # Edits
 	- contacts Info (need to be remote not local) (Profile Bloc)
-    - check on any text/image constraints
-
-	(?<!\w)\d+(\.\d+)?(?!\w)
+	- Search for any number: (?<!\w)\d+(\.\d+)?(?!\w)
 # Bugs
-	

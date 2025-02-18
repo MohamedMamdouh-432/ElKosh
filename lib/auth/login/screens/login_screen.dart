@@ -133,22 +133,7 @@ class LoginScreen extends StatelessWidget {
                                   : state.password.error ==
                                           PasswordValidationError.tooShort
                                       ? "يجب الا تقل كلمة المرور عن ٥ حرف"
-                                      : state.password.error ==
-                                              PasswordValidationError.lacksDigit
-                                          ? "يجب ان تحتوى كلمة المرور على الاقل على رقم واحد"
-                                          : state.password.error ==
-                                                  PasswordValidationError
-                                                      .lacksLowercase
-                                              ? "يجب ان تحتوى كلمة المرور على الاقل على حرف صغير واحد"
-                                              : state.password.error ==
-                                                      PasswordValidationError
-                                                          .lacksUppercase
-                                                  ? "يجب ان تحتوى كلمة المرور على الاقل على حرف كبير واحد"
-                                                  : state.password.error ==
-                                                          PasswordValidationError
-                                                              .lacksSpecialChar
-                                                      ? "يجب ان تحتوى كلمة المرور على الاقل على حرف خاص واحد"
-                                                      : null,
+                                      : null,
                         ),
                         const Gap(40),
                         AuthButton(
