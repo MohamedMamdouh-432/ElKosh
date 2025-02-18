@@ -4,9 +4,8 @@ import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
-import 'package:elkosh/core/utils/color_manager.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -114,60 +113,15 @@ class CartScreen extends StatelessWidget {
                       onPressed: state.shopping.isEmpty
                           ? null
                           : () async {
-                              final user = FirebaseAuth.instance.currentUser;
-                              Future<bool> isUserBlockedByEmailOrPhone(
-                                  String email, String phoneNumber) async {
-                                final firestore = FirebaseFirestore.instance;
-                                try {
-                                  // Check if the email is blocked
-                                  final emailQuery = await firestore
-                                      .collection('blockedUsers')
-                                      .where('email', isEqualTo: email)
-                                      .get();
-
-                                  // Check if the phone number is blocked
-                                  final phoneQuery = await firestore
-                                      .collection('blockedUsers')
-                                      .where('phoneNumber',
-                                          isEqualTo: phoneNumber)
-                                      .get();
-
-                                  // If either email or phone number is blocked, return true
-                                  return emailQuery.docs.isNotEmpty ||
-                                      phoneQuery.docs.isNotEmpty;
-                                } catch (e) {
-                                  print('Error checking blocked user: $e');
-                                  throw Exception(
-                                      "حدث خطأ أثناء التحقق من حالة الحظر");
-                                }
-                              }
-
-                              String? userEmail = user?.email;
-                              String? userPhone = user?.phoneNumber;
-                              bool isBlocked =
-                                  await isUserBlockedByEmailOrPhone(
-                                      userEmail ?? '', userPhone ?? '');
-
-                              if (isBlocked) {
-                                QuickAlert.show(
-                                  context: context,
-                                  type: QuickAlertType.error,
-                                  title: 'ممنوع',
-                                  text: " لا يمكنك الطلب لأنك محظور",
-                                  borderRadius: 20,
-                                  animType: QuickAlertAnimType.scale,
-                                );
-                              } else {
-                                showModalBottomSheet(
-                                  context: context,
-                                  elevation: 20,
-                                  useSafeArea: true,
-                                  isScrollControlled: true,
-                                  showDragHandle: true,
-                                  builder: (context) =>
-                                      const PlaceOrderBottomSheet(),
-                                );
-                              }
+                              showModalBottomSheet(
+                                context: context,
+                                elevation: 20,
+                                useSafeArea: true,
+                                isScrollControlled: true,
+                                showDragHandle: true,
+                                builder: (context) =>
+                                    const PlaceOrderBottomSheet(),
+                              );
                             },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 5),

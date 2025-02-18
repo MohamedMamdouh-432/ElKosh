@@ -5,6 +5,7 @@ class ProductsState extends Equatable {
   final Product curProduct;
   final String errMsg;
   final LoadStatus status;
+  final bool hasReachedMax;
 
   const ProductsState({
     required this.products,
@@ -12,6 +13,7 @@ class ProductsState extends Equatable {
     required this.curProduct,
     required this.errMsg,
     required this.status,
+    required this.hasReachedMax,
   });
 
   static ProductsState initial = ProductsState(
@@ -20,6 +22,7 @@ class ProductsState extends Equatable {
     curProduct: Product.empty,
     errMsg: '',
     status: LoadStatus.initial,
+    hasReachedMax: false,
   );
 
   ProductsState copyWith({
@@ -28,6 +31,7 @@ class ProductsState extends Equatable {
     Product? curProduct,
     String? errMsg,
     LoadStatus? status,
+    bool? hasReachedMax,
   }) {
     return ProductsState(
       products: products ?? this.products,
@@ -35,6 +39,7 @@ class ProductsState extends Equatable {
       curProduct: curProduct ?? this.curProduct,
       errMsg: errMsg ?? this.errMsg,
       status: status ?? this.status,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
@@ -43,9 +48,10 @@ class ProductsState extends Equatable {
     return '''Products State ::
       Current Product: ${curProduct.name}
       Status: ${status.name}
-      Error: $errMsg
       products: ${products.length}
+      Reach Max: ${hasReachedMax ? 'Max' : 'Not Yet'}
       Related Products: ${relProducts.length}
+      Error: $errMsg
     ''';
   }
 
@@ -56,5 +62,6 @@ class ProductsState extends Equatable {
         curProduct,
         errMsg,
         status,
+        hasReachedMax,
       ];
 }

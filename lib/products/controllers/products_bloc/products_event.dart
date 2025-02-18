@@ -7,9 +7,9 @@ sealed class ProductsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ProductsLoadingEvent extends ProductsEvent {
+class ProductsFetchingEvent extends ProductsEvent {
   final int? limit;
-  const ProductsLoadingEvent([this.limit]);
+  const ProductsFetchingEvent([this.limit]);
 
   @override
   List<Object> get props => [limit ?? 0];
@@ -32,3 +32,5 @@ class ProductsUpdatedEvent extends ProductsEvent {
   @override
   List<Object> get props => [products];
 }
+
+class ProductsStreamListeneing extends ProductsEvent {}
