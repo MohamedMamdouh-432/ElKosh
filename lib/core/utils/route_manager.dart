@@ -96,7 +96,7 @@ abstract class RouteManager {
       ),
       GoRoute(
         path: deliveryLocationPickerRoute,
-        builder: (_, __) => const DeliveryLocationPickerScreen(),
+        builder: (_, __) => DeliveryLocationPickerScreen(),
       ),
       GoRoute(
         path: ongoingOrderDetailsRoute,

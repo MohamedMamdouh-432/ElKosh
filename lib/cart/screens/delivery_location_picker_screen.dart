@@ -5,12 +5,29 @@ import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geodesy/geodesy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
 import 'package:models_repository/models_repository.dart';
 
 class DeliveryLocationPickerScreen extends StatelessWidget {
-  const DeliveryLocationPickerScreen({super.key});
+  DeliveryLocationPickerScreen({super.key});
+
+  final Geodesy geodesy = Geodesy(); // ✅ Create a geodesy instance
+
+// Define the polygon for Dessouq & Mahallet Dyay
+  final List<LatLng> allowedArea = [
+    const LatLng(31.07260724788931, 30.726538054796629), // Point 1
+    const LatLng(31.07030987075852, 30.722160689703298), // Point 2
+    const LatLng(31.04054266966147, 30.726012011563757), // Point 3
+    const LatLng(31.02479960431465, 30.719769764598176), // Point 4
+    const LatLng(31.02022735590357, 30.722776930641807), // Point 5
+    const LatLng(31.014321980162496, 30.730394381960235), // Point 6
+    const LatLng(31.010954005306676, 30.742030414736846), // Point 7
+    const LatLng(31.044133762797884, 30.768804414381712), // Point 8
+    const LatLng(31.0711364629584, 30.735888346204142), // Point 9
+    const LatLng(31.07260724788931, 30.726538054796629), // Point 10
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +52,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
               "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${ConstantManager.mapboxkey}",
           // general
           initZoom: 12,
+
           mapLanguage: 'ar',
           trackMyPosition: true,
           initPosition: const LatLong(31.033110408222704, 30.73117720658826),
@@ -80,14 +98,33 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
           onError: (e) => AppLogs.error('Cart Delivery Location Picker: $e'),
 
           onPicked: (pickedData) {
-            final location = Location.fromMapPicker(
-              pickedData.latLong.latitude,
-              pickedData.latLong.longitude,
-              getAddress(pickedData.addressData),
-            );
-            context.read<CartBloc>().add(CartPlaceOrderEvent(location));
-            context.pop();
-            context.pop();
+            final double lat = pickedData.latLong.latitude;
+            final double lng = pickedData.latLong.longitude;
+            final LatLng selectedLocation = LatLng(lat, lng);
+
+            // ✅ Check if the point is inside the polygon using Geodesy
+            bool isInside =
+                geodesy.isGeoPointInPolygon(selectedLocation, allowedArea);
+
+            if (isInside) {
+              final location = Location.fromMapPicker(
+                lat,
+                lng,
+                getAddress(pickedData.addressData),
+              );
+              context.read<CartBloc>().add(CartPlaceOrderEvent(location));
+              context.pop();
+              context.pop();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text(
+                      '🚫 الرجاء اختيار موقع داخل نطاق التوصيل',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: Colors.green),
+              );
+            }
           },
         ),
       ),
