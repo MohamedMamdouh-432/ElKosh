@@ -46,6 +46,7 @@ class CategoryItem extends StatelessWidget {
                 maxLines: 2,
               ),
               CachedNetworkImage(
+                useOldImageOnUrlChange: true,
                 width: double.infinity,
                 height: 80.h,
                 imageUrl: category.imgUrl,

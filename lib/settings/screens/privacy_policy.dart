@@ -16,67 +16,43 @@ class PrivacyPolicyPage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "سياسة الخصوصية",
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'ArabicFont'),
-                textAlign: TextAlign.right,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                "آخر تحديث: فبراير 2025",
-                style: TextStyle(
-                    fontSize: 14,
-                    fontStyle: FontStyle.italic,
-                    fontFamily: 'ArabicFont'),
-                textAlign: TextAlign.right,
-              ),
-              const Divider(),
-              const SizedBox(height: 10),
-              _buildSectionTitle("1. المقدمة"),
-              _buildSectionContent(
-                  "خصوصيتك تهمنا. توضح سياسة الخصوصية هذه كيفية جمعنا واستخدامنا وكشفنا عن معلوماتك وحمايتها عند استخدامك لتطبيقنا."),
-              _buildSectionTitle("2. المعلومات التي نجمعها"),
-              _buildSectionContent(
-                  "قد نقوم بجمع بيانات شخصية مثل الاسم والبريد الإلكتروني  عند تفاعلك مع تطبيقنا."),
-              _buildSectionTitle("3. كيفية استخدامنا لمعلوماتك"),
-              _buildSectionContent(
-                  "نستخدم معلوماتك لتقديم خدماتنا وتحسينها وتخصيصها، بما في ذلك وظائف التطبيق والأمان."),
-              _buildSectionTitle("4. مشاركة معلوماتك"),
-              _buildSectionContent(
-                  "نحن لا نبيع أو نؤجر بياناتك الشخصية. ومع ذلك، قد نشاركها مع خدماتنا لتعزيز ميزات التطبيق."),
-              _buildSectionTitle("5. أمان البيانات"),
-              _buildSectionContent(
-                  "نحن نأخذ الأمان على محمل الجد ونستخدم طرق التشفير والتخزين الآمن لحماية بياناتك."),
-              _buildSectionTitle("6. التغييرات على هذه السياسة"),
-              _buildSectionContent(
-                  "قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر. نوصي بمراجعتها بشكل دوري."),
-              const SizedBox(height: 20),
-              _buildSectionTitle("7. إلغاء الطلب"),
-              _buildSectionContent(
-                  "- فى حالة إلغاء الطلب قبل تحركه من المتجر إلى المستخدم فإنه لا يوجد أى رسوم.\n"
-                  "- وفى حالة إلغاء الطلب عند وصوله للموقع المحدد أو وصوله للمستخدم يكون هناك رسوم التوصيل والعودة."),
-              _buildSectionTitle("8. حذف الحساب والبيانات"),
-              _buildSectionContent(
-                  "عند اختيار حذف الحساب يتم حذف حساب المستخدم وحذف كل بياناته."),
-              const Divider(),
-              _buildSectionTitle(" ملحوظة هامة"),
-              _buildSectionContent(
-                  "نظرًا لتغير الأسعار من وقت لآخر، إذا طلب المستخدم سلعة بسعر وتم تحديث السعر، سوف يتم التواصل مع المستخدم لتنبيهه على السعر الجديد. نرجوا من المستخدمين قبول العذر."),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("عودة",
-                      style: TextStyle(fontFamily: 'ArabicFont')),
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildSectionTitle("معلومات الاتصال الشخصية"),
+                _buildSectionContent(
+                    "نقوم بجمع المعلومات عن مستخدمى تطبيق خير بلدنا كالأسم ثلاثى ورقم الهاتف وموقع المستخدم وذلك لتأمين حساب المستخدم وتأمين الطلب حتى وصوله للموقع"),
+                _buildSectionContent(
+                    "التطبيق لايقوم باستخدام اى معلومات خاصة بالمستخدم إلا عند التواصل للتأكد على وصول الطلب أو الاستفسار عن الخدمة وتقيمها او تعديل سعر مسجل وتم تعديله"),
+                _buildSectionTitle("إلغاء الطلب"),
+                _buildSectionContent(
+                    "- فى حالة إلغاء الطلب قبل تحركه من المتجر إلى المستخدم فإنه لايوجد اى رسوم\n"
+                    "- وفى حالة الغاء الطلب عند وصوله للموقع المحدد او وصوله للمستخدم يكون هناك رسوم التوصيل والعودة"),
+                _buildSectionTitle("حذف الحساب والبيانات"),
+                _buildSectionContent(
+                    "عند اختيار حذف الحساب يتم حذف حساب المستخدم وحذف كل بياناته"),
+                _buildSectionTitle("ملحوظة هامة"),
+                _buildSectionContent(
+                    "نظرا لموقف تغير الأسعار من وقت لآخر اذا طلب المستخدم سلعة بسعر وتم تحديث السعر سوف يتم التواصل مع المستخدم لتنبيهه على السعر الجديد ونرجوا من المستخدمين قبول العذر"),
+                const SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 105, 151, 231),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 10),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("عودة",
+                        style: TextStyle(
+                            fontFamily: 'ArabicFont', color: Colors.white)),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

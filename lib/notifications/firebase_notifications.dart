@@ -11,7 +11,7 @@ class PushNotificationService {
   static Future<void> initialize() async {
     // Request permissions for iOS
     await messaging.requestPermission();
-    String? token = await messaging.getToken();
+    // String? token = await messaging.getToken();
     FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
     handleForegroundMessage();
   }

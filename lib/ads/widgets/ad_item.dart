@@ -22,6 +22,7 @@ class AdItem extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: CachedNetworkImage(
+          useOldImageOnUrlChange: true,
           fit: BoxFit.fill,
           width: double.infinity,
           filterQuality: FilterQuality.high,

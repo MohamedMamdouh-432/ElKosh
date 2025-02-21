@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/cart/bloc/cart_bloc.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';

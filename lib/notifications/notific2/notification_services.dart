@@ -93,11 +93,11 @@ class NotificationServices {
 //get token
 
   Future<String?> getDeviceToken() async {
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    // NotificationSettings settings = await messaging.requestPermission(
+    //   alert: true,
+    //   badge: true,
+    //   sound: true,
+    // );
 
     String? token = await messaging.getToken();
     log('token is $token');
@@ -125,8 +125,6 @@ class NotificationServices {
   //init firebase notification
   void initFirebaseNotification(BuildContext context) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
       // if (notification != null && android != null) {
       //   initLocalNotification(context, message);
       // }

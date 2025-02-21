@@ -43,6 +43,7 @@ class CartCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: CachedNetworkImage(
+                useOldImageOnUrlChange: true,
                 imageUrl: product.imgUrl,
                 fit: BoxFit.fitHeight,
               ),

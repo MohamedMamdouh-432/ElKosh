@@ -43,6 +43,7 @@ dependencies:
   google_fonts: ^6.2.1
   google_nav_bar: ^5.0.6
   googleapis_auth: ^1.6.0
+  http: ^1.3.0
   image_picker: ^1.1.2
   intl: ^0.19.0
   latlng: ^2.0.7
@@ -59,7 +60,7 @@ dependencies:
   shared_preferences: ^2.5.1
   shimmer: ^3.0.0
   skeletonizer: ^1.4.2
-  supabase_flutter: ^2.8.3
+
   super_banners: ^0.0.1
   url_launcher: ^6.3.1
   user_repository:
@@ -68,29 +69,29 @@ dependencies:
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
-  # flutter_native_splash: ^2.4.1
+  flutter_native_splash: ^2.4.0
   flutter_test:
     sdk: flutter
 
 flutter_launcher_icons:
   # dart run flutter_launcher_icons
-  image_path: "assets/Kheer_Icon.png"
+  image_path: "assets/AppPhoto.jpg"
   android: true
   ios: false
 
-# flutter_native_splash:
-#   # dart run flutter_native_splash:create
-#   # dart run flutter_native_splash:remove
-#   color: "#ffffff"
-#   color_dark: "#ffffff"
-#   image: assets/tas.png
-#   background_image: assets/background.png
-
-#   android_12:
-#     color: "#ffffff"
-#     color_dark: "#ffffff"
-#     image: assets/tas.png
-#     background_image: assets/background.png
+flutter_native_splash:
+  # dart run flutter_native_splash:create
+  # dart run flutter_native_splash:remove
+  color: "#000000"
+  fullscreen: true
+  image: assets/AppPhoto2.png
+  
+  
+  android_12:
+    color: "#000000"
+    color_dark: "#ffffff"
+    image: assets/AppPhoto2.png
+    fullscreen: true
 
 flutter:
   uses-material-design: true

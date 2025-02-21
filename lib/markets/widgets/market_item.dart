@@ -40,7 +40,9 @@ class MarketItem extends StatelessWidget {
                   border: Border.all(color: Colors.black38),
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: CachedNetworkImageProvider(market.imgUrl),
+                    image: CachedNetworkImageProvider(
+                      market.imgUrl,
+                    ),
                   ),
                 ),
               ),
