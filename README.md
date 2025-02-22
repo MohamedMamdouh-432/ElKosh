@@ -66,6 +66,28 @@
     * search feature
 
 # Edits
-	- contacts Info (need to be remote not local) (Profile Bloc)
-	- Search for any number: (?<!\w)\d+(\.\d+)?(?!\w)
+	- Caching
+		* Ads
+		* Markets
+		* Products
+		* Categories
+		* Orders
+		* Cart
+	- Pagination
+		* Ads
+		* Products
+		* Orders
+	- BLoC Replacing
+		* Markets BLoC => Cubit
+		* Products BLoC => Cubit
+		* Profile BLoC => Provider
+		* Cart BLoC => Cubit
+		* Search BLoC => Provider
+		* Ads BLoC => Cubit
+		* Market Details BLoC => Provider
+		* Product Details BLoC => Provider
+		* Ad Details BLoC => Provider
+
 # Bugs
+
+- Search for any number: (?<!\w)\d+(\.\d+)?(?!\w)
