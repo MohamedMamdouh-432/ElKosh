@@ -998,17 +998,17 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, Ad>> adDetailsStream(String adId) async* {
+  Stream<Either<Failure, Ad>> adDetailsStream() async* {
     try {
       final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
 
       // **Yield cached ad details first**
-      if (adsBox.containsKey(adId)) {
-        yield Right(adsBox.get(adId)!);
+      if (adsBox.containsKey(_curAd?.id)) {
+        yield Right(adsBox.get(_curAd?.id)!);
       }
 
       final docRef =
-          firestore.collection(ConstantManager.adsCollection).doc(adId);
+          firestore.collection(ConstantManager.adsCollection).doc(_curAd?.id);
 
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
