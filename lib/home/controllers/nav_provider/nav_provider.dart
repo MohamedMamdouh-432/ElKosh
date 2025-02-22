@@ -4,12 +4,12 @@ import 'package:elkosh/settings/screens/setting_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavProvider extends ChangeNotifier {
-  int curIdx = 0;
-  final PageController pageController = PageController(initialPage: 0);
+  int curIdx = 1;
+  final PageController pageController = PageController(initialPage: 1);
   final List<Widget> pages = [
+    const SettingScreen(),
     const HomeScreen(),
     const CartScreen(),
-    const SettingScreen()
   ];
 
   void navToPage(int idx) {
@@ -18,13 +18,13 @@ class NavProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void animateToPage(idx) {
-    curIdx = idx;
+  void animateToPage(int index) {
     pageController.animateToPage(
-      idx,
+      index,
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      duration: const Duration(milliseconds: 500),
     );
+    curIdx = index;
     notifyListeners();
   }
 }
