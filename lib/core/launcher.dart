@@ -48,13 +48,13 @@ class ElKoshLauncher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Color.fromARGB(255, 247, 234, 250),
+      SystemUiOverlayStyle(
+        statusBarColor: ColorManager.primary.withValues(),
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Color.fromARGB(255, 246, 237, 233),
+        systemNavigationBarColor: ColorManager.primary.withValues(alpha: 0.7),
         systemNavigationBarIconBrightness: Brightness.dark,
-        systemNavigationBarDividerColor: Color.fromARGB(255, 246, 237, 233),
+        systemNavigationBarDividerColor: Colors.transparent,
       ),
     );
 

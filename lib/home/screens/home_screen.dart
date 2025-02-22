@@ -1,7 +1,7 @@
 import 'package:elkosh/ads/components/ads_slider.dart';
 import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
-import 'package:elkosh/home/components/custom_app_bar.dart';
+import 'package:elkosh/home/components/home_app_bar.dart';
 import 'package:elkosh/markets/components/markets_view.dart';
 import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
 import 'package:elkosh/products/components/products_grid.dart';
@@ -18,7 +18,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late Animation<double> appBarAnimation;
+  late AnimationController appBarController;
   NotificationServices notificationServices = NotificationServices();
 
   @override
@@ -29,6 +31,14 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.initFirebaseNotification(context);
     notificationServices.setupInteractedMessage(context);
     //notificationServices.saveUserTokenToFirebase();
+    appBarController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    appBarAnimation = Tween<double>(
+      begin: 150,
+      end: 80,
+    ).animate(appBarController);
   }
 
   @override
@@ -61,13 +71,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ]);
       },
-      child: const SingleChildScrollView(
+      child: SingleChildScrollView(
         child: Column(
           children: [
-            CustomAppBar(),
-            AdsSlider(),
-            ProductsGrid(),
-            MarketsView(),
+            HomeAppBar(appBarAnimation: appBarAnimation),
+            const AdsSlider(),
+            const ProductsGrid(),
+            const MarketsView(),
           ],
         ),
       ),

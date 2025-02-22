@@ -87,49 +87,17 @@ class Product extends Equatable {
         'updatedPrice': updatedPrice,
       };
 
-  Product copyWith({
-    String? id,
-    String? name,
-    String? desc,
-    double? price,
-    double? quantity,
-    String? categoryId,
-    String? marketId,
-    String? imgUrl,
-    String? unitDesc,
-    double? updatedPrice,
-  }) =>
-      Product(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        desc: desc ?? this.desc,
-        price: price ?? this.price,
-        quantity: quantity ?? this.quantity,
-        categoryId: categoryId ?? this.categoryId,
-        marketId: marketId ?? this.marketId,
-        imgUrl: imgUrl ?? this.imgUrl,
-        unitDesc: unitDesc ?? this.unitDesc,
-        updatedPrice: updatedPrice ?? this.updatedPrice,
-      );
-
   @override
-  String toString() {
-    return '\tName: $name ::\n\tDescription: $desc\n\tPrice: $price\n\tStock Quantity: $quantity\n\tImgUrl: $imgUrl\n\tUnit Desc: $unitDesc\nUpdatedPrice; $updatedPrice';
-  }
-
-  @override
-  List<Object> get props {
-    return [
-      id,
-      name,
-      desc,
-      price,
-      quantity,
-      imgUrl,
-      categoryId,
-      marketId,
-      unitDesc,
-      updatedPrice,
-    ];
-  }
+  List<Object> get props => [
+        id,
+        name,
+        desc,
+        price,
+        quantity,
+        imgUrl,
+        categoryId,
+        marketId,
+        unitDesc,
+        updatedPrice
+      ];
 }
