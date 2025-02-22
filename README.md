@@ -69,10 +69,10 @@
 	- Caching
 		* Ads
 		* Markets
+		* Cart
 		* Products
 		* Categories
 		* Orders
-		* Cart
 	- Pagination
 		* Ads
 		* Products
@@ -87,6 +87,9 @@
 		* Market Details BLoC => Provider
 		* Product Details BLoC => Provider
 		* Ad Details BLoC => Provider
+	- Cart Staratigy
+		* List<Ad>
+		* List<Product>
 
 # Bugs
 

@@ -1,15 +1,16 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:elkosh/home/widgets/home_nav_item.dart';
+import 'package:elkosh/home/widgets/nav_item.dart';
+import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 
 class NavBarScreen extends StatelessWidget {
   const NavBarScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
     return SafeArea(
       child: Container(
         decoration: const BoxDecoration(
@@ -25,42 +26,128 @@ class NavBarScreen extends StatelessWidget {
           ),
         ),
         child: Scaffold(
+          extendBody: true,
           backgroundColor: Colors.transparent,
-          body: PageView(
-            controller: context.read<NavProvider>().pageController,
-            onPageChanged: context.read<NavProvider>().animateToPage,
-            children: context.read<NavProvider>().pages,
+          body: Padding(
+            padding: const EdgeInsets.only(bottom: 70),
+            child: PageView(
+              controller: ctx.read<NavProvider>().pageController,
+              children: ctx.read<NavProvider>().pages,
+            ),
           ),
           bottomNavigationBar: Consumer<NavProvider>(
-            builder: (context, navProvider, child) {
-              return GNav(
-                selectedIndex: navProvider.curIdx,
-                activeColor: ColorManager.primary,
-                color: Colors.blueGrey,
-                backgroundColor: const Color.fromARGB(255, 246, 237, 233),
-                iconSize: 26,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                onTabChange: navProvider.navToPage,
-                tabs: const [
-                  GButton(
-                    text: "الرئيسية",
-                    icon: CupertinoIcons.home,
+            builder: (context, navProvider, child) => Stack(
+              children: [
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 110,
+                  child: ClipRRect(
+                    child: ClipPath(
+                      clipper: BottomNavClipper(),
+                      child: Container(
+                        width: ctx.width,
+                        height: 110,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              ColorManager.primary.withValues(alpha: 0.75),
+                              ColorManager.primary.withValues(alpha: 0.75),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  GButton(
-                    icon: CupertinoIcons.cart_fill,
-                    text: "السلة",
+                ),
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 80,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      NavItem(
+                        idx: 0,
+                        curIdx: navProvider.curIdx,
+                        label: 'الإعدادات',
+                        icon: ImageManager.settingsSvg,
+                        onTap: () => navProvider.animateToPage(0),
+                      ),
+                      HomeNavItem(
+                        idx: 1,
+                        curIdx: navProvider.curIdx,
+                        onTap: () => navProvider.animateToPage(1),
+                      ),
+                      NavItem(
+                        idx: 2,
+                        curIdx: navProvider.curIdx,
+                        label: 'السله',
+                        icon: ImageManager.basketSvg,
+                        onTap: () => navProvider.animateToPage(2),
+                      ),
+                    ],
                   ),
-                  GButton(
-                    icon: CupertinoIcons.settings_solid,
-                    text: "الاعدادات",
-                  ),
-                ],
-              );
-            },
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+
+class BottomNavClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    double height = size.height;
+    double width = size.width;
+    Path path = Path();
+    path.lineTo(0, 0);
+    path.lineTo(0, height);
+    path.lineTo(width, height);
+    path.lineTo(size.width, 0);
+    path.quadraticBezierTo(width, 45, width - 45, 45);
+    path.lineTo(45, 45);
+    path.quadraticBezierTo(0, 45, 0, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
+}
+
+// bottomNavigationBar: Consumer<NavProvider>(
+//   builder: (context, navProvider, child) {
+//     return GNav(
+//       selectedIndex: navProvider.curIdx,
+//       activeColor: ColorManager.primary,
+//       color: Colors.blueGrey,
+//       backgroundColor: const Color.fromARGB(255, 246, 237, 233),
+//       iconSize: 26,
+//       padding: const EdgeInsets.symmetric(vertical: 16),
+//       mainAxisAlignment: MainAxisAlignment.spaceAround,
+//       onTabChange: navProvider.navToPage,
+//       tabs: const [
+//         GButton(
+//           text: "الرئيسية",
+//           icon: CupertinoIcons.home,
+//         ),
+//         GButton(
+//           icon: CupertinoIcons.cart_fill,
+//           text: "السلة",
+//         ),
+//         GButton(
+//           icon: CupertinoIcons.settings_solid,
+//           text: "الاعدادات",
+//         ),
+//       ],
+//     );
+// },
+// ),

@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_screenutil: ^5.9.3
+  flutter_svg: ^2.0.17
   font_awesome_flutter: ^10.8.0
   formz: ^0.7.0
   gap: ^3.0.1
@@ -60,16 +61,19 @@ dependencies:
   shared_preferences: ^2.5.1
   shimmer: ^3.0.0
   skeletonizer: ^1.4.2
-
   super_banners: ^0.0.1
   url_launcher: ^6.3.1
   user_repository:
     path: packages/user_repository
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
   flutter_native_splash: ^2.4.0
+  build_runner: ^2.4.15
+  hive_generator: ^2.0.1
   flutter_test:
     sdk: flutter
 
