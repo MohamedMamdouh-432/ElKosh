@@ -926,7 +926,15 @@ class DataRepository {
 
   Stream<Either<Failure, List<Ad>>> adsStream() async* {
     try {
+      final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
+
+      // **Yield cached ads first**
+      if (adsBox.isNotEmpty) {
+        yield Right(adsBox.values.toList());
+      }
+
       final query = firestore.collection(ConstantManager.adsCollection);
+
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Ad> adsList = [];
@@ -938,6 +946,13 @@ class DataRepository {
             }
             adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
           }
+
+          // **Update Hive cache**
+          await adsBox.clear();
+          for (var ad in adsList) {
+            await adsBox.put(ad.id, ad);
+          }
+
           return Right(adsList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -950,8 +965,16 @@ class DataRepository {
 
   Future<Either<Failure, List<Ad>>> fetchAds() async {
     try {
+      final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
+
+      // **Return cached ads first**
+      if (adsBox.isNotEmpty) {
+        return Right(adsBox.values.toList());
+      }
+
       final response =
           await firestore.collection(ConstantManager.adsCollection).get();
+
       List<Ad> adsList = [];
       for (var adDoc in response.docs) {
         List<Offer> offers = [];
@@ -961,6 +984,13 @@ class DataRepository {
         }
         adsList.add(Ad.fromDoc(adDoc.id, offers, adDoc.data()));
       }
+
+      // **Update Hive cache**
+      await adsBox.clear();
+      for (var ad in adsList) {
+        await adsBox.put(ad.id, ad);
+      }
+
       return Right(adsList);
     } catch (e) {
       AppLogs.error('Error @fetchAds: $e');
@@ -968,20 +998,36 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, Ad>> adDetailsStream() async* {
+  Stream<Either<Failure, Ad>> adDetailsStream(String adId) async* {
     try {
+      final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
+
+      // **Yield cached ad details first**
+      if (adsBox.containsKey(adId)) {
+        yield Right(adsBox.get(adId)!);
+      }
+
       final docRef =
-          firestore.collection(ConstantManager.adsCollection).doc(_curAd?.id);
+          firestore.collection(ConstantManager.adsCollection).doc(adId);
+
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
-          if (!snapshot.exists)
-            return const Left(Failure('لم يتم العثور على المنتج'));
+          if (!snapshot.exists) {
+            return const Left(Failure('لم يتم العثور على الإعلان'));
+          }
+
           List<Offer> offers = [];
           for (var offerDoc in snapshot.data()!['offers']) {
             final offerProduct = await getProductById(offerDoc['productId']);
             offers.add(Offer.fromDoc(offerDoc, offerProduct));
           }
-          return Right(Ad.fromDoc(snapshot.id, offers, snapshot.data()!));
+
+          final ad = Ad.fromDoc(snapshot.id, offers, snapshot.data()!);
+
+          // **Update Hive cache**
+          await adsBox.put(ad.id, ad);
+
+          return Right(ad);
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -997,6 +1043,19 @@ class DataRepository {
     String productName,
   ) async {
     try {
+      final Box<Product> productsBox = Hive.box<Product>('productsBox');
+
+      // **Check if products are already cached in Hive**
+      final List<Product> cachedProducts = productsBox.values
+          .where((product) =>
+              product.name.toLowerCase().contains(productName.toLowerCase()))
+          .toList();
+
+      if (cachedProducts.isNotEmpty) {
+        return Right(cachedProducts);
+      }
+
+      // **If not found in Hive, fetch from Firestore**
       final searchResults = await firestore
           .collection(ConstantManager.productCollection)
           .where(
@@ -1007,8 +1066,14 @@ class DataRepository {
           .get();
 
       final List<Product> searchProductList = [];
-      for (var result in searchResults.docs)
-        searchProductList.add(Product.fromDoc(result.id, result.data()));
+      for (var result in searchResults.docs) {
+        final product = Product.fromDoc(result.id, result.data());
+        searchProductList.add(product);
+
+        // **Cache the product in Hive**
+        await productsBox.put(product.id, product);
+      }
+
       return Right(searchProductList);
     } catch (e) {
       AppLogs.error('Error @searchForProductByName: $e');

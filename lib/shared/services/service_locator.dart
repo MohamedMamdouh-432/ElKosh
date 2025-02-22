@@ -43,9 +43,12 @@ Future<void> setup() async {
   Hive.registerAdapter(UserOrderAdapter());
   Hive.registerAdapter(OrderStatusAdapter());
   Hive.registerAdapter(LocationAdapter());
+  Hive.registerAdapter(OfferAdapter());
+  Hive.registerAdapter(AdAdapter());
   await Hive.openBox<Category>('categoriesBox');
   await Hive.openBox<Market>('marketsBox');
   await Hive.openBox<Product>('productsBox');
   await Hive.openBox<Map>('cartBox');
   await Hive.openBox<UserOrder>('ordersBox');
+  await Hive.openBox<Ad>('adsBox');
 }
