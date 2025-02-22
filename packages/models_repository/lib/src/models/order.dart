@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:models_repository/models_repository.dart';
+
+part 'order.g.dart';
 
 OrderStatus getOrderStatus(String stateValue) {
   switch (stateValue) {
@@ -17,15 +20,33 @@ OrderStatus getOrderStatus(String stateValue) {
   }
 }
 
+@HiveType(typeId: 4)
 class UserOrder extends Equatable {
+  @HiveField(0)
   final String id;
+
+  @HiveField(1)
   final int code;
+
+  @HiveField(2)
   final double total;
+
+  @HiveField(3)
   final String userId;
-  final OrderStatus status;
+
+  @HiveField(4)
+  final OrderStatus status; // سيتم إنشاء Adapter له
+
+  @HiveField(5)
   final DateTime createdAt;
-  final Location location;
+
+  @HiveField(6)
+  final Location location; // سيتم إنشاء Adapter له
+
+  @HiveField(7)
   final bool isAd;
+
+  @HiveField(8)
   final List<ShoppingItem> shopping;
 
   const UserOrder({

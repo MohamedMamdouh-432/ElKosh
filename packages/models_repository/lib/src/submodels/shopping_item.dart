@@ -1,9 +1,16 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:models_repository/models_repository.dart';
 
+part 'shopping_item.g.dart';
+
+@HiveType(typeId: 7)
 class ShoppingItem extends Equatable {
+  @HiveField(0)
   final Product product;
+  @HiveField(1)
   final int quantity;
+  @HiveField(2)
   final double price;
 
   const ShoppingItem({

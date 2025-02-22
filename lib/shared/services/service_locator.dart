@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
+import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:user_repository/user_repository.dart';
 
@@ -34,4 +36,16 @@ Future<void> setup() async {
     fireStorage: sl.get<FirebaseStorage>(),
     sharedPref: sl.get<SharedPreferences>(),
   ));
+
+  Hive.registerAdapter(MarketAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(ProductAdapter());
+  Hive.registerAdapter(UserOrderAdapter());
+  Hive.registerAdapter(OrderStatusAdapter());
+  Hive.registerAdapter(LocationAdapter());
+  await Hive.openBox<Category>('categoriesBox');
+  await Hive.openBox<Market>('marketsBox');
+  await Hive.openBox<Product>('productsBox');
+  await Hive.openBox<Map>('cartBox');
+  await Hive.openBox<UserOrder>('ordersBox');
 }

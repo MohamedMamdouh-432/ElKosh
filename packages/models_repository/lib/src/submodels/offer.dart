@@ -1,9 +1,16 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:models_repository/models_repository.dart';
 
+part 'offer.g.dart';
+
+@HiveType(typeId: 3)
 class Offer extends Equatable {
+  @HiveField(0)
   final int quantity;
+  @HiveField(1)
   final double price;
+  @HiveField(2)
   final Product product;
 
   const Offer({

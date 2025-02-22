@@ -7,6 +7,8 @@ environment:
 
 dependencies:
   another_carousel_pro: ^1.0.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   app_settings: ^5.1.1
   auth_repository:
     path: packages/auth_repository
@@ -60,14 +62,17 @@ dependencies:
   shared_preferences: ^2.5.1
   shimmer: ^3.0.0
   skeletonizer: ^1.4.2
-
   super_banners: ^0.0.1
   url_launcher: ^6.3.1
   user_repository:
     path: packages/user_repository
+  
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.15
+  
   flutter_lints: ^4.0.0
   flutter_native_splash: ^2.4.0
   flutter_test:

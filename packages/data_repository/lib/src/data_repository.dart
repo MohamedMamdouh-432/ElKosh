@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +43,13 @@ class DataRepository {
 
   Stream<Either<Failure, List<Market>>> marketsStream() async* {
     try {
+      final Box<Market> marketBox = Hive.box<Market>('marketsBox');
+
+      // **إرسال البيانات المخزنة مؤقتًا أولاً (إن وجدت)**
+      if (marketBox.isNotEmpty) {
+        yield Right(marketBox.values.toList());
+      }
+
       final query = firestore.collection(ConstantManager.marketCollection);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
@@ -52,6 +58,13 @@ class DataRepository {
             if (doc.data()['active'] == false) continue;
             marketsList.add(Market.fromDoc(doc.id, doc.data()));
           }
+
+          // **تحديث الكاش في Hive**
+          await marketBox.clear();
+          for (var market in marketsList) {
+            await marketBox.put(market.id, market);
+          }
+
           return Right(marketsList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -64,14 +77,28 @@ class DataRepository {
 
   Stream<Either<Failure, Market>> marketDetailsStream() async* {
     try {
+      final Box<Market> marketBox = Hive.box<Market>('marketsBox');
+
+      // **إرسال البيانات المخزنة مؤقتًا أولاً إن وجدت**
+      if (marketBox.containsKey(_curMarket?.id)) {
+        yield Right(marketBox.get(_curMarket?.id)!);
+      }
+
       final docRef = firestore
           .collection(ConstantManager.marketCollection)
           .doc(_curMarket?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
-          if (!snapshot.exists)
-            return const Left(Failure('لم يتم العثور على هذاالمتجر'));
-          return Right(Market.fromDoc(snapshot.id, snapshot.data()!));
+          if (!snapshot.exists) {
+            return const Left(Failure('لم يتم العثور على هذا المتجر'));
+          }
+
+          final Market market = Market.fromDoc(snapshot.id, snapshot.data()!);
+
+          // **تحديث الكاش**
+          await marketBox.put(market.id, market);
+
+          return Right(market);
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -83,6 +110,13 @@ class DataRepository {
 
   Future<Either<Failure, List<Market>>> fetchMarkets() async {
     try {
+      final Box<Market> marketBox = Hive.box<Market>('marketsBox');
+
+      // **جلب البيانات المخزنة مؤقتًا إذا كانت موجودة**
+      if (marketBox.isNotEmpty) {
+        return Right(marketBox.values.toList());
+      }
+
       final response =
           await firestore.collection(ConstantManager.marketCollection).get();
       List<Market> marketsList = [];
@@ -90,6 +124,13 @@ class DataRepository {
         if (marketDoc.data()['active'] == false) continue;
         marketsList.add(Market.fromDoc(marketDoc.id, marketDoc.data()));
       }
+
+      // **تحديث الكاش**
+      await marketBox.clear();
+      for (var market in marketsList) {
+        await marketBox.put(market.id, market);
+      }
+
       return Right(marketsList);
     } catch (e) {
       AppLogs.error('Markets Loading Error: $e');
@@ -99,6 +140,13 @@ class DataRepository {
 
   Future<bool> isMarketActive(String id, [String? pId]) async {
     try {
+      final Box<Market> marketBox = Hive.box<Market>('marketsBox');
+
+      // **التحقق من الكاش أولاً**
+      if (marketBox.containsKey(id)) {
+        return marketBox.get(id)!.active;
+      }
+
       final marketDoc = await firestore
           .collection(ConstantManager.marketCollection)
           .doc(id)
@@ -107,7 +155,14 @@ class DataRepository {
         AppLogs.debug('Market $id Not Found');
         return false;
       }
-      return marketDoc.data()?['active'];
+
+      final bool isActive = marketDoc.data()?['active'] ?? false;
+
+      // **تحديث الكاش إذا كان المتجر موجودًا**
+      final Market market = Market.fromDoc(id, marketDoc.data()!);
+      await marketBox.put(market.id, market);
+
+      return isActive;
     } catch (e) {
       AppLogs.error('Error @isMarketActive: $e');
       throw const Failure("حدث خطأ أثناء جلب المتجر");
@@ -118,16 +173,32 @@ class DataRepository {
 
   Stream<Either<Failure, List<Category>>> categorysStream() async* {
     try {
+      final Box<Category> categoryBox = Hive.box<Category>('categoriesBox');
+
+      // **إرسال البيانات المخزنة مؤقتًا أولًا (إن وجدت)**
+      if (categoryBox.isNotEmpty) {
+        yield Right(categoryBox.values.toList());
+      }
+
       final query = firestore
           .collection(ConstantManager.categoryCollection)
           .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId');
+
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
-          List<Category> categorysList = [];
-          for (var doc in snapshot.docs)
-            categorysList.add(Category.fromDoc(doc.id, doc.data()));
-          return Right(categorysList);
+          List<Category> categoriesList = [];
+          for (var doc in snapshot.docs) {
+            categoriesList.add(Category.fromDoc(doc.id, doc.data()));
+          }
+
+          // **تحديث الكاش في Hive**
+          await categoryBox.clear();
+          for (var category in categoriesList) {
+            await categoryBox.put(category.id, category);
+          }
+
+          return Right(categoriesList);
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -139,14 +210,30 @@ class DataRepository {
 
   Future<Either<Failure, List<Category>>> fetchCategories() async {
     try {
+      final Box<Category> categoryBox = Hive.box<Category>('categoriesBox');
+
+      // **إرجاع البيانات المخزنة مؤقتًا إذا كانت موجودة**
+      if (categoryBox.isNotEmpty) {
+        return Right(categoryBox.values.toList());
+      }
+
       final response = await firestore
           .collection(ConstantManager.categoryCollection)
           .where('marketId', isEqualTo: _curMarket?.id)
           .orderBy('orderId')
           .get();
+
       List<Category> categoriesList = [];
-      for (var doc in response.docs)
+      for (var doc in response.docs) {
         categoriesList.add(Category.fromDoc(doc.id, doc.data()));
+      }
+
+      // **تحديث الكاش**
+      await categoryBox.clear();
+      for (var category in categoriesList) {
+        await categoryBox.put(category.id, category);
+      }
+
       return Right(categoriesList);
     } catch (e) {
       AppLogs.error('Categories Loading Error: $e');
@@ -158,14 +245,29 @@ class DataRepository {
 
   Stream<Either<Failure, Product>> productDetailsStream() async* {
     try {
+      final Box<Product> productBox = Hive.box<Product>('productsBox');
+
+      // **إرسال البيانات المخزنة مؤقتًا أولًا إن وجدت**
+      if (productBox.containsKey(_curProduct?.id)) {
+        yield Right(productBox.get(_curProduct?.id)!);
+      }
+
       final docRef = firestore
           .collection(ConstantManager.productCollection)
           .doc(_curProduct?.id);
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
-          if (!snapshot.exists)
+          if (!snapshot.exists) {
             return const Left(Failure('لم يتم العثور على المنتج'));
-          return Right(Product.fromDoc(snapshot.id, snapshot.data()!));
+          }
+
+          final Product product =
+              Product.fromDoc(snapshot.id, snapshot.data()!);
+
+          // **تحديث الكاش**
+          await productBox.put(product.id, product);
+
+          return Right(product);
         } catch (e) {
           return Left(Failure(e.toString()));
         }
@@ -176,31 +278,22 @@ class DataRepository {
   }
 
   Future<Either<Failure, Map<String, List<Product>>>> fetchProducts() async {
-    if (_lastId != null) {
-      if (_lastIdVal == 0)
-        _lastIdVal = 1;
-      else
-        return Right({
-          'p': [],
-          'still': [Product.empty],
-        });
-    }
     try {
-      final response = _lastId == null
-          ? await firestore
-              .collection(ConstantManager.productCollection)
-              .limit(10)
-              .get()
-          : await firestore
-              .collection(ConstantManager.productCollection)
-              .startAfterDocument(
-                await firestore
-                    .collection(ConstantManager.productCollection)
-                    .doc(_lastId)
-                    .get(),
-              )
-              .limit(10)
-              .get();
+      final Box<Product> productBox = Hive.box<Product>('productsBox');
+
+      // **إرجاع البيانات المخزنة مؤقتًا إذا كانت موجودة**
+      if (productBox.isNotEmpty) {
+        return Right({
+          'p': productBox.values.toList(),
+          'still': productBox.isNotEmpty ? [Product.empty] : [],
+        });
+      }
+
+      final response = await firestore
+          .collection(ConstantManager.productCollection)
+          .limit(10)
+          .get();
+
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
         final marketActive =
@@ -208,11 +301,16 @@ class DataRepository {
         if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
-      _lastId = productsList.last.id;
-      _lastIdVal = 0;
+
+      // **تحديث الكاش**
+      await productBox.clear();
+      for (var product in productsList) {
+        await productBox.put(product.id, product);
+      }
+
       return Right({
         'p': productsList,
-        'still': productsList.isEmpty ? [] : [Product.empty],
+        'still': productsList.isNotEmpty ? [Product.empty] : [],
       });
     } catch (e) {
       AppLogs.error('Products Loading Limiting Error: $e');
@@ -221,22 +319,17 @@ class DataRepository {
   }
 
   Stream<Either<Failure, List<Product>>> productsStream() async* {
-    if (_lastId != null) {
-      if (_lastIdVal == 0)
-        _lastIdVal = 1;
-      else
-        yield const Right([]);
-    }
     try {
-      final query = _lastId == null
-          ? firestore.collection(ConstantManager.productCollection).limit(10)
-          : firestore
-              .collection(ConstantManager.productCollection)
-              .startAfterDocument(await firestore
-                  .collection(ConstantManager.productCollection)
-                  .doc(_lastId)
-                  .get())
-              .limit(10);
+      final Box<Product> productBox = Hive.box<Product>('productsBox');
+
+      // **إرسال البيانات المخزنة مؤقتًا أولًا إن وجدت**
+      if (productBox.isNotEmpty) {
+        yield Right(productBox.values.toList());
+      }
+
+      final query =
+          firestore.collection(ConstantManager.productCollection).limit(10);
+
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           List<Product> productsList = [];
@@ -246,8 +339,13 @@ class DataRepository {
             if (!marketActive) continue;
             productsList.add(Product.fromDoc(doc.id, doc.data()));
           }
-          _lastId = productsList.last.id;
-          _lastIdVal = 0;
+
+          // **تحديث الكاش**
+          await productBox.clear();
+          for (var product in productsList) {
+            await productBox.put(product.id, product);
+          }
+
           return Right(productsList);
         } catch (e) {
           return Left(Failure(e.toString()));
@@ -260,10 +358,21 @@ class DataRepository {
 
   Future<Either<Failure, List<Product>>> fetchCategoryRelatedProducts() async {
     try {
+      final Box<Product> productBox = Hive.box<Product>('productsBox');
+
+      // **جلب المنتجات المخزنة مؤقتًا إذا كانت موجودة**
+      final List<Product> cachedProducts = productBox.values
+          .where((product) => product.categoryId == _curCategory?.id)
+          .toList();
+      if (cachedProducts.isNotEmpty) {
+        return Right(cachedProducts);
+      }
+
       final response = await firestore
           .collection(ConstantManager.productCollection)
           .where('categoryId', isEqualTo: _curCategory?.id)
           .get();
+
       List<Product> productsList = [];
       for (var productDoc in response.docs) {
         final marketActive =
@@ -271,6 +380,12 @@ class DataRepository {
         if (!marketActive) continue;
         productsList.add(Product.fromDoc(productDoc.id, productDoc.data()));
       }
+
+      // **تحديث الكاش**
+      for (var product in productsList) {
+        await productBox.put(product.id, product);
+      }
+
       return Right(productsList);
     } catch (e) {
       AppLogs.error('Error @fetchCategoryRelatedProducts: $e');
@@ -280,11 +395,30 @@ class DataRepository {
 
   Future<Product> getProductById(String id) async {
     try {
+      final Box<Product> productBox = Hive.box<Product>('productsBox');
+
+      // **التحقق من وجود المنتج في الكاش (Hive)**
+      if (productBox.containsKey(id)) {
+        return productBox.get(id)!;
+      }
+
+      // **جلب المنتج من Firestore إذا لم يكن في الكاش**
       final productDoc = await firestore
           .collection(ConstantManager.productCollection)
           .doc(id)
           .get();
-      return Product.fromDoc(productDoc.id, productDoc.data() ?? {});
+
+      if (!productDoc.exists) {
+        throw const Failure("لم يتم العثور على المنتج");
+      }
+
+      final Product product =
+          Product.fromDoc(productDoc.id, productDoc.data() ?? {});
+
+      // **تحديث الكاش في Hive**
+      await productBox.put(product.id, product);
+
+      return product;
     } catch (e) {
       AppLogs.error('Error @getProductById: $e');
       throw const Failure("حدث خطأ أثناء جلب المنتج");
@@ -295,124 +429,140 @@ class DataRepository {
 
   Future<Either<Failure, Map<String, dynamic>>> fetchCart() async {
     try {
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
       _price = 0;
-      String? cartMap = sharedPref.getString('shopping');
-      if (cartMap == null) {
-        _shopping = {};
-        await sharedPref.setDouble('price', _price);
-        await sharedPref.setString('shopping', json.encode(_shopping));
+      final storedCart =
+          cartBox.get('shopping', defaultValue: {}) as Map<String, int>;
+      Map<String, int> shoppingData = Map<String, int>.from(storedCart);
+
+      if (shoppingData.isEmpty) {
         return const Right({
           'shopping': <Product, int>{},
           'price': 0.0,
         });
       }
-      Map<String, dynamic> decShopping = json.decode(cartMap);
-      Map<Product, int> shoppingData = {};
-      _shopping = decShopping.map((id, cnt) => MapEntry(id, cnt as int));
-      for (MapEntry<String, int> entry in _shopping.entries) {
-        final mappedProduct = await getProductById(entry.key);
-        _price += mappedProduct.updatedPrice * entry.value;
-        shoppingData.putIfAbsent(mappedProduct, () => entry.value);
+
+      Map<Product, int> cartItems = {};
+      for (var entry in shoppingData.entries) {
+        final product = await getProductById(entry.key);
+        _price += product.updatedPrice * entry.value;
+        cartItems[product] = entry.value;
       }
+
       return Right({
         'price': _price,
-        'shopping': shoppingData,
+        'shopping': cartItems,
       });
     } catch (e) {
       AppLogs.error('Error @fetchCart: $e');
-      return const Left(Failure('حدث خطأ أثناء تحميل السله'));
+      return const Left(Failure('حدث خطأ أثناء تحميل السلة'));
     }
   }
 
   Future<Either<Failure, Map<String, dynamic>>> resetCart() async {
-    _price = 0;
-    _shopping = {};
     try {
-      await sharedPref.setDouble('price', _price);
-      await sharedPref.setString('shopping', json.encode(_shopping));
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
+      _price = 0;
+      _shopping = {};
+
+      await cartBox.put('shopping', {});
+
       return Right({
         'price': _price,
         'shopping': const <Product, int>{},
       });
     } catch (e) {
       AppLogs.error('Error @resetCart: $e');
-      return const Left(Failure('حدث خطأ أثناء اعادة السله'));
+      return const Left(Failure('حدث خطأ أثناء إعادة تعيين السلة'));
     }
   }
 
-  Future<Either<Failure, void>> addProductToCart(
-    Product product,
-  ) async {
+  Future<Either<Failure, void>> addProductToCart(Product product) async {
     try {
-      _price += product.updatedPrice;
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
       _shopping.update(
         product.id,
         (value) => value + 1,
         ifAbsent: () => 1,
       );
-      await sharedPref.setDouble('price', _price);
-      await sharedPref.setString('shopping', json.encode(_shopping));
+
+      _price += product.updatedPrice;
+
+      await cartBox.put('shopping', _shopping);
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @addProductToCart: $e');
-      return const Left(Failure('حدث خطأ أثناء اضافة المنتج للسله'));
+      return const Left(Failure('حدث خطأ أثناء إضافة المنتج للسلة'));
     }
   }
 
   Future<Either<Failure, void>> removeProductFromCart(Product product) async {
     try {
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
       if (_shopping.containsKey(product.id)) {
         _price -= product.updatedPrice * (_shopping[product.id] ?? 0);
         _shopping.remove(product.id);
-        await sharedPref.setDouble('price', _price);
-        await sharedPref.setString('shopping', json.encode(_shopping));
+
+        await cartBox.put('shopping', _shopping);
       }
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @removeProductFromCart: $e');
-      return const Left(Failure('حدث خطأ أثناء حذف المنتج من السله'));
+      return const Left(Failure('حدث خطأ أثناء حذف المنتج من السلة'));
     }
   }
 
   Future<Either<Failure, void>> increaseProductQuantityInCart(
       Product product) async {
     try {
-      _price += product.updatedPrice;
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
       _shopping.update(
         product.id,
         (value) => value + 1,
         ifAbsent: () => 1,
       );
-      await sharedPref.setDouble('price', _price);
-      await sharedPref.setString('shopping', json.encode(_shopping));
+
+      _price += product.updatedPrice;
+
+      await cartBox.put('shopping', _shopping);
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @increaseProductQuantityInCart: $e');
-      return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج فى السله'));
+      return const Left(Failure('حدث خطأ أثناء زيادة كمية المنتج في السلة'));
     }
   }
 
   Future<Either<Failure, void>> decreaseProductQuantityFromCart(
-    Product product,
-  ) async {
+      Product product) async {
     try {
+      final Box<Map> cartBox = Hive.box<Map>('cartBox');
+
       if (_shopping.containsKey(product.id)) {
         _price -= product.updatedPrice;
         _shopping.update(
           product.id,
           (value) => value - 1,
-          ifAbsent: null,
         );
+
         if (_shopping[product.id] == 0) {
           _shopping.remove(product.id);
         }
-        await sharedPref.setDouble('price', _price);
-        await sharedPref.setString('shopping', json.encode(_shopping));
+
+        await cartBox.put('shopping', _shopping);
       }
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @decreaseProductQuantityFromCart: $e');
-      return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السله'));
+      return const Left(Failure('حدث خطأ أثناء تقليل كمية المنتج من السلة'));
     }
   }
 
@@ -435,16 +585,21 @@ class DataRepository {
 
   Future<Either<Failure, Null>> placeOrder(Location location) async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
       final seqIdDoc = firestore
           .collection(ConstantManager.ordersCollection)
           .doc(ConstantManager.orderSeqIdDoc);
+
       int seqIdVal = (await seqIdDoc.get()).data()?['seqId'] ?? 0;
+
       Map<String, List> shoppingList = {};
       for (MapEntry entry in _shopping.entries) {
         final mappedProduct = await getProductById(entry.key);
         shoppingList.putIfAbsent(
             entry.key, () => [entry.value, mappedProduct.updatedPrice]);
       }
+
       final orderMap = {
         'total': _price,
         'code': seqIdVal,
@@ -455,14 +610,21 @@ class DataRepository {
         'createdAt': DateTime.now(),
         'location': location.toJson(),
       };
-      await firestore.collection('orders').add(orderMap);
+
+      final orderRef = await firestore.collection('orders').add(orderMap);
       await seqIdDoc.set({'seqId': seqIdVal + 1});
+
       _shopping.forEach((id, taken) async {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(id)
             .update({'quantity': FieldValue.increment(-taken)});
       });
+
+      // **Store Order in Hive**
+      final order = UserOrder.fromDoc(orderMap, const [], orderRef.id);
+      await ordersBox.put(orderRef.id, order);
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @placeOrder: $e');
@@ -472,14 +634,20 @@ class DataRepository {
 
   Future<Either<Failure, Null>> placeAdOrder(Location location) async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
       final seqIdDoc = firestore
           .collection(ConstantManager.ordersCollection)
           .doc(ConstantManager.orderSeqIdDoc);
-      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'];
+
+      int seqIdVal = (await seqIdDoc.get()).data()?['seqId'] ?? 0;
+
       Map<String, List> shoppingList = {};
-      for (Offer offer in _curAd!.offers)
+      for (Offer offer in _curAd!.offers) {
         shoppingList.putIfAbsent(
             offer.product.id, () => [offer.quantity, offer.price]);
+      }
+
       final orderMap = {
         'code': seqIdVal,
         'createdAt': DateTime.now(),
@@ -490,14 +658,21 @@ class DataRepository {
         'total': _curAd?.total,
         'userId': getUserId(),
       };
-      await firestore.collection('orders').add(orderMap);
+
+      final orderRef = await firestore.collection('orders').add(orderMap);
       await seqIdDoc.set({'seqId': seqIdVal + 1});
+
       for (var offer in _curAd!.offers) {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(offer.product.id)
             .update({'quantity': FieldValue.increment(-offer.quantity)});
       }
+
+      // **Store Order in Hive**
+      final order = UserOrder.fromDoc(orderMap, const [], orderRef.id);
+      await ordersBox.put(orderRef.id, order);
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @placeAdOrder: $e');
@@ -507,10 +682,21 @@ class DataRepository {
 
   Future<Either<Failure, Null>> confirmDeliveryOrder(String orderId) async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
       await firestore
           .collection('orders')
           .doc(orderId)
           .update({'status': OrderStatus.delivered.name});
+
+      // **Update Order in Hive**
+      if (ordersBox.containsKey(orderId)) {
+        final updatedOrder = ordersBox.get(orderId)!.copyWith(
+              status: OrderStatus.delivered,
+            );
+        await ordersBox.put(orderId, updatedOrder);
+      }
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @confirmDeliveryOrder: $e');
@@ -520,21 +706,36 @@ class DataRepository {
 
   Future<Either<Failure, Null>> cancelOrder(String orderId) async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
       final orderData =
           (await firestore.collection('orders').doc(orderId).get()).data() ??
               {};
-      if (orderData['status'] == OrderStatus.shipped.name)
+
+      if (orderData['status'] == OrderStatus.shipped.name) {
         return const Left(Failure('تم شحن الطلب بالفعل'));
+      }
+
       await firestore
           .collection('orders')
           .doc(orderId)
           .update({'status': OrderStatus.cancelled.name});
+
       orderData['shopping'].forEach((id, takenObj) async {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(id)
             .update({'quantity': FieldValue.increment(takenObj[0])});
       });
+
+      // **Update Order in Hive**
+      if (ordersBox.containsKey(orderId)) {
+        final updatedOrder = ordersBox.get(orderId)!.copyWith(
+              status: OrderStatus.cancelled,
+            );
+        await ordersBox.put(orderId, updatedOrder);
+      }
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @cancelOrder: $e');
@@ -544,19 +745,32 @@ class DataRepository {
 
   Future<Either<Failure, Null>> refuseOrder(String orderId) async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
       final orderData =
           (await firestore.collection('orders').doc(orderId).get()).data() ??
               {};
+
       await firestore
           .collection('orders')
           .doc(orderId)
           .update({'status': OrderStatus.refused.name});
+
       orderData['shopping'].forEach((id, takenObj) async {
         await firestore
             .collection(ConstantManager.productCollection)
             .doc(id)
             .update({'quantity': FieldValue.increment(takenObj[0])});
       });
+
+      // **Update Order in Hive**
+      if (ordersBox.containsKey(orderId)) {
+        final updatedOrder = ordersBox.get(orderId)!.copyWith(
+              status: OrderStatus.refused,
+            );
+        await ordersBox.put(orderId, updatedOrder);
+      }
+
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @refuseOrder: $e');
@@ -633,6 +847,29 @@ class DataRepository {
 
   Future<Either<Failure, Map<String, List<UserOrder>>>> fetchOrders() async {
     try {
+      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+
+      // **Return cached orders first**
+      if (ordersBox.isNotEmpty) {
+        final ongoingOrders = ordersBox.values
+            .where((order) =>
+                order.status == OrderStatus.pending ||
+                order.status == OrderStatus.shipped)
+            .toList();
+
+        final historyOrders = ordersBox.values
+            .where((order) =>
+                order.status == OrderStatus.cancelled ||
+                order.status == OrderStatus.delivered ||
+                order.status == OrderStatus.refused)
+            .toList();
+
+        return Right({
+          'ongoing': ongoingOrders,
+          'history': historyOrders,
+        });
+      }
+
       final results = await Future.wait([
         firestore
             .collection('orders')
@@ -660,31 +897,19 @@ class DataRepository {
       final List<UserOrder> historyOrderList = [];
 
       for (var orderDoc in ongoingOrders.docs) {
-        if (orderDoc.data()['seqId'] != null) continue;
-        List<ShoppingItem> shopping = [];
-        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
-          final mappedProduct = await getProductById(entry.key);
-          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
-        }
-        ongoingOrderList.add(UserOrder.fromDoc(
-          orderDoc.data(),
-          shopping,
-          orderDoc.id,
-        ));
+        ongoingOrderList
+            .add(UserOrder.fromDoc(orderDoc.data(), const [], orderDoc.id));
       }
 
       for (var orderDoc in historyOrders.docs) {
-        if (orderDoc.data()['seqId'] != null) continue;
-        List<ShoppingItem> shopping = [];
-        for (MapEntry entry in orderDoc.data()['shopping'].entries) {
-          final mappedProduct = await getProductById(entry.key);
-          shopping.add(ShoppingItem.fromDoc(entry.value, mappedProduct));
-        }
-        historyOrderList.add(UserOrder.fromDoc(
-          orderDoc.data(),
-          shopping,
-          orderDoc.id,
-        ));
+        historyOrderList
+            .add(UserOrder.fromDoc(orderDoc.data(), const [], orderDoc.id));
+      }
+
+      // **Update Hive Cache**
+      await ordersBox.clear();
+      for (var order in [...ongoingOrderList, ...historyOrderList]) {
+        await ordersBox.put(order.id, order);
       }
 
       return Right({

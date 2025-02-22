@@ -27,6 +27,31 @@ class AdItem extends StatelessWidget {
           width: double.infinity,
           filterQuality: FilterQuality.high,
           imageUrl: ad.imgUrl,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.fill,
+                
+              ),
+            ),
+          ),
+          placeholder: (context, url) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(ad.imgUrl),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/error_image.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
         ),
       ),
     );

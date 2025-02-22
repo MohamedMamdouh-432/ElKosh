@@ -1,8 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 
+part 'location.g.dart';
+
+@HiveType(typeId: 6)
 class Location extends Equatable {
+  @HiveField(0)
   final double latitude;
+  @HiveField(1)
   final double longitude;
+  @HiveField(2)
   final String address;
 
   const Location({

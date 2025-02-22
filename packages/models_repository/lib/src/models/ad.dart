@@ -1,11 +1,20 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:models_repository/models_repository.dart';
 
+part 'ad.g.dart';
+
+@HiveType(typeId: 0)
 class Ad extends Equatable {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final String imgUrl;
+  @HiveField(3)
   final double total;
+  @HiveField(4)
   final List<Offer> offers;
 
   const Ad({
