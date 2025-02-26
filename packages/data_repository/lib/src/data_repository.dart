@@ -19,6 +19,8 @@ class DataRepository {
   Map<String, int> _shopping;
   bool isThereOtherThread;
 
+  // todo: remember to make cache listen to firebase changes
+
   DataRepository({
     required this.firestore,
     required this.fireStorage,
@@ -466,6 +468,7 @@ class DataRepository {
       Map<Product, int> cartItems = {};
       for (MapEntry<String, int> entry in shoppingData.entries) {
         final product = await getProductById(entry.key);
+        if (product.quantity.floor() == 0) continue;
         _price += product.updatedPrice * entry.value;
         cartItems.putIfAbsent(product, () => entry.value);
       }

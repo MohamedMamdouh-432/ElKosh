@@ -122,32 +122,3 @@ class BottomNavClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => true;
 }
-
-// bottomNavigationBar: Consumer<NavProvider>(
-//   builder: (context, navProvider, child) {
-//     return GNav(
-//       selectedIndex: navProvider.curIdx,
-//       activeColor: ColorManager.primary,
-//       color: Colors.blueGrey,
-//       backgroundColor: const Color.fromARGB(255, 246, 237, 233),
-//       iconSize: 26,
-//       padding: const EdgeInsets.symmetric(vertical: 16),
-//       mainAxisAlignment: MainAxisAlignment.spaceAround,
-//       onTabChange: navProvider.navToPage,
-//       tabs: const [
-//         GButton(
-//           text: "الرئيسية",
-//           icon: CupertinoIcons.home,
-//         ),
-//         GButton(
-//           icon: CupertinoIcons.cart_fill,
-//           text: "السلة",
-//         ),
-//         GButton(
-//           icon: CupertinoIcons.settings_solid,
-//           text: "الاعدادات",
-//         ),
-//       ],
-//     );
-// },
-// ),

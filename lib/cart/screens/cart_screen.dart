@@ -20,6 +20,7 @@ class CartScreen extends StatelessWidget {
     return BlocListener<ProductsCubit, ProductsState>(
       listener: (context, state) {
         if (state.status == LoadStatus.updated)
+          // todo: when fetching if product.quantity == 0 => ignore it
           context.read<CartCubit>().fetchCart();
       },
       child: BlocConsumer<CartCubit, CartState>(
