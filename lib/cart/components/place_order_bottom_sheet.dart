@@ -1,5 +1,4 @@
 import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
-import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:models_repository/models_repository.dart';
 
 class PlaceOrderBottomSheet extends StatelessWidget {
   const PlaceOrderBottomSheet({super.key});
@@ -52,8 +52,11 @@ class PlaceOrderBottomSheet extends StatelessWidget {
               const Gap(20),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () =>
-                      context.push(RouteManager.deliveryLocationPickerRoute),
+                  onPressed: () {
+                    // context.push(RouteManager.deliveryLocationPickerRoute)
+                    context.read<CartCubit>().placeOrder(Location.empty);
+                    context.pop();
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     elevation: 15,
