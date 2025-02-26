@@ -1,5 +1,4 @@
 import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
-import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +49,10 @@ class PlaceAdOrderBottomSheet extends StatelessWidget {
               Gap(20.sp),
               Center(
                 child: ElevatedButton.icon(
-                  onPressed: () =>
-                      context.push(RouteManager.adDeliveryLocationPickerRoute),
+                  onPressed: () {
+                    context.read<CartCubit>().placeAdOrder(Location.empty);
+                    context.pop();
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40.sp),
                     elevation: 10.sp,
