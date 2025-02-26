@@ -1,4 +1,4 @@
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
@@ -66,7 +66,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
 
           selectLocationButtonStyle: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
-                ColorManager.primary.withValues(alpha: 0.8)),
+                ColorManager.primary.withValues(alpha: 0.9)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             elevation: const WidgetStatePropertyAll(15),
           ),
@@ -84,9 +84,9 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
           searchBarBackgroundColor: Colors.grey.shade200,
           // other buttons
           locationButtonBackgroundColor:
-              ColorManager.primary.withValues(alpha: 0.8),
+              ColorManager.primary.withValues(alpha: 0.9),
           zoomButtonsBackgroundColor:
-              ColorManager.primary.withValues(alpha: 0.8),
+              ColorManager.primary.withValues(alpha: 0.9),
           locationButtonsColor: Colors.grey.shade300,
           zoomButtonsColor: Colors.grey.shade300,
           markerIcon: Icon(
@@ -112,7 +112,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
                 lng,
                 getAddress(pickedData.addressData),
               );
-              context.read<CartBloc>().add(CartPlaceOrderEvent(location));
+              context.read<CartCubit>().placeOrder(location);
               context.pop();
               context.pop();
             } else {

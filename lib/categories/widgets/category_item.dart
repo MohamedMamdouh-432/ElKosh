@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/categories/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +25,7 @@ class CategoryItem extends StatelessWidget {
             'steps': 3,
           },
         );
-        context.read<ProductsBloc>().add(ProductsRelatedLoadingEvent());
+        context.read<ProductsCubit>().fetchRelatedProducts();
       },
       child: Card(
         elevation: 40,

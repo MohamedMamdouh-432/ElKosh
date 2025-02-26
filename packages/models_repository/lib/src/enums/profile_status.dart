@@ -1,4 +1,5 @@
 enum ProfileStatus {
+  initial,
   unknown,
   loading,
   userExists,

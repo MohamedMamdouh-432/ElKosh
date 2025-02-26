@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/cart/widgets/cart_product_quantity_counter.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
@@ -80,9 +80,8 @@ class CartCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: () => context
-                    .read<CartBloc>()
-                    .add(CartRemovingProductEvent(product)),
+                onPressed: () =>
+                    context.read<CartCubit>().removeProductFromCart(product),
                 icon: Icon(
                   Icons.delete,
                   color: Colors.red,

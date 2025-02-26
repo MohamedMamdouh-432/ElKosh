@@ -1,9 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/auth/widgets/auth_button.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/settings/controllers/profile_provider.dart';
 import 'package:elkosh/shared/widgets/auth_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,17 +62,17 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: 20,
                   animType: QuickAlertAnimType.scale,
                 );
-                context.read<ProfileBloc>().add(ProfileLoadingEvent());
-                context.read<CartBloc>().add(CartFetchingEvent());
+                context.read<ProfileProvider>().loadProfile();
+                context.read<CartCubit>().fetchCart();
                 context.read<LoginBloc>().add(LoginStateReset());
                 Future.delayed(
                   const Duration(seconds: 2),
                   () => context.go(RouteManager.navbarRoute),
                 );
               } else if (state.submissionStatus.isCanceled) {
-                context.read<ProfileBloc>().add(ProfileLoadingEvent());
+                context.read<ProfileProvider>().loadProfile();
+                context.read<CartCubit>().fetchCart();
                 context.read<LoginBloc>().add(LoginStateReset());
-                context.read<CartBloc>().add(CartFetchingEvent());
                 context.go(RouteManager.navbarRoute);
               }
             },

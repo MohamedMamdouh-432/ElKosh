@@ -1,10 +1,10 @@
 import 'package:elkosh/products/widgets/product_card.dart';
-import 'package:elkosh/search/bloc/search_bloc.dart';
+import 'package:elkosh/search/controllers/search_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -27,9 +27,8 @@ class SearchScreen extends StatelessWidget {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: BlocBuilder<SearchBloc, SearchState>(
-            buildWhen: (p, c) => p != c,
-            builder: (context, state) {
+          body: Consumer<SearchProvider>(
+            builder: (context, state, _) {
               return SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -49,12 +48,10 @@ class SearchScreen extends StatelessWidget {
                       ),
                       padding: const WidgetStatePropertyAll(
                           EdgeInsets.symmetric(horizontal: 10)),
-                      onChanged: (value) => context
-                          .read<SearchBloc>()
-                          .add(SearchQueryChanged(value)),
-                      onSubmitted: (value) => context
-                          .read<SearchBloc>()
-                          .add(SearchQuerySubmitted()),
+                      onChanged: (value) =>
+                          context.read<SearchProvider>().updateQuery(value),
+                      onSubmitted: (value) =>
+                          context.read<SearchProvider>().submitQuery(),
                     ),
                     const Gap(10),
                     Skeletonizer(

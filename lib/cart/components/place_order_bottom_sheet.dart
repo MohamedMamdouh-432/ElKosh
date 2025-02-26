@@ -1,4 +1,4 @@
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
@@ -19,7 +19,7 @@ class PlaceOrderBottomSheet extends StatelessWidget {
         right: 20,
         bottom: context.bottomInsets + 10.sp,
       ),
-      child: BlocBuilder<CartBloc, CartState>(
+      child: BlocBuilder<CartCubit, CartState>(
         buildWhen: (p, c) => p != c,
         builder: (context, state) {
           return Column(

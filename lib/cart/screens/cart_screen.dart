@@ -1,10 +1,10 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/cart/components/place_order_bottom_sheet.dart';
 import 'package:elkosh/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/cart/widgets/cart_card.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,12 +17,12 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProductsBloc, ProductsState>(
+    return BlocListener<ProductsCubit, ProductsState>(
       listener: (context, state) {
         if (state.status == LoadStatus.updated)
-          context.read<CartBloc>().add(CartFetchingEvent());
+          context.read<CartCubit>().fetchCart();
       },
-      child: BlocConsumer<CartBloc, CartState>(
+      child: BlocConsumer<CartCubit, CartState>(
         buildWhen: (p, c) => p != c,
         listenWhen: (p, c) => p != c,
         listener: (context, state) {
@@ -44,7 +44,7 @@ class CartScreen extends StatelessWidget {
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );
-            context.read<CartBloc>().add(CartResetEvent());
+            context.read<CartCubit>().resetCart();
           } else if (state.status == CartStatus.failure)
             QuickAlert.show(
               context: context,
@@ -64,7 +64,7 @@ class CartScreen extends StatelessWidget {
               color: ColorManager.primary,
               backgroundColor: Colors.white,
               onRefresh: () async =>
-                  context.read<CartBloc>().add(CartFetchingEvent()),
+                  context.read<CartCubit>().fetchCart(),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -79,8 +79,8 @@ class CartScreen extends StatelessWidget {
                             onPressed: state.shopping.isEmpty
                                 ? null
                                 : () => context
-                                    .read<CartBloc>()
-                                    .add(CartResetEvent()),
+                                    .read<CartCubit>()
+                                    .resetCart(),
                             icon: Icon(
                               Icons.cleaning_services_sharp,
                               size: 30.sp,

@@ -8,7 +8,7 @@ part of 'offer.dart';
 
 class OfferAdapter extends TypeAdapter<Offer> {
   @override
-  final int typeId = 3;
+  final int typeId = 8;
 
   @override
   Offer read(BinaryReader reader) {

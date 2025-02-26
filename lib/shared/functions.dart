@@ -6,7 +6,6 @@ import 'package:path_provider/path_provider.dart';
 
 String getAddress(Map<String, dynamic> addressMap) {
   String address = '';
-  // country, state, city, road, neighbourhood, house_number
   if (addressMap['road'] != null) address += '${addressMap['road']}';
   if (addressMap['neighbourhood'] != null)
     address += ' , ${addressMap['neighbourhood']}';
@@ -34,7 +33,6 @@ String toArNumber(String input) {
     ':': ':',
     '.': ',',
   };
-
   return input.split('').map((char) => eaMap[char] ?? char).join('');
 }
 

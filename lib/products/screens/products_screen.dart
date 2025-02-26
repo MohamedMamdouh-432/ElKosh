@@ -1,4 +1,4 @@
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/products/widgets/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +20,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   void initState() {
     super.initState();
     _scrollController.addListener(() {
-      if (_isBottom)
-        context.read<ProductsBloc>().add(const ProductsFetchingEvent());
+      if (_isBottom) context.read<ProductsCubit>().fetchProducts();
     });
   }
 
@@ -34,7 +33,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProductsBloc, ProductsState>(
+    return BlocConsumer<ProductsCubit, ProductsState>(
       buildWhen: (p, c) => p != c,
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
@@ -49,7 +48,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              context.read<ProductsBloc>().add(const ProductsFetchingEvent());
+              context.read<ProductsCubit>().fetchProducts();
             },
           );
         }

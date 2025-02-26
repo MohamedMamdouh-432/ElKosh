@@ -1,4 +1,4 @@
-part of 'ads_bloc.dart';
+part of 'ads_cubit.dart';
 
 class AdsState extends Equatable {
   final List<Ad> ads;

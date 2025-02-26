@@ -8,7 +8,7 @@ part of 'market.dart';
 
 class MarketAdapter extends TypeAdapter<Market> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
   Market read(BinaryReader reader) {
@@ -24,8 +24,8 @@ class MarketAdapter extends TypeAdapter<Market> {
       imgUrl: fields[4] as String,
       active: fields[5] as bool,
       location: fields[8] as Location,
-      beginTime: fields[6] as TimeOfDay,
-      endTime: fields[7] as TimeOfDay,
+      beginTime: fields[6] as DayTime,
+      endTime: fields[7] as DayTime,
     );
   }
 

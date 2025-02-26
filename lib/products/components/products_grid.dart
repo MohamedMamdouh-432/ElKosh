@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/products/widgets/product_grid_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProductsBloc, ProductsState>(
+    return BlocConsumer<ProductsCubit, ProductsState>(
       buildWhen: (p, c) => p != c,
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
@@ -32,7 +32,7 @@ class ProductsGrid extends StatelessWidget {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              context.read<ProductsBloc>().add(const ProductsFetchingEvent());
+              context.read<ProductsCubit>().fetchProducts();
             },
           );
         }

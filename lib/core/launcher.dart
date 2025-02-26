@@ -1,14 +1,13 @@
-import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/auth/register/bloc/register_bloc.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/markets/controllers/markets_cubit/markets_cubit.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
-import 'package:elkosh/search/bloc/search_bloc.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
+import 'package:elkosh/search/controllers/search_provider.dart';
+import 'package:elkosh/settings/controllers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,17 +24,18 @@ class ElKoshApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => RegisterBloc()),
-        BlocProvider(create: (_) => MarketsBloc()),
-        BlocProvider(create: (_) => ProductsBloc()),
-        BlocProvider(create: (_) => ProfileBloc()),
-        BlocProvider(create: (_) => CartBloc()),
+        BlocProvider(create: (_) => MarketsCubit()),
+        BlocProvider(create: (_) => ProductsCubit()),
         BlocProvider(create: (_) => OrdersBloc()),
-        BlocProvider(create: (_) => SearchBloc()),
-        BlocProvider(create: (_) => AdsBloc()),
-        BlocProvider(create: (_) => AdDetailsBloc()),
+        BlocProvider(create: (_) => CartCubit()),
+        BlocProvider(create: (_) => AdsCubit()),
       ],
-      child: ChangeNotifierProvider(
-        create: (context) => NavProvider(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => NavProvider()),
+          ChangeNotifierProvider(create: (_) => ProfileProvider()),
+          ChangeNotifierProvider(create: (_) => SearchProvider()),
+        ],
         child: const ElKoshLauncher(),
       ),
     );

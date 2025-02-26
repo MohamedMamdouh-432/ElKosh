@@ -1,4 +1,4 @@
-part of 'products_bloc.dart';
+part of 'products_cubit.dart';
 
 class ProductsState extends Equatable {
   final List<Product> products, relProducts;
@@ -49,7 +49,7 @@ class ProductsState extends Equatable {
       Current Product: ${curProduct.name}
       Status: ${status.name}
       products: ${products.length}
-      Reach Max: ${hasReachedMax ? 'Max' : 'Not Yet'}
+      Reach Max: ${hasReachedMax ? 'YES' : 'NO'}
       Related Products: ${relProducts.length}
       Error: $errMsg
     ''';

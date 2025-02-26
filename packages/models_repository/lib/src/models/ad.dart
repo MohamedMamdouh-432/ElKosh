@@ -4,7 +4,7 @@ import 'package:models_repository/models_repository.dart';
 
 part 'ad.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 1)
 class Ad extends Equatable {
   @HiveField(0)
   final String id;

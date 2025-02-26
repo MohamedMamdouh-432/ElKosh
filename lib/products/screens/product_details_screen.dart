@@ -1,8 +1,8 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/products/controllers/product_details_bloc/product_details_bloc.dart';
+import 'package:elkosh/products/controllers/product_details_provider/product_details_provider.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:elkosh/shared/widgets/image_section.dart';
@@ -13,6 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -24,27 +25,14 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProductDetailsBloc(),
+    return ChangeNotifierProvider(
+      create: (context) => ProductDetailsProvider(),
       child: SafeArea(
-        child: BlocConsumer<CartBloc, CartState>(
-          buildWhen: (p, c) => p != c,
-          listenWhen: (p, c) => p != c,
-          listener: (context, state) {
-            if (state.status == CartStatus.failure) {
-              QuickAlert.show(
-                context: context,
-                type: QuickAlertType.warning,
-                title: 'خطأ',
-                text: state.errorMessage,
-                borderRadius: 25,
-              );
-            }
-          },
+        child: BlocConsumer<CartCubit, CartState>(
+          listener: (context, state) {},
           builder: (context, state) {
-            return BlocBuilder<ProductDetailsBloc, ProductDetailsState>(
-              buildWhen: (p, c) => p != c,
-              builder: (context, productState) {
+            return Consumer<ProductDetailsProvider>(
+              builder: (context, productState, _) {
                 bool isInCart =
                     state.shopping.containsKey(productState.product);
                 return Container(
@@ -171,9 +159,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                         IconButton(
                                           onPressed: !isInCart
                                               ? null
-                                              : () => context.read<CartBloc>().add(
-                                                  CartDecreasingProductQuantityEvent(
-                                                      productState.product)),
+                                              : () => context
+                                                  .read<CartCubit>()
+                                                  .decreaseProductCartQuantity(
+                                                      productState.product),
                                           icon: Icon(
                                             Icons.remove,
                                             size: 35,
@@ -214,9 +203,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                                               .product] ??
                                                           0) +
                                                       1
-                                              ? context.read<CartBloc>().add(
-                                                  CartIncreasingProductQuantityEvent(
-                                                      productState.product))
+                                              ? context
+                                                  .read<CartCubit>()
+                                                  .increaseProductCartQuantity(
+                                                      productState.product)
                                               : QuickAlert.show(
                                                   context: context,
                                                   type: QuickAlertType.warning,
@@ -317,7 +307,7 @@ class ProductDetailsScreen extends StatelessWidget {
                         onPressed: () {
                           int steps = (GoRouter.of(context).state.extra
                               as Map<String, dynamic>)['steps'] as int;
-                          context.read<NavProvider>().navToPage(1);
+                          context.read<NavProvider>().navToPage(2);
                           while (steps-- > 0) context.pop();
                         },
                         child: const Text(

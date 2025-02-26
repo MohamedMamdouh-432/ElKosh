@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 
 part 'location.g.dart';
 
-@HiveType(typeId: 6)
+@HiveType(typeId: 7)
 class Location extends Equatable {
   @HiveField(0)
   final double latitude;

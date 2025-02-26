@@ -1,13 +1,13 @@
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/orders/bloc/orders_bloc.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/settings/controllers/profile_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:models_repository/models_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,32 +17,10 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProfileBloc, ProfileState>(
-      buildWhen: (p, c) => p != c,
-      listenWhen: (p, c) => p != c,
-      listener: (context, state) {
-        if (state.status == ProfileStatus.userNotFound) {
-          String msg = state.errMsg;
-          if (msg.startsWith("Exception:"))
-            msg = msg.substring(msg.indexOf(":") + 1);
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.error,
-            title: 'حدث خطأ ما',
-            text: msg,
-            borderRadius: 25,
-            barrierDismissible: false,
-            confirmBtnText: "تسجيل الدخول",
-            onConfirmBtnTap: () {
-              context.pop();
-              context.go(RouteManager.loginRoute);
-            },
-          );
-        }
-      },
-      builder: (context, state) {
+    return Consumer<ProfileProvider>(
+      builder: (context, pp, child) {
         return Skeletonizer(
-          enabled: state.status == ProfileStatus.loading,
+          enabled: pp.status == ProfileStatus.loading,
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
             child: Column(
@@ -55,7 +33,7 @@ class SettingScreen extends StatelessWidget {
                         radius: 25,
                         child: Center(
                           child: Text(
-                            state.user.name[0],
+                            pp.user.name[0],
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 30,
@@ -69,7 +47,7 @@ class SettingScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            state.user.name,
+                            pp.user.name,
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -85,7 +63,7 @@ class SettingScreen extends StatelessWidget {
                               ),
                               const Gap(10),
                               Text(
-                                state.user.phone,
+                                pp.user.phone,
                                 style: const TextStyle(
                                   fontSize: 20,
                                 ),
@@ -182,8 +160,7 @@ class SettingScreen extends StatelessWidget {
                       },
                       onConfirmBtnTap: () {
                         context
-                            .read<ProfileBloc>()
-                            .add(ProfileSigningOutEvent());
+                            .read<ProfileProvider>().signOut();
                         context.go(RouteManager.loginRoute);
                       },
                     );
@@ -212,7 +189,7 @@ class SettingScreen extends StatelessWidget {
                         context.pop();
                       },
                       onConfirmBtnTap: () {
-                        context.read<ProfileBloc>().add(ProfileDeletingEvent());
+                        context.read<ProfileProvider>().deleteProfile();
                         context.go(RouteManager.loginRoute);
                       },
                     );
