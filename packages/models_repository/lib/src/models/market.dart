@@ -5,8 +5,7 @@ import 'package:models_repository/models_repository.dart';
 
 part 'market.g.dart';
 
-
-@HiveType(typeId: 2)
+@HiveType(typeId: 3)
 class Market extends Equatable {
   @HiveField(0)
   final String id;
@@ -27,10 +26,10 @@ class Market extends Equatable {
   final bool active;
 
   @HiveField(6)
-  final TimeOfDay beginTime; // تحويل TimeOfDay إلى String
+  final DayTime beginTime;
 
   @HiveField(7)
-  final TimeOfDay endTime; // تحويل TimeOfDay إلى String
+  final DayTime endTime;
 
   @HiveField(8)
   final Location location;
@@ -55,8 +54,8 @@ class Market extends Equatable {
     hotline: '',
     active: true,
     location: Location.empty,
-    beginTime: TimeOfDay(hour: 0, minute: 0),
-    endTime: TimeOfDay(hour: 0, minute: 0),
+    beginTime: DayTime(hour: 0, minute: 0, period: 'am'),
+    endTime: DayTime(hour: 0, minute: 0, period: 'pm'),
   );
 
   Market copyWith({
@@ -67,8 +66,8 @@ class Market extends Equatable {
     String? imgUrl,
     bool? active,
     Location? location,
-    TimeOfDay? beginTime,
-    TimeOfDay? endTime,
+    DayTime? beginTime,
+    DayTime? endTime,
   }) =>
       Market(
         id: id ?? this.id,
@@ -91,12 +90,14 @@ class Market extends Equatable {
         imgUrl: marketDoc['imgUrl'],
         active: marketDoc['active'],
         location: Location.fromJson(marketDoc['location']),
-        beginTime: TimeOfDay(
-            hour: marketDoc['beginTime']['hour'],
-            minute: marketDoc['beginTime']['minute']),
-        endTime: TimeOfDay(
-            hour: marketDoc['endTime']['hour'],
-            minute: marketDoc['endTime']['minute']),
+        beginTime: DayTime.fromTimeOfDay(TimeOfDay(
+          hour: marketDoc['beginTime']['hour'],
+          minute: marketDoc['beginTime']['minute'],
+        )),
+        endTime: DayTime.fromTimeOfDay(TimeOfDay(
+          hour: marketDoc['endTime']['hour'],
+          minute: marketDoc['endTime']['minute'],
+        )),
       );
 
   Map<String, dynamic> toDoc() => {
@@ -118,7 +119,7 @@ class Market extends Equatable {
 
   @override
   String toString() {
-    return '\n\tName: $name ::\n\tHotline: $hotline\n\tDescription: $desc\n\tImage Url: $imgUrl\n\tBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period.name}\n\tEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period.name}\n\tAddress: ${location.latitude}, ${location.longitude}\nActive: $active';
+    return '\n\tName: $name ::\n\tHotline: $hotline\n\tDescription: $desc\n\tImage Url: $imgUrl\n\tBeginTime: ${beginTime.hour}:${beginTime.minute} ${beginTime.period}\n\tEndTime: ${endTime.hour}:${endTime.minute} ${endTime.period}\n\tAddress: ${location.latitude}, ${location.longitude}\nActive: $active';
   }
 
   @override

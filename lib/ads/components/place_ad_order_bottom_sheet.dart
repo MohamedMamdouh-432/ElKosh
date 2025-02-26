@@ -1,4 +1,4 @@
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +15,7 @@ class PlaceAdOrderBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CartBloc, CartState>(
+    return BlocBuilder<CartCubit, CartState>(
       buildWhen: (p, c) => p != c,
       builder: (context, state) {
         return Container(

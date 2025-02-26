@@ -1,4 +1,4 @@
-import 'package:elkosh/cart/bloc/cart_bloc.dart';
+import 'package:elkosh/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
@@ -45,7 +45,7 @@ class AdDeliveryLocationPickerScreen extends StatelessWidget {
           ),
           selectLocationButtonStyle: ButtonStyle(
             backgroundColor: WidgetStateProperty.all(
-                ColorManager.primary.withValues(alpha: 0.8)),
+                ColorManager.primary.withValues(alpha: 0.9)),
             foregroundColor: const WidgetStatePropertyAll(Colors.white),
             elevation: const WidgetStatePropertyAll(15),
           ),
@@ -63,9 +63,9 @@ class AdDeliveryLocationPickerScreen extends StatelessWidget {
           searchBarBackgroundColor: Colors.grey.shade200,
           // other buttons
           locationButtonBackgroundColor:
-              ColorManager.primary.withValues(alpha: 0.8),
+              ColorManager.primary.withValues(alpha: 0.9),
           zoomButtonsBackgroundColor:
-              ColorManager.primary.withValues(alpha: 0.8),
+              ColorManager.primary.withValues(alpha: 0.9),
           locationButtonsColor: Colors.grey.shade300,
           zoomButtonsColor: Colors.grey.shade300,
           markerIcon: Icon(
@@ -74,14 +74,15 @@ class AdDeliveryLocationPickerScreen extends StatelessWidget {
             color: ColorManager.primary,
           ),
           showCurrentLocationPointer: false,
-          onError: (e) => AppLogs.error('Ad Delivery Location Picker Error: $e'),
+          onError: (e) =>
+              AppLogs.error('Ad Delivery Location Picker Error: $e'),
           onPicked: (pickedData) {
             final location = Location.fromMapPicker(
               pickedData.latLong.latitude,
               pickedData.latLong.longitude,
               getAddress(pickedData.addressData),
             );
-            context.read<CartBloc>().add(CartPlaceAdOrderEvent(location));
+            context.read<CartCubit>().placeAdOrder(location);
             context.pop();
             context.pop();
           },

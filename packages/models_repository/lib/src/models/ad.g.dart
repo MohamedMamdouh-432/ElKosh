@@ -8,7 +8,7 @@ part of 'ad.dart';
 
 class AdAdapter extends TypeAdapter<Ad> {
   @override
-  final int typeId = 0;
+  final int typeId = 1;
 
   @override
   Ad read(BinaryReader reader) {

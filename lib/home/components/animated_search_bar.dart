@@ -1,4 +1,4 @@
-import 'package:elkosh/search/bloc/search_bloc.dart';
+import 'package:elkosh/search/controllers/search_provider.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,8 +32,7 @@ class AnimatedSearchBar extends StatelessWidget {
             ),
             padding: const WidgetStatePropertyAll(
                 EdgeInsets.symmetric(horizontal: 10)),
-            onSubmitted: (value) =>
-                ctx.read<SearchBloc>().add(SearchQuerySubmitted()),
+            onSubmitted: (value) => ctx.read<SearchProvider>().submitQuery(),
           ),
           const Gap(16),
         ],

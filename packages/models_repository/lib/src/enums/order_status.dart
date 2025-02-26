@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'order_status.g.dart';
 
-@HiveType(typeId: 6) // Unique typeId
+@HiveType(typeId: 0) // Unique typeId
 enum OrderStatus {
   @HiveField(0)
   pending,

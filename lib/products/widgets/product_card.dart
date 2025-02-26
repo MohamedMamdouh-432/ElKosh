@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/shared/functions.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<ProductsBloc>().add(ProductSelectedEvent(product));
+        context.read<ProductsCubit>().selectProduct(product);
         context.push(RouteManager.productDetailsRoute, extra: {
           'steps': steps,
           'isRelated': ((GoRouter.of(context).state.extra ?? {})
@@ -47,7 +47,7 @@ class ProductCard extends StatelessWidget {
                 color: const Color.fromARGB(255, 242, 240, 240),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: BlocBuilder<ProductsBloc, ProductsState>(
+              child: BlocBuilder<ProductsCubit, ProductsState>(
                 buildWhen: (p, c) => p != c,
                 builder: (context, state) {
                   return Column(

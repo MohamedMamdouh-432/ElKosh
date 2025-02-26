@@ -1,11 +1,11 @@
 import 'package:elkosh/ads/components/ads_slider.dart';
-import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/core/utils/color_manager.dart';
 import 'package:elkosh/home/components/home_app_bar.dart';
 import 'package:elkosh/markets/components/markets_view.dart';
-import 'package:elkosh/markets/controllers/markets_bloc/markets_bloc.dart';
+import 'package:elkosh/markets/controllers/markets_cubit/markets_cubit.dart';
 import 'package:elkosh/products/components/products_grid.dart';
-import 'package:elkosh/products/controllers/products_bloc/products_bloc.dart';
+import 'package:elkosh/products/controllers/products_cubit/products_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,22 +52,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Future.wait([
           Future.delayed(
             Duration.zero,
-            () => context.read<AdsBloc>().add(AdsLoadingEvent()),
+            () => context.read<AdsCubit>().loadAds(),
           ),
           Future.delayed(
             Duration.zero,
-            () => context.read<MarketsBloc>().add(MarketsLoadingEvent()),
+            () => context.read<MarketsCubit>().fetchMarkets(),
           ),
           Future.delayed(
             Duration.zero,
-            () => context
-                .read<ProductsBloc>()
-                .add(const ProductsFetchingEvent(10)),
-          ),
-          Future.delayed(
-            Duration.zero,
-            () =>
-                context.read<ProductsBloc>().add(const ProductsFetchingEvent()),
+            () => context.read<ProductsCubit>().fetchProducts(),
           ),
         ]);
       },

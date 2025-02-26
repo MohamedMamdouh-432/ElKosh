@@ -7,23 +7,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-part 'cart_event.dart';
 part 'cart_state.dart';
 
-class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartState.initial) {
-    on<CartFetchingEvent>(_onFetchCart);
-    on<CartAddingProductEvent>(_onAddProductToCart);
-    on<CartRemovingProductEvent>(_onRemoveProductFromCart);
-    on<CartIncreasingProductQuantityEvent>(_onIncreaseProductQuantityInCart);
-    on<CartDecreasingProductQuantityEvent>(_onDecreaseProductQuantityInCart);
-    on<CartPlaceOrderEvent>(_onPlacingOrder);
-    on<CartPlaceAdOrderEvent>(_onPlacingAdOrder);
-    on<CartResetEvent>(_onResetCart);
-    on<CartAdResetEvent>(_onResetAdCart);
-  }
+class CartCubit extends Cubit<CartState> {
+  CartCubit() : super(CartState.initial);
 
-  Future<void> _onFetchCart(event, emit) async {
+  Future<void> fetchCart() async {
     try {
       emit(state.copyWith(status: CartStatus.loading));
       final result = await sl.get<DataRepository>().fetchCart();
@@ -47,9 +36,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onAddProductToCart(CartAddingProductEvent event, emit) async {
-    final result =
-        await sl.get<DataRepository>().addProductToCart(event.product);
+  Future<void> addProductToCart(Product p) async {
+    final result = await sl.get<DataRepository>().addProductToCart(p);
     result.fold(
       (left) => emit(state.copyWith(
         status: CartStatus.failure,
@@ -58,7 +46,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       (right) {
         final updatedShopping = Map<Product, int>.of(state.shopping);
         updatedShopping.update(
-          event.product,
+          p,
           (cnt) => cnt + 1,
           ifAbsent: () => 1,
         );
@@ -66,16 +54,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           shopping: updatedShopping,
           errorMessage: '',
           status: CartStatus.success,
-          price: state.price + event.product.updatedPrice,
+          price: state.price + p.updatedPrice,
         ));
       },
     );
   }
 
-  Future<void> _onRemoveProductFromCart(
-      CartRemovingProductEvent event, emit) async {
-    final result =
-        await sl.get<DataRepository>().removeProductFromCart(event.product);
+  Future<void> removeProductFromCart(Product p) async {
+    final result = await sl.get<DataRepository>().removeProductFromCart(p);
     result.fold(
       (left) => emit(state.copyWith(
         status: CartStatus.failure,
@@ -83,11 +69,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       )),
       (right) {
         final updatedShopping = Map<Product, int>.of(state.shopping);
-        int count = updatedShopping[event.product] ?? 0;
-        updatedShopping.remove(event.product);
+        int count = updatedShopping[p] ?? 0;
+        updatedShopping.remove(p);
         emit(state.copyWith(
           errorMessage: '',
-          price: state.price - (event.product.updatedPrice * count),
+          price: state.price - (p.updatedPrice * count),
           status: CartStatus.success,
           shopping: updatedShopping,
         ));
@@ -95,11 +81,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
   }
 
-  Future<void> _onIncreaseProductQuantityInCart(
-      CartIncreasingProductQuantityEvent event, emit) async {
-    final result = await sl
-        .get<DataRepository>()
-        .increaseProductQuantityInCart(event.product);
+  Future<void> increaseProductCartQuantity(Product p) async {
+    final result =
+        await sl.get<DataRepository>().increaseProductQuantityInCart(p);
     result.fold(
       (left) => emit(state.copyWith(
         status: CartStatus.failure,
@@ -108,26 +92,24 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       (right) {
         final updatedShopping = Map<Product, int>.of(state.shopping);
         updatedShopping.update(
-          event.product,
+          p,
           (value) => value + 1,
           ifAbsent: () => 1,
         );
         emit(state.copyWith(
           shopping: updatedShopping,
           errorMessage: '',
-          price: state.price + event.product.updatedPrice,
+          price: state.price + p.updatedPrice,
           status: CartStatus.success,
         ));
       },
     );
   }
 
-  Future<void> _onDecreaseProductQuantityInCart(
-      CartDecreasingProductQuantityEvent event, emit) async {
+  Future<void> decreaseProductCartQuantity(Product p) async {
     try {
-      final result = await sl
-          .get<DataRepository>()
-          .decreaseProductQuantityFromCart(event.product);
+      final result =
+          await sl.get<DataRepository>().decreaseProductQuantityFromCart(p);
       result.fold(
         (left) => emit(state.copyWith(
           status: CartStatus.failure,
@@ -136,17 +118,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         (right) {
           Map<Product, int> updatedShopping =
               Map<Product, int>.of(state.shopping);
-          bool isExist = updatedShopping.containsKey(event.product);
+          bool isExist = updatedShopping.containsKey(p);
           updatedShopping.update(
-            event.product,
+            p,
             (value) => value - 1,
             ifAbsent: null,
           );
-          if (updatedShopping[event.product] == 0)
-            updatedShopping.remove(event.product);
+          if (updatedShopping[p] == 0) updatedShopping.remove(p);
           emit(state.copyWith(
             errorMessage: '',
-            price: state.price - (isExist ? event.product.updatedPrice : 0),
+            price: state.price - (isExist ? p.updatedPrice : 0),
             status: CartStatus.success,
             shopping: updatedShopping,
           ));
@@ -160,11 +141,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onPlacingOrder(
-      CartPlaceOrderEvent event, Emitter<CartState> emit) async {
+  Future<void> placeOrder(Location location) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
-      final result = await sl.get<DataRepository>().placeOrder(event.location);
+      final result = await sl.get<DataRepository>().placeOrder(location);
       List<String?> adminTokens =
           await sl.get<DataRepository>().getAdminTokens();
       result.fold(
@@ -210,11 +190,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onPlacingAdOrder(CartPlaceAdOrderEvent event, emit) async {
+  Future<void> placeAdOrder(Location location) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
       final result =
-          await sl.get<DataRepository>().placeAdOrder(event.location);
+          await sl.get<DataRepository>().placeAdOrder(location);
       List<String?> adminTokens =
           await sl.get<DataRepository>().getAdminTokens();
       result.fold(
@@ -262,7 +242,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onResetCart(event, emit) async {
+  Future<void> resetCart() async {
     try {
       emit(state.copyWith(status: CartStatus.loading));
       final result = await sl.get<DataRepository>().resetCart();
@@ -281,7 +261,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
-  Future<void> _onResetAdCart(event, emit) async {
+  Future<void> resetAdCart() async {
     try {
       emit(state.copyWith(status: CartStatus.loading));
       final result = await sl.get<DataRepository>().resetCart();

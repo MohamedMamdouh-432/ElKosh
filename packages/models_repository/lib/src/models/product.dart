@@ -60,6 +60,32 @@ class Product extends Equatable {
     marketId: '',
     unitDesc: '',
   );
+  
+  Product copyWith({
+    String? id,
+    String? name,
+    String? desc,
+    String? imgUrl,
+    double? price,
+    String? unitDesc,
+    double? quantity,
+    double? updatedPrice,
+    String? marketId,
+    String? categoryId,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      desc: desc ?? this.desc,
+      imgUrl: imgUrl ?? this.imgUrl,
+      price: price ?? this.price,
+      unitDesc: unitDesc ?? this.unitDesc,
+      quantity: quantity ?? this.quantity,
+      updatedPrice: updatedPrice ?? this.updatedPrice,
+      marketId: marketId ?? this.marketId,
+      categoryId: categoryId ?? this.categoryId,
+    );
+  }
 
   factory Product.fromDoc(String productId, Map<String, dynamic> productDoc) =>
       Product(

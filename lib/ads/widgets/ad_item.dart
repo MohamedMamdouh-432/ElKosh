@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/ads/controllers/ad_details_bloc/ad_details_bloc.dart';
-import 'package:elkosh/ads/controllers/ads_bloc/ads_bloc.dart';
+import 'package:elkosh/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,8 +15,8 @@ class AdItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.read<AdsBloc>().add(AdSelectedEvent(ad));
-        context.read<AdDetailsBloc>().add(AdDetailsLoadingEvent());
+        context.read<AdsCubit>().selectAd(ad);
+        context.read<AdDetailsProvider>().loadAdDetails();
         context.push(RouteManager.adDetailsRoute);
       },
       child: ClipRRect(
@@ -32,7 +32,6 @@ class AdItem extends StatelessWidget {
               image: DecorationImage(
                 image: imageProvider,
                 fit: BoxFit.fill,
-                
               ),
             ),
           ),

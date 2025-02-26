@@ -4,7 +4,7 @@ import 'package:models_repository/models_repository.dart';
 
 part 'offer.g.dart';
 
-@HiveType(typeId: 3)
+@HiveType(typeId: 8)
 class Offer extends Equatable {
   @HiveField(0)
   final int quantity;

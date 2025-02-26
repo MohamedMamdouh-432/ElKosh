@@ -4,7 +4,7 @@ import 'package:models_repository/models_repository.dart';
 
 part 'shopping_item.g.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 9)
 class ShoppingItem extends Equatable {
   @HiveField(0)
   final Product product;

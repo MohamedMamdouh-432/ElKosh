@@ -1,45 +1,60 @@
 import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/shared/services/service_locator.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-part 'ad_details_event.dart';
-part 'ad_details_state.dart';
-
-class AdDetailsBloc extends Bloc<AdDetailsEvent, AdDetailsState> {
+class AdDetailsProvider extends ChangeNotifier {
+  Ad _ad = Ad.empty;
+  LoadStatus _status = LoadStatus.initial;
+  String _errMsg = '';
   StreamSubscription? _subscription;
-  AdDetailsBloc() : super(AdDetailsState.initial) {
-    on<AdDetailsLoadingEvent>(_onAdDetailsLoaded);
-    on<AdDetailsUpdatingEvent>(_onAdDetailsUpdated);
 
+  AdDetailsProvider() {
+    _init();
+  }
+
+  // Getters
+  Ad get ad => _ad;
+  LoadStatus get status => _status;
+  String get errMsg => _errMsg;
+
+  void _init() {
     _subscription = sl.get<DataRepository>().adDetailsStream().listen(
-          (result) => result.fold((l) => addError(l.message),
-              (r) => add(AdDetailsUpdatingEvent(r))),
+      (result) {
+        result.fold(
+          (l) => _setError(l.message),
+          (r) => _updateAd(r),
         );
+      },
+      onError: (e) => _setError(e.toString()),
+    );
   }
 
-  FutureOr<void> _onAdDetailsLoaded(AdDetailsLoadingEvent event, emit) {
-    emit(state.copyWith(status: LoadStatus.inProgress));
-    emit(state.copyWith(
-      status: LoadStatus.success,
-      ad: sl.get<DataRepository>().getCurAd(),
-    ));
+  void loadAdDetails() {
+    _status = LoadStatus.inProgress;
+    notifyListeners();
+
+    _ad = sl.get<DataRepository>().getCurAd()!;
+    _status = LoadStatus.success;
+    notifyListeners();
   }
 
-  FutureOr<void> _onAdDetailsUpdated(AdDetailsUpdatingEvent event, emit) {
-    emit(state.copyWith(
-      ad: event.ad,
-      status: LoadStatus.success,
-    ));
+  void _updateAd(Ad newAd) {
+    _ad = newAd;
+    _status = LoadStatus.success;
+    notifyListeners();
+  }
+
+  void _setError(String message) {
+    _errMsg = message;
+    _status = LoadStatus.failure;
+    notifyListeners();
   }
 
   @override
-  Future<void> close() {
+  void dispose() {
     _subscription?.cancel();
-    _subscription = null;
-    return super.close();
+    super.dispose();
   }
 }

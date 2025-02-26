@@ -2,11 +2,11 @@ import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/home/components/animated_search_bar.dart';
 import 'package:elkosh/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/home/widgets/home_hi_item.dart';
-import 'package:elkosh/settings/bloc/profile_bloc.dart';
+import 'package:elkosh/settings/controllers/profile_provider.dart';
 import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class HomeAppBar extends StatelessWidget {
   final Animation appBarAnimation;
@@ -17,16 +17,15 @@ class HomeAppBar extends StatelessWidget {
     return AnimatedBuilder(
         animation: appBarAnimation,
         builder: (context, child) {
-          return BlocBuilder<ProfileBloc, ProfileState>(
-            buildWhen: (p, c) => p != c,
-            builder: (ctx, state) {
+          return Consumer<ProfileProvider>(
+            builder: (ctx, pp, child) {
               return Container(
                 width: ctx.width,
                 height: appBarAnimation.value,
                 decoration: BoxDecoration(
-                  color: ColorManager.primary.withValues(alpha: 0.75),
+                  color: ColorManager.primary.withValues(alpha: 0.9),
                   borderRadius: const BorderRadius.vertical(
-                    bottom: Radius.circular(28),
+                    bottom: Radius.circular(40),
                   ),
                 ),
                 child: Stack(
@@ -42,7 +41,7 @@ class HomeAppBar extends StatelessWidget {
                                   EdgeInsets.only(top: ctx.viewPaddingTop + 15),
                               child: Row(
                                 children: [
-                                  HomeHiItem(name: state.user.name),
+                                  HomeHiItem(name: pp.user.name),
                                   GestureDetector(
                                     onTap: () => context
                                         .read<NavProvider>()

@@ -1,4 +1,4 @@
-part of 'markets_bloc.dart';
+part of 'markets_cubit.dart';
 
 class MarketsState extends Equatable {
   final List<Market> markets;

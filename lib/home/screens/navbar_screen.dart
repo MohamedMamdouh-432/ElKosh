@@ -52,8 +52,8 @@ class NavBarScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              ColorManager.primary.withValues(alpha: 0.75),
-                              ColorManager.primary.withValues(alpha: 0.75),
+                              ColorManager.primary.withValues(alpha: 0.9),
+                              ColorManager.primary.withValues(alpha: 0.9),
                             ],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -112,9 +112,9 @@ class BottomNavClipper extends CustomClipper<Path> {
     path.lineTo(0, height);
     path.lineTo(width, height);
     path.lineTo(size.width, 0);
-    path.quadraticBezierTo(width, 45, width - 45, 45);
-    path.lineTo(45, 45);
-    path.quadraticBezierTo(0, 45, 0, 0);
+    path.quadraticBezierTo(width, 40, width - 40, 40);
+    path.lineTo(40, 40);
+    path.quadraticBezierTo(0, 40, 0, 0);
     path.close();
     return path;
   }

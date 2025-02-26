@@ -37,18 +37,29 @@ Future<void> setup() async {
     sharedPref: sl.get<SharedPreferences>(),
   ));
 
-  Hive.registerAdapter(MarketAdapter());
-  Hive.registerAdapter(CategoryAdapter());
-  Hive.registerAdapter(ProductAdapter());
-  Hive.registerAdapter(UserOrderAdapter());
+  //* Hive Adapters
   Hive.registerAdapter(OrderStatusAdapter());
+  Hive.registerAdapter(AdAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(MarketAdapter());
+  Hive.registerAdapter(UserOrderAdapter());
+  Hive.registerAdapter(ProductAdapter());
+  Hive.registerAdapter(DayTimeAdapter());
   Hive.registerAdapter(LocationAdapter());
   Hive.registerAdapter(OfferAdapter());
-  Hive.registerAdapter(AdAdapter());
+  Hive.registerAdapter(ShoppingItemAdapter());
+
+  //* Hive Boxes
   await Hive.openBox<Category>('categoriesBox');
   await Hive.openBox<Market>('marketsBox');
   await Hive.openBox<Product>('productsBox');
   await Hive.openBox<Map>('cartBox');
   await Hive.openBox<UserOrder>('ordersBox');
   await Hive.openBox<Ad>('adsBox');
+
+  //* Firebase Cache Settings
+  sl.get<FirebaseFirestore>().settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
 }
