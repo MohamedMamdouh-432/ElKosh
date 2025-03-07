@@ -68,7 +68,6 @@
 # Edits
 	- Pagination
 		* Ads
-		* Products
 		* Orders
 	- Cart Staratigy
 		* List<Ad>

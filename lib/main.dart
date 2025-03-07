@@ -10,7 +10,7 @@ import 'firebase_options.dart';
 import 'shared/services/service_locator.dart';
 
 @pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> _fMBHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
@@ -18,10 +18,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
-  
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onBackgroundMessage(_fMBHandler);
   await setup();
-  
-  Bloc.observer = const AppBlocObserver();
+
+  Bloc.observer = const AppObserver();
   runApp(const ElKoshApp());
 }

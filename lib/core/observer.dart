@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-class AppBlocObserver extends BlocObserver {
-  const AppBlocObserver();
+class AppObserver extends BlocObserver {
+  const AppObserver();
 
   @override
   void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
@@ -19,4 +19,3 @@ class AppBlocObserver extends BlocObserver {
     AppLogs.debug(transition.nextState.toString());
   }
 }
-
