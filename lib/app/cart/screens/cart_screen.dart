@@ -1,0 +1,126 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
+import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
+import 'package:elkosh/app/cart/components/place_order_bottom_sheet.dart';
+import 'package:elkosh/app/cart/components/settings_appbar.dart';
+import 'package:elkosh/app/cart/screens/empty_cart_screen.dart';
+import 'package:elkosh/app/cart/widgets/cart_card.dart';
+import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
+import 'package:elkosh/core/theme/themes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:models_repository/models_repository.dart';
+import 'package:quickalert/quickalert.dart';
+
+class CartScreen extends StatelessWidget {
+  const CartScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<ProductsCubit, ProductsState>(
+      listener: (context, state) {
+        if (state.status == LoadStatus.updated)
+          // todo: when fetching if product.quantity == 0 => ignore it
+          context.read<CartCubit>().fetchCart();
+      },
+      child: BlocConsumer<CartCubit, CartState>(
+        buildWhen: (p, c) => p != c,
+        listenWhen: (p, c) => p != c,
+        listener: (context, state) {
+          if (state.status == CartStatus.placingfailure)
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.warning,
+              title: 'خطأ',
+              text: "حدث خطأ أثناء طلب الوردر. حاول مره اخرى",
+              borderRadius: 20,
+              animType: QuickAlertAnimType.scale,
+            );
+          else if (state.status == CartStatus.placingSuccess) {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.success,
+              title: 'نجاح',
+              text: "تم تسجيل الطلب بنجاح",
+              borderRadius: 20,
+              animType: QuickAlertAnimType.scale,
+            );
+            context.read<CartCubit>().resetCart();
+          } else if (state.status == CartStatus.failure)
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.warning,
+              title: 'خطأ',
+              text: state.errMsg,
+              borderRadius: 20,
+              animType: QuickAlertAnimType.scale,
+            );
+        },
+        builder: (context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state.status == CartStatus.loading ||
+                state.status == CartStatus.onProgress,
+            child: RefreshIndicator(
+              displacement: 60,
+              color: ColorManager.primary,
+              backgroundColor: Colors.white,
+              onRefresh: () async => context.read<CartCubit>().fetchCart(),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Column(
+                    children: [
+                      const CartAppBar(),
+                      Expanded(
+                        child: ConditionalBuilder(
+                          condition: state.items.isEmpty,
+                          builder: (context) => const EmptyCartView(),
+                          fallback: (context) => ListView.builder(
+                            padding: EdgeInsets.only(bottom: 60.sp),
+                            itemCount: state.items.length,
+                            itemBuilder: (context, index) => CartCard(
+                              product: state.items.keys.elementAt(index),
+                              quantity: state.items.values.elementAt(index),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    bottom: 5,
+                    left: 20,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: state.items.isEmpty
+                          ? null
+                          : () async {
+                              showModalBottomSheet(
+                                context: context,
+                                elevation: 20,
+                                useSafeArea: true,
+                                isScrollControlled: true,
+                                showDragHandle: true,
+                                builder: (context) =>
+                                    const PlaceOrderBottomSheet(),
+                              );
+                            },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                      ),
+                      child: const Text(
+                        "أطلب الأن",
+                        textScaler: TextScaler.linear(1.8),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

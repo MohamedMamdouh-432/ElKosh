@@ -29,10 +29,8 @@ class UserRepository {
       _userId = _sharedPref.getString('userId');
       if (_userId == null || _userId?.isEmpty == true)
         return const Left(Failure("لم تقم بتسجيل الدخول"));
-      final userDoc = await _firestore
-          .collection(ConstantManager.userCollection)
-          .doc(_userId)
-          .get();
+      final userDoc =
+          await _firestore.collection(Constants.userCol).doc(_userId).get();
       if (userDoc.exists)
         _user = User.fromDoc(userDoc.id, userDoc.data() ?? {});
       await _sharedPref.setString('userId', _userId ?? '');
@@ -52,10 +50,7 @@ class UserRepository {
   }
 
   Future<void> deleteAccount() async {
-    await _firestore
-        .collection(ConstantManager.userCollection)
-        .doc(_userId ?? '')
-        .delete();
+    await _firestore.collection(Constants.userCol).doc(_userId ?? '').delete();
     _user = _userId = null;
     await _sharedPref.remove('userId');
   }

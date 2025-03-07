@@ -158,7 +158,7 @@ class AuthRepository {
         password: password,
       );
       _firestore
-          .collection(ConstantManager.userCollection)
+          .collection(Constants.userCol)
           .doc(userCredentials.user?.uid)
           .set({
         'name': name,
@@ -205,10 +205,8 @@ class AuthRepository {
         password: password,
       );
       _userId = userCredentials.user?.uid;
-      final userDoc = await _firestore
-          .collection(ConstantManager.userCollection)
-          .doc(_userId)
-          .get();
+      final userDoc =
+          await _firestore.collection(Constants.userCol).doc(_userId).get();
       if (userDoc.data()?['active'] == false) throw "الحساب موقوف";
       await _sharedPref.setString('userId', _userId ?? '');
       return _userId ?? '';

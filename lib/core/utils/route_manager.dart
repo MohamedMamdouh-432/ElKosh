@@ -1,22 +1,21 @@
-import 'package:elkosh/ads/screens/ad_delivery_location_picker_screen.dart';
-import 'package:elkosh/ads/screens/ad_details_screen.dart';
-import 'package:elkosh/auth/login/bloc/login_bloc.dart';
-import 'package:elkosh/auth/login/screens/login_screen.dart';
-import 'package:elkosh/auth/register/screens/otp_screen.dart';
-import 'package:elkosh/auth/register/screens/register_screen.dart';
-import 'package:elkosh/cart/screens/delivery_location_picker_screen.dart';
-import 'package:elkosh/home/screens/home_screen.dart';
-import 'package:elkosh/home/screens/navbar_screen.dart';
-import 'package:elkosh/markets/screens/market_details_screen.dart';
-import 'package:elkosh/orders/screens/history_order_details_screen.dart';
-import 'package:elkosh/orders/screens/ongoing_order_details_screen.dart';
-import 'package:elkosh/orders/screens/talabty_screen.dart';
-import 'package:elkosh/products/screens/product_details_screen.dart';
-import 'package:elkosh/products/screens/products_screen.dart';
-import 'package:elkosh/search/screens/search_screen.dart';
-import 'package:elkosh/settings/screens/about_app_screen.dart';
-import 'package:elkosh/settings/screens/app_policy2.dart';
-import 'package:elkosh/settings/screens/privacy_policy.dart';
+import 'package:elkosh/app/ads/screens/ad_details_screen.dart';
+import 'package:elkosh/app/auth/login/bloc/login_bloc.dart';
+import 'package:elkosh/app/auth/login/screens/login_screen.dart';
+import 'package:elkosh/app/auth/register/screens/otp_screen.dart';
+import 'package:elkosh/app/auth/register/screens/register_screen.dart';
+import 'package:elkosh/app/cart/screens/delivery_location_picker_screen.dart';
+import 'package:elkosh/app/home/markets/screens/market_details_screen.dart';
+import 'package:elkosh/app/home/products/screens/product_details_screen.dart';
+import 'package:elkosh/app/home/products/screens/products_screen.dart';
+import 'package:elkosh/app/home/screens/home_screen.dart';
+import 'package:elkosh/app/home/screens/main_screen.dart';
+import 'package:elkosh/app/home/search/screens/search_screen.dart';
+import 'package:elkosh/app/settings/orders/screens/history_order_details_screen.dart';
+import 'package:elkosh/app/settings/orders/screens/ongoing_order_details_screen.dart';
+import 'package:elkosh/app/settings/orders/screens/talabty_screen.dart';
+import 'package:elkosh/app/settings/screens/about_app_screen.dart';
+import 'package:elkosh/app/settings/screens/app_policy2.dart';
+import 'package:elkosh/app/settings/screens/privacy_policy.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -72,7 +71,7 @@ abstract class RouteManager {
       ),
       GoRoute(
         path: navbarRoute,
-        builder: (_, __) => const NavBarScreen(),
+        builder: (_, __) => const MainScreen(),
       ),
       GoRoute(
         path: homeRoute,
@@ -113,10 +112,6 @@ abstract class RouteManager {
       GoRoute(
         path: aboutAppRoute,
         builder: (_, __) => const AboutAppScreen(),
-      ),
-      GoRoute(
-        path: adDeliveryLocationPickerRoute,
-        builder: (_, __) => const AdDeliveryLocationPickerScreen(),
       ),
     ],
   );
