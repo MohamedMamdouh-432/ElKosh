@@ -1,9 +1,9 @@
 import 'package:elkosh/app/home/markets/categories/components/related_categories_grid.dart';
 import 'package:elkosh/app/home/markets/categories/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/app/home/markets/controllers/market_details_provider/market_details_provider.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/time_service.dart';
-import 'package:elkosh/shared/widgets/image_section.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/services/time_service.dart';
+import 'package:elkosh/app/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

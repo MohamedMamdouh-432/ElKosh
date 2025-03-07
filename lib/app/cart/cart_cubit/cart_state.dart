@@ -2,50 +2,57 @@ part of 'cart_cubit.dart';
 
 class CartState extends Equatable {
   final double price;
-  final String errorMessage;
+  final String errMsg;
   final CartStatus status;
-  final Map<Product, int> shopping;
+  final Map<Product, int> items;
+  final Map<Ad, int> ads;
 
   const CartState({
-    required this.shopping,
+    required this.items,
+    required this.ads,
     required this.price,
-    required this.errorMessage,
+    required this.errMsg,
     required this.status,
   });
 
   static CartState initial = const CartState(
     price: 0,
-    shopping: {},
-    errorMessage: '',
+    items: {},
+    ads: {},
+    errMsg: '',
     status: CartStatus.initial,
   );
 
   CartState copyWith({
     double? price,
-    Map<Product, int>? shopping,
-    String? errorMessage,
+    Map<Product, int>? items,
+    Map<Ad, int>? ads,
+    String? errMsg,
     CartStatus? status,
   }) =>
       CartState(
         price: price ?? this.price,
         status: status ?? this.status,
-        errorMessage: errorMessage ?? this.errorMessage,
-        shopping: shopping != null ? Map.of(shopping) : this.shopping,
+        errMsg: errMsg ?? this.errMsg,
+        items: items != null ? Map.of(items) : this.items,
+        ads: ads ?? this.ads,
       );
 
   @override
   String toString() => '''CartState ::
         Price: $price
         Status: ${status.name}
-        Shopping: ${shopping.length}
-        Error: $errorMessage
+        Items: ${items.length}
+        Ads: ${ads.length}
+        Error: $errMsg
       ''';
 
   @override
   List<Object> get props => [
         price,
-        shopping,
-        errorMessage,
+        items,
+        ads,
+        errMsg,
         status,
       ];
 }

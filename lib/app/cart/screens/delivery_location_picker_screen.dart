@@ -1,7 +1,7 @@
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,7 +49,7 @@ class DeliveryLocationPickerScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: FlutterLocationPicker(
           urlTemplate:
-              "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${ConstantManager.mapboxkey}",
+              "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${Constants.mapboxkey}",
           // general
           initZoom: 12,
 

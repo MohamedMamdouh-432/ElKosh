@@ -1,6 +1,6 @@
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
-import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/core/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +17,7 @@ class OngoingOrderListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        context.read<OrdersBloc>().add(OrderSelectedEvent(order));
+        context.read<OrdersCubit>().selectOrder(order);
         context.push(RouteManager.ongoingOrderDetailsRoute);
       },
       leading: CircleAvatar(

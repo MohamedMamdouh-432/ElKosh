@@ -1,13 +1,14 @@
 import 'package:elkosh/app/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/app/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/app/home/markets/controllers/markets_cubit/markets_cubit.dart';
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/app/home/search/controllers/search_provider.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
+import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class ElKoshApp extends StatelessWidget {
         BlocProvider(create: (_) => RegisterBloc()),
         BlocProvider(create: (_) => MarketsCubit()),
         BlocProvider(create: (_) => ProductsCubit()),
-        BlocProvider(create: (_) => OrdersBloc()),
+        BlocProvider(create: (_) => OrdersCubit()),
         BlocProvider(create: (_) => CartCubit()),
         BlocProvider(create: (_) => AdsCubit()),
       ],

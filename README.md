@@ -66,12 +66,10 @@
     * search feature
 
 # Edits
-	- Pagination
-		* Ads
-		* Orders
 	- Cart Staratigy
-		* List<Ad>
-		* List<Product>
+		* ads: List<Ad>
+		* items: List<Product>
+	- Order
 
 # Bugs
 

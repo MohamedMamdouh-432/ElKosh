@@ -1,10 +1,11 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/app/cart/components/place_order_bottom_sheet.dart';
+import 'package:elkosh/app/cart/components/settings_appbar.dart';
 import 'package:elkosh/app/cart/screens/empty_cart_screen.dart';
 import 'package:elkosh/app/cart/widgets/cart_card.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
+import 'package:elkosh/core/theme/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,7 +52,7 @@ class CartScreen extends StatelessWidget {
               context: context,
               type: QuickAlertType.warning,
               title: 'خطأ',
-              text: state.errorMessage,
+              text: state.errMsg,
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );
@@ -64,41 +65,23 @@ class CartScreen extends StatelessWidget {
               displacement: 60,
               color: ColorManager.primary,
               backgroundColor: Colors.white,
-              onRefresh: () async =>
-                  context.read<CartCubit>().fetchCart(),
+              onRefresh: () async => context.read<CartCubit>().fetchCart(),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
                   Column(
                     children: [
-                      AppBar(
-                        title: const Text("سلة التسوق"),
-                        leading: Icon(Icons.shopping_bag_outlined, size: 30.sp),
-                        actions: [
-                          IconButton(
-                            padding: const EdgeInsets.only(left: 20),
-                            onPressed: state.shopping.isEmpty
-                                ? null
-                                : () => context
-                                    .read<CartCubit>()
-                                    .resetCart(),
-                            icon: Icon(
-                              Icons.cleaning_services_sharp,
-                              size: 30.sp,
-                            ),
-                          ),
-                        ],
-                      ),
+                      const CartAppBar(),
                       Expanded(
                         child: ConditionalBuilder(
-                          condition: state.shopping.isEmpty,
+                          condition: state.items.isEmpty,
                           builder: (context) => const EmptyCartView(),
                           fallback: (context) => ListView.builder(
                             padding: EdgeInsets.only(bottom: 60.sp),
-                            itemCount: state.shopping.length,
+                            itemCount: state.items.length,
                             itemBuilder: (context, index) => CartCard(
-                              product: state.shopping.keys.elementAt(index),
-                              quantity: state.shopping.values.elementAt(index),
+                              product: state.items.keys.elementAt(index),
+                              quantity: state.items.values.elementAt(index),
                             ),
                           ),
                         ),
@@ -110,7 +93,7 @@ class CartScreen extends StatelessWidget {
                     left: 20,
                     right: 20,
                     child: ElevatedButton(
-                      onPressed: state.shopping.isEmpty
+                      onPressed: state.items.isEmpty
                           ? null
                           : () async {
                               showModalBottomSheet(

@@ -1,4 +1,4 @@
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/app/settings/orders/widgets/ongoing_order_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,12 +8,33 @@ import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-class TalbatyOngoing extends StatelessWidget {
+class TalbatyOngoing extends StatefulWidget {
   const TalbatyOngoing({super.key});
+  @override
+  State<TalbatyOngoing> createState() => _TalbatyOngoingState();
+}
+
+class _TalbatyOngoingState extends State<TalbatyOngoing> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_isBottom) context.read<OrdersCubit>().fetchOngoingOrders();
+    });
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OrdersBloc, OrdersState>(
+    return BlocConsumer<OrdersCubit, OrdersState>(
       buildWhen: (p, c) => p != c,
       listenWhen: (p, c) => p != c,
       listener: (context, state) {
@@ -28,7 +49,7 @@ class TalbatyOngoing extends StatelessWidget {
             confirmBtnText: "أعد المحاولة",
             onConfirmBtnTap: () {
               context.pop();
-              context.read<OrdersBloc>().add(OrdersFetchedEvent());
+              context.read<OrdersCubit>().fetchOngoingOrders();
             },
           );
         }
@@ -38,6 +59,7 @@ class TalbatyOngoing extends StatelessWidget {
           inAsyncCall: state.status == OrdersStatus.onProgress,
           child: ListView.builder(
             itemCount: state.ongoingOrders.length,
+            controller: _scrollController,
             itemBuilder: (ctx, index) => OngoingOrderListTile(
               order: state.ongoingOrders[index],
             ),

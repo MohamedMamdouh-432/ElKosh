@@ -2,10 +2,10 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/app/home/products/controllers/product_details_provider/product_details_provider.dart';
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/shared/widgets/image_section.dart';
+import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/app/home/widgets/image_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,8 +33,7 @@ class ProductDetailsScreen extends StatelessWidget {
           builder: (context, state) {
             return Consumer<ProductDetailsProvider>(
               builder: (context, productState, _) {
-                bool isInCart =
-                    state.shopping.containsKey(productState.product);
+                bool isInCart = state.items.containsKey(productState.product);
                 return Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -167,8 +166,9 @@ class ProductDetailsScreen extends StatelessWidget {
                                               ? null
                                               : () => context
                                                   .read<CartCubit>()
-                                                  .decreaseProductCartQuantity(
-                                                      productState.product),
+                                                  .removeProductFromCart(
+                                                      productState.product,
+                                                      false),
                                           icon: Icon(
                                             Icons.remove,
                                             size: 35,
@@ -190,7 +190,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                           ),
                                           child: Text(
                                             isInCart
-                                                ? (state.shopping[productState
+                                                ? (state.items[productState
                                                             .product] ??
                                                         0)
                                                     .toString()
@@ -205,13 +205,13 @@ class ProductDetailsScreen extends StatelessWidget {
                                           onPressed: () => productState
                                                       .product.quantity
                                                       .toInt() >=
-                                                  (state.shopping[productState
+                                                  (state.items[productState
                                                               .product] ??
                                                           0) +
                                                       1
                                               ? context
                                                   .read<CartCubit>()
-                                                  .increaseProductCartQuantity(
+                                                  .addProductToCart(
                                                       productState.product)
                                               : QuickAlert.show(
                                                   context: context,

@@ -1,9 +1,9 @@
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_card.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_section.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_selector.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,7 +15,7 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrdersBloc, OrdersState>(
+    return BlocBuilder<OrdersCubit, OrdersState>(
       buildWhen: (p, c) => p != c,
       builder: (context, state) {
         final shopping = state.curOrder.shopping;
@@ -159,22 +159,22 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                   OrderSelector(
                     content: 'إستلام',
                     onTap: () => context
-                        .read<OrdersBloc>()
-                        .add(OrderDeleveringingEvent(state.curOrder)),
+                        .read<OrdersCubit>()
+                        .deliverOrder(state.curOrder),
                   ),
                   const Gap(10),
                   OrderSelector(
                     content: 'إالغاء',
                     onTap: () => context
-                        .read<OrdersBloc>()
-                        .add(OrderCancellingEvent(state.curOrder)),
+                        .read<OrdersCubit>()
+                        .cancelOrder(state.curOrder),
                   ),
                   const Gap(10),
                   OrderSelector(
                     content: 'رفض',
                     onTap: () => context
-                        .read<OrdersBloc>()
-                        .add(OrderRefusingEvent(state.curOrder)),
+                        .read<OrdersCubit>()
+                        .refuseOrder(state.curOrder),
                   ),
                 ],
               ),

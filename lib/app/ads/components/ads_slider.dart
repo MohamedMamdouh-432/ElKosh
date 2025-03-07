@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:elkosh/app/ads/controllers/ad_details_provider/ad_details_provider.dart';
 import 'package:elkosh/app/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/app/ads/widgets/ad_item.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/core/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +37,7 @@ class AdsSlider extends StatelessWidget {
                 confirmBtnText: "أعد المحاولة",
                 onConfirmBtnTap: () {
                   context.pop();
-                  context.read<AdsCubit>().loadAds();
+                  context.read<AdsCubit>().fetchAds();
                 },
               );
             }

@@ -1,4 +1,4 @@
-part of 'orders_bloc.dart';
+part of 'orders_cubit.dart';
 
 class OrdersState extends Equatable {
   final List<UserOrder> ongoingOrders;
@@ -6,6 +6,7 @@ class OrdersState extends Equatable {
   final UserOrder curOrder;
   final String errMsg;
   final OrdersStatus status;
+  final bool hasReachedMax;
 
   const OrdersState({
     required this.ongoingOrders,
@@ -13,6 +14,7 @@ class OrdersState extends Equatable {
     required this.errMsg,
     required this.status,
     required this.curOrder,
+    required this.hasReachedMax,
   });
 
   static OrdersState initial = OrdersState(
@@ -21,6 +23,7 @@ class OrdersState extends Equatable {
     errMsg: '',
     curOrder: UserOrder.empty,
     status: OrdersStatus.initial,
+    hasReachedMax: false,
   );
 
   OrdersState copyWith({
@@ -29,6 +32,7 @@ class OrdersState extends Equatable {
     String? errMsg,
     OrdersStatus? status,
     UserOrder? curOrder,
+    bool? hasReachedMax,
   }) {
     return OrdersState(
       ongoingOrders: ongoingOrders ?? this.ongoingOrders,
@@ -36,6 +40,7 @@ class OrdersState extends Equatable {
       errMsg: errMsg ?? this.errMsg,
       status: status ?? this.status,
       curOrder: curOrder ?? this.curOrder,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
@@ -47,6 +52,7 @@ class OrdersState extends Equatable {
       Error: $errMsg
       status: ${status.name}
       curOrder Id: ${curOrder == UserOrder.empty ? Null : curOrder.id}
+      Reach Max: ${hasReachedMax ? 'YES' : 'NO'}
     ''';
   }
 

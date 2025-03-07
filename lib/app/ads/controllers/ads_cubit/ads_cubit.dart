@@ -1,6 +1,7 @@
 import 'dart:async';
+
 import 'package:data_repository/data_repository.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
@@ -29,7 +30,7 @@ class AdsCubit extends Cubit<AdsState> {
     );
   }
 
-  Future<void> loadAds() async {
+  Future<void> fetchAds() async {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
       final results = await sl.get<DataRepository>().fetchAds();
@@ -39,7 +40,10 @@ class AdsCubit extends Cubit<AdsState> {
         (r) => emit(state.copyWith(ads: r, status: LoadStatus.success)),
       );
     } catch (e) {
-      emit(state.copyWith(errMsg: e.toString(), status: LoadStatus.failure));
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadStatus.failure,
+      ));
     }
   }
 

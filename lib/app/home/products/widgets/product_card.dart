@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
-import 'package:elkosh/shared/functions.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

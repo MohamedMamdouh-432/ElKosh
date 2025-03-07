@@ -30,7 +30,7 @@ class CartProductQuantityCounter extends StatelessWidget {
                 ? null
                 : () => context
                     .read<CartCubit>()
-                    .decreaseProductCartQuantity(product),
+                    .removeProductFromCart(product, false),
             icon: const Icon(
               Icons.remove,
               color: Colors.black,
@@ -43,9 +43,7 @@ class CartProductQuantityCounter extends StatelessWidget {
           ),
           IconButton(
             onPressed: () => product.quantity.toInt() >= quantity + 1
-                ? context
-                    .read<CartCubit>()
-                    .increaseProductCartQuantity(product)
+                ? context.read<CartCubit>().addProductToCart(product)
                 : QuickAlert.show(
                     context: context,
                     type: QuickAlertType.warning,

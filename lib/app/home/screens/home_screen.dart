@@ -1,11 +1,11 @@
 import 'package:elkosh/app/ads/components/ads_slider.dart';
 import 'package:elkosh/app/ads/controllers/ads_cubit/ads_cubit.dart';
-import 'package:elkosh/core/utils/color_manager.dart';
-import 'package:elkosh/app/home/components/home_app_bar.dart';
+import 'package:elkosh/app/home/components/home_appbar.dart';
 import 'package:elkosh/app/home/markets/components/markets_view.dart';
 import 'package:elkosh/app/home/markets/controllers/markets_cubit/markets_cubit.dart';
 import 'package:elkosh/app/home/products/components/products_grid.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
+import 'package:elkosh/core/theme/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +19,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late Animation<double> appBarAnimation;
   late AnimationController appBarController;
   NotificationServices notificationServices = NotificationServices();
 
@@ -31,14 +30,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     notificationServices.initFirebaseNotification(context);
     notificationServices.setupInteractedMessage(context);
     //notificationServices.saveUserTokenToFirebase();
-    appBarController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    appBarAnimation = Tween<double>(
-      begin: 150,
-      end: 80,
-    ).animate(appBarController);
   }
 
   @override
@@ -52,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Future.wait([
           Future.delayed(
             Duration.zero,
-            () => context.read<AdsCubit>().loadAds(),
+            () => context.read<AdsCubit>().fetchAds(),
           ),
           Future.delayed(
             Duration.zero,
@@ -64,14 +55,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
         ]);
       },
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+      child: const SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
           children: [
-            HomeAppBar(appBarAnimation: appBarAnimation),
-            const AdsSlider(),
-            const ProductsGrid(),
-            const MarketsView(),
+            HomeAppBar(),
+            AdsSlider(),
+            ProductsGrid(),
+            MarketsView(),
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:auth_repository/auth_repository.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:user_repository/user_repository.dart';

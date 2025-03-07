@@ -1,6 +1,7 @@
-import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/app/settings/components/settings_appbar.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,76 +23,10 @@ class SettingScreen extends StatelessWidget {
         return Skeletonizer(
           enabled: pp.status == ProfileStatus.loading,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 25,
-                        child: Center(
-                          child: Text(
-                            pp.user.name[0],
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Gap(16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            pp.user.name,
-                            style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              wordSpacing: 3,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.phone_enabled_rounded,
-                                color: Colors.green,
-                                size: 25,
-                              ),
-                              const Gap(10),
-                              Text(
-                                pp.user.phone,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.location_on,
-                                color: Colors.lime,
-                                size: 25,
-                              ),
-                              Gap(10),
-                              Text(
-                                'مصر',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 32, indent: 20, endIndent: 20),
+                const SettingsAppBar(),
+                const Gap(40),
                 ListTile(
                   leading: const Icon(
                     Icons.assignment,
@@ -103,7 +38,7 @@ class SettingScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () {
-                    context.read<OrdersBloc>().add(OrdersFetchedEvent());
+                    context.read<OrdersCubit>().fetchOngoingOrders();
                     context.push(RouteManager.talabatyScreen);
                   },
                 ),
@@ -159,8 +94,7 @@ class SettingScreen extends StatelessWidget {
                         context.pop();
                       },
                       onConfirmBtnTap: () {
-                        context
-                            .read<ProfileProvider>().signOut();
+                        context.read<ProfileProvider>().signOut();
                         context.go(RouteManager.loginRoute);
                       },
                     );
@@ -195,7 +129,7 @@ class SettingScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const Gap(10),
+                const Gap(40),
                 const Row(
                   children: [
                     Expanded(

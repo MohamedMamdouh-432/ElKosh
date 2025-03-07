@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elkosh/app/ads/components/place_ad_order_bottom_sheet.dart';
 import 'package:elkosh/app/ads/controllers/ad_details_provider/ad_details_provider.dart';
 import 'package:elkosh/app/ads/widgets/offer_item.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
-import 'package:elkosh/shared/services/context_media.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
-import 'package:elkosh/shared/widgets/image_section.dart';
+import 'package:elkosh/app/home/widgets/image_section.dart';
+import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,32 +30,12 @@ class AdDetailsScreen extends StatelessWidget {
         buildWhen: (p, c) => p != c,
         listenWhen: (p, c) => p != c,
         listener: (context, cartState) {
-          if (cartState.status == CartStatus.adPlacingfailure)
+          if (cartState.status == CartStatus.failure)
             QuickAlert.show(
               context: context,
               type: QuickAlertType.warning,
               title: 'خطأ',
-              text: "حدث خطأ أثناء طلب العرض. حاول مره اخرى",
-              borderRadius: 20,
-              animType: QuickAlertAnimType.scale,
-            );
-          else if (cartState.status == CartStatus.adPlacingSuccess) {
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              title: 'نجاح',
-              text: "تم تسجيل العرض بنجاح",
-              borderRadius: 20,
-              animType: QuickAlertAnimType.scale,
-            );
-            context.read<CartCubit>().resetAdCart();
-            context.pop();
-          } else if (cartState.status == CartStatus.failure)
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.warning,
-              title: 'خطأ',
-              text: cartState.errorMessage,
+              text: cartState.errMsg,
               borderRadius: 20,
               animType: QuickAlertAnimType.scale,
             );
@@ -149,7 +128,7 @@ class AdDetailsScreen extends StatelessWidget {
                             onPressed: () async {
                               final userData = await sl
                                   .get<FirebaseFirestore>()
-                                  .collection(ConstantManager.userCollection)
+                                  .collection(Constants.userCol)
                                   .doc(FirebaseAuth.instance.currentUser!.uid)
                                   .get();
                               if (userData['active'] == false)
@@ -164,14 +143,8 @@ class AdDetailsScreen extends StatelessWidget {
                                   animType: QuickAlertAnimType.scale,
                                   confirmBtnText: 'حسنا',
                                 );
-                              showModalBottomSheet(
-                                context: context,
-                                elevation: 20,
-                                useSafeArea: true,
-                                showDragHandle: true,
-                                builder: (context) =>
-                                    PlaceAdOrderBottomSheet(state.ad),
-                              );
+                              else
+                                context.read<CartCubit>().addAdToCart(state.ad);
                             },
                             child: const Text(
                               "أطلب العرض",

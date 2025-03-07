@@ -1,13 +1,13 @@
-import 'package:elkosh/core/observer.dart';
+import 'package:elkosh/core/services/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/adapters.dart';
 
-import 'core/launcher.dart';
+import 'app.dart';
 import 'firebase_options.dart';
-import 'shared/services/service_locator.dart';
+import 'core/services/service_locator.dart';
 
 @pragma('vm:entry-point')
 Future<void> _fMBHandler(RemoteMessage message) async {

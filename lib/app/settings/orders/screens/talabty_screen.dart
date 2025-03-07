@@ -1,6 +1,8 @@
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/app/settings/orders/screens/talabaty_history.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'talbaty_ongoing.dart';
 
@@ -35,8 +37,8 @@ class TalabtyScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back_ios_new_outlined),
                 onPressed: () => context.pop(),
               ),
-              bottom: const TabBar(
-                tabs: [
+              bottom: TabBar(
+                tabs: const [
                   Tab(
                     text: "الطلبات",
                     icon: Icon(Icons.list),
@@ -46,6 +48,9 @@ class TalabtyScreen extends StatelessWidget {
                     icon: Icon(Icons.list),
                   ),
                 ],
+                onTap: (value) => value == 0
+                    ? context.read<OrdersCubit>().fetchOngoingOrders()
+                    : context.read<OrdersCubit>().fetchHistoryOrders(),
               ),
             ),
             body: const TabBarView(

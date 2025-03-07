@@ -1,7 +1,7 @@
-import 'package:elkosh/core/utils/color_manager.dart';
-import 'package:elkosh/app/settings/orders/bloc/orders_bloc.dart';
+import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_card.dart';
-import 'package:elkosh/shared/functions.dart';
+import 'package:elkosh/core/theme/color_manager.dart';
+import 'package:elkosh/core/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +13,7 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrdersBloc, OrdersState>(
+    return BlocBuilder<OrdersCubit, OrdersState>(
       buildWhen: (p, c) => p != c,
       builder: (context, state) {
         final shopping = state.curOrder.shopping;

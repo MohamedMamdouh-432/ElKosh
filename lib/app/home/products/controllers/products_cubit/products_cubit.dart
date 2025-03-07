@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:data_repository/data_repository.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
@@ -11,8 +10,6 @@ part 'products_state.dart';
 
 class ProductsCubit extends Cubit<ProductsState> {
   StreamSubscription? _subscription;
-  DocumentSnapshot? lastDocument;
-  final DataRepository _dataRepository = sl.get<DataRepository>();
 
   ProductsCubit() : super(ProductsState.initial) {
     fetchProducts();
@@ -23,7 +20,7 @@ class ProductsCubit extends Cubit<ProductsState> {
     if (state.hasReachedMax) return;
     _subscription?.cancel();
     _subscription =
-        _dataRepository.productsStream(state.products.length).listen(
+        sl.get<DataRepository>().productsStream(state.products.length).listen(
               (result) => result.fold(
                 (l) => emit(
                   state.copyWith(
@@ -55,11 +52,10 @@ class ProductsCubit extends Cubit<ProductsState> {
 
   Future<void> fetchProducts() async {
     if (state.hasReachedMax) return;
-
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
       final results =
-          await _dataRepository.fetchProducts(state.products.length);
+          await sl.get<DataRepository>().fetchProducts(state.products.length);
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -79,14 +75,18 @@ class ProductsCubit extends Cubit<ProductsState> {
         },
       );
     } catch (e) {
-      emit(state.copyWith(errMsg: e.toString(), status: LoadStatus.failure));
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadStatus.failure,
+      ));
     }
   }
 
   Future<void> fetchRelatedProducts() async {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
-      final results = await _dataRepository.fetchCategoryRelatedProducts();
+      final results =
+          await sl.get<DataRepository>().fetchCategoryRelatedProducts();
       results.fold(
         (failure) => emit(state.copyWith(
             errMsg: failure.message, status: LoadStatus.failure)),
@@ -94,12 +94,15 @@ class ProductsCubit extends Cubit<ProductsState> {
             state.copyWith(relProducts: products, status: LoadStatus.success)),
       );
     } catch (e) {
-      emit(state.copyWith(errMsg: e.toString(), status: LoadStatus.failure));
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: LoadStatus.failure,
+      ));
     }
   }
 
   void selectProduct(Product product) {
-    _dataRepository.setCurProduct(product);
+    sl.get<DataRepository>().setCurProduct(product);
     emit(state.copyWith(curProduct: product));
   }
 
@@ -108,8 +111,9 @@ class ProductsCubit extends Cubit<ProductsState> {
       emit(state.copyWith(hasReachedMax: true));
     } else {
       emit(state.copyWith(
-          products: [...state.products, ...products],
-          status: LoadStatus.success));
+        products: [...state.products, ...products],
+        status: LoadStatus.success,
+      ));
     }
   }
 

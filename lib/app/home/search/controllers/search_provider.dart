@@ -1,5 +1,5 @@
 import 'package:data_repository/data_repository.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:models_repository/models_repository.dart';
 

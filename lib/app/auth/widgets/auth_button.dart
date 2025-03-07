@@ -1,4 +1,4 @@
-import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/core/theme/themes.dart';
 import 'package:flutter/material.dart';
 
 class AuthButton extends StatelessWidget {

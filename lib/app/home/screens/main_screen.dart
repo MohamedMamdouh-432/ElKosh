@@ -1,13 +1,14 @@
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/app/home/widgets/home_nav_item.dart';
 import 'package:elkosh/app/home/widgets/nav_item.dart';
-import 'package:elkosh/shared/services/context_media.dart';
+import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NavBarScreen extends StatelessWidget {
-  const NavBarScreen({super.key});
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
 
   @override
   Widget build(BuildContext ctx) {

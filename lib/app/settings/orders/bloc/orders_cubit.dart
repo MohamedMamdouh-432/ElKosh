@@ -1,52 +1,41 @@
 import 'dart:async';
 
 import 'package:data_repository/data_repository.dart';
-import 'package:elkosh/shared/services/service_locator.dart';
+import 'package:elkosh/core/services/service_locator.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
 
-part 'orders_event.dart';
 part 'orders_state.dart';
 
-class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
+class OrdersCubit extends Cubit<OrdersState> {
   StreamSubscription? _subscription;
-  OrdersBloc() : super(OrdersState.initial) {
-    on<OrdersFetchedEvent>(_onOrdersFetched);
-    on<OrderSelectedEvent>(_onOrderSelected);
-    on<OrderDeleveringingEvent>(_onOrderDelevering);
-    on<OrderCancellingEvent>(_onOrderCancelled);
-    on<OrdersUpdatedEvent>(_onOrdersUpdated);
-    on<OrderRefusingEvent>(_onOrderRefusing);
+  OrdersCubit() : super(OrdersState.initial);
 
-    _subscription = sl.get<DataRepository>().ordersStream().listen(
-          (result) => result.fold(
-            (l) => addError(l.message),
-            (r) => add(
-              OrdersUpdatedEvent(
-                r['ongoing'] as List<UserOrder>,
-                r['history'] as List<UserOrder>,
-              ),
-            ),
-          ),
-          onError: (e) => addError(e.toString()),
-        );
-  }
-
-  Future<void> _onOrdersFetched(event, emit) async {
+  Future<void> fetchOngoingOrders() async {
+    if (state.hasReachedMax) return;
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final orders = await sl.get<DataRepository>().fetchOrders();
+      final orders = await sl
+          .get<DataRepository>()
+          .fetchOngoingOrders(state.ongoingOrders.length);
       orders.fold(
-        (left) => emit(state.copyWith(
-          errMsg: left.message,
+        (l) => emit(state.copyWith(
+          errMsg: l.message,
           status: OrdersStatus.fetchFailure,
         )),
-        (right) => emit(state.copyWith(
-          ongoingOrders: right['ongoing'],
-          historyOrders: right['history'],
-          status: OrdersStatus.fetchSuccess,
-        )),
+        (r) {
+          final skip = r['skip'];
+          final data = r['data'] as List<UserOrder>;
+          if (data.isEmpty && !skip) {
+            emit(state.copyWith(hasReachedMax: true));
+          } else {
+            emit(state.copyWith(
+              ongoingOrders: [...state.ongoingOrders, ...data],
+              status: OrdersStatus.fetchSuccess,
+            ));
+          }
+        },
       );
     } catch (e) {
       emit(state.copyWith(
@@ -56,26 +45,79 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  Future<void> _onOrdersUpdated(OrdersUpdatedEvent event, emit) async {
-    emit(state.copyWith(
-      ongoingOrders: event.ongoingOrders,
-      historyOrders: event.historyOrders,
-    ));
+  Future<void> fetchHistoryOrders() async {
+    if (state.hasReachedMax) return;
+    try {
+      emit(state.copyWith(status: OrdersStatus.onProgress));
+      final orders = await sl
+          .get<DataRepository>()
+          .fetchHistoryOrders(state.historyOrders.length);
+      orders.fold(
+        (l) => emit(state.copyWith(
+          errMsg: l.message,
+          status: OrdersStatus.fetchFailure,
+        )),
+        (r) {
+          final skip = r['skip'];
+          final data = r['data'] as List<UserOrder>;
+          if (data.isEmpty && !skip) {
+            emit(state.copyWith(hasReachedMax: true));
+          } else {
+            emit(state.copyWith(
+              historyOrders: [...state.historyOrders, ...data],
+              status: OrdersStatus.fetchSuccess,
+            ));
+          }
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: e.toString(),
+        status: OrdersStatus.fetchFailure,
+      ));
+    }
   }
 
-  void _onOrderSelected(OrderSelectedEvent event, emit) {
-    emit(state.copyWith(curOrder: event.order));
-  }
+  void selectOrder(UserOrder order) => emit(state.copyWith(curOrder: order));
 
-  Future<void> _onOrderDelevering(OrderDeleveringingEvent event, emit) async {
+  Future<void> deliverOrder(UserOrder order) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
       final result =
-          await sl.get<DataRepository>().confirmDeliveryOrder(event.order.id);
+          await sl.get<DataRepository>().confirmDeliveryOrder(order.id);
       final newOngoingOrders = state.ongoingOrders;
       final newHistoryOrders = state.historyOrders;
-      newOngoingOrders.remove(event.order);
-      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.delivered));
+      newOngoingOrders.remove(order);
+      newHistoryOrders.add(order.copyWith(status: OrderStatus.delivered));
+      result.fold(
+        (left) => emit(state.copyWith(
+          errMsg: left.message,
+          status: OrdersStatus.placingFailure,
+        )),
+        (right) {
+          emit(state.copyWith(
+            ongoingOrders: newOngoingOrders,
+            historyOrders: newHistoryOrders,
+            status: OrdersStatus.placingSuccess,
+          ));
+        },
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        errMsg: "حدث خطأ أثناء تأكيد الاوردر",
+        status: OrdersStatus.placingFailure,
+      ));
+    }
+  }
+
+  Future<void> cancelOrder(UserOrder order) async {
+    try {
+      emit(state.copyWith(status: OrdersStatus.onProgress));
+      final result = await sl.get<DataRepository>().cancelOrder(order.id);
+      final newOngoingOrders = state.ongoingOrders;
+      final newHistoryOrders = state.historyOrders;
+      newOngoingOrders.remove(order);
+      newHistoryOrders.add(order.copyWith(status: OrderStatus.cancelled));
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,
@@ -97,14 +139,14 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
     }
   }
 
-  Future<void> _onOrderCancelled(OrderCancellingEvent event, emit) async {
+  Future<void> refuseOrder(UserOrder order) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result = await sl.get<DataRepository>().cancelOrder(event.order.id);
+      final result = await sl.get<DataRepository>().refuseOrder(order.id);
       final newOngoingOrders = state.ongoingOrders;
       final newHistoryOrders = state.historyOrders;
-      newOngoingOrders.remove(event.order);
-      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.cancelled));
+      newOngoingOrders.remove(order);
+      newHistoryOrders.add(order.copyWith(status: OrderStatus.refused));
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,
@@ -120,36 +162,7 @@ class OrdersBloc extends Bloc<OrdersEvent, OrdersState> {
       );
     } catch (e) {
       emit(state.copyWith(
-        errMsg: "حدث خطأ أثناء الغاء الاوردر",
-        status: OrdersStatus.placingFailure,
-      ));
-    }
-  }
-  
-  Future<void> _onOrderRefusing(OrderRefusingEvent event, emit) async {
-    try {
-      emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result = await sl.get<DataRepository>().refuseOrder(event.order.id);
-      final newOngoingOrders = state.ongoingOrders;
-      final newHistoryOrders = state.historyOrders;
-      newOngoingOrders.remove(event.order);
-      newHistoryOrders.add(event.order.copyWith(status: OrderStatus.refused));
-      result.fold(
-        (left) => emit(state.copyWith(
-          errMsg: left.message,
-          status: OrdersStatus.placingFailure,
-        )),
-        (right) {
-          emit(state.copyWith(
-            ongoingOrders: newOngoingOrders,
-            historyOrders: newHistoryOrders,
-            status: OrdersStatus.placingSuccess,
-          ));
-        },
-      );
-    } catch (e) {
-      emit(state.copyWith(
-        errMsg: "حدث خطأ أثناء الغاء الاوردر",
+        errMsg: "حدث خطأ أثناء رفض الاوردر",
         status: OrdersStatus.placingFailure,
       ));
     }

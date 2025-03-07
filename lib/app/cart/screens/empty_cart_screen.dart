@@ -1,5 +1,5 @@
+import 'package:elkosh/core/services/context_media.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/shared/services/context_media.dart';
 import 'package:flutter/material.dart';
 
 class EmptyCartView extends StatelessWidget {
@@ -7,7 +7,7 @@ class EmptyCartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
