@@ -16,7 +16,7 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
     on<CategorySelectedEvent>(_onCategorySelected);
     on<CategorysUpdatedEvent>(_onCategorysUpdated);
 
-    _subscription = sl.get<DataRepository>().categorysStream().listen(
+    _subscription = sl.get<DataRepo>().categorysStream().listen(
           (result) => result.fold(
             (l) => addError(l.message),
             (r) => add(CategorysUpdatedEvent(r)),
@@ -28,7 +28,7 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
   FutureOr<void> _onCategorysLoading(event, emit) async {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
-      final results = await sl.get<DataRepository>().fetchCategories();
+      final results = await sl.get<DataRepo>().fetchCategories();
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -49,7 +49,7 @@ class CategorysBloc extends Bloc<CategorysEvent, CategorysState> {
 
   FutureOr<void> _onCategorySelected(CategorySelectedEvent event, emit) async {
     try {
-      sl.get<DataRepository>().setCurCategory(event.category);
+      sl.get<DataRepo>().setCurCategory(event.category);
       emit(state.copyWith(
         curCategory: event.category,
         status: LoadStatus.success,

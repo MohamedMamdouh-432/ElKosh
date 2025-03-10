@@ -10,7 +10,7 @@ part 'markets_state.dart';
 
 class MarketsCubit extends Cubit<MarketsState> {
   StreamSubscription? _subscription;
-  final DataRepository _dataRepository = sl.get<DataRepository>();
+  final DataRepo _dataRepository = sl.get<DataRepo>();
 
   MarketsCubit() : super(MarketsState.initial) {
     _subscription = _dataRepository.marketsStream().listen(

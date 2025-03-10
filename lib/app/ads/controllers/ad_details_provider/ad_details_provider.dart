@@ -1,7 +1,8 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+
 import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:flutter/material.dart';
 import 'package:models_repository/models_repository.dart';
 
 class AdDetailsProvider extends ChangeNotifier {
@@ -20,7 +21,7 @@ class AdDetailsProvider extends ChangeNotifier {
   String get errMsg => _errMsg;
 
   void _init() {
-    _subscription = sl.get<DataRepository>().adDetailsStream().listen(
+    _subscription = sl.get<DataRepo>().adDetailsStream().listen(
       (result) {
         result.fold(
           (l) => _setError(l.message),
@@ -35,7 +36,7 @@ class AdDetailsProvider extends ChangeNotifier {
     _status = LoadStatus.inProgress;
     notifyListeners();
 
-    _ad = sl.get<DataRepository>().getCurAd()!;
+    _ad = sl.get<DataRepo>().getCurAd()!;
     _status = LoadStatus.success;
     notifyListeners();
   }

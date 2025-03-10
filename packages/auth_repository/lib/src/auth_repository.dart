@@ -60,7 +60,7 @@ class CodeErrorGetter {
   }
 }
 
-class AuthRepository {
+class AuthRepo {
   final FirebaseAuth _fireAuth;
   final FirebaseFirestore _firestore;
   final GoogleSignIn _googleSignIn;
@@ -68,7 +68,7 @@ class AuthRepository {
   final Dio _dio;
   String? _userId;
 
-  AuthRepository({
+  AuthRepo({
     required FirebaseAuth firebaseAuth,
     GoogleSignIn? googleSignIn,
     required FirebaseFirestore firestore,

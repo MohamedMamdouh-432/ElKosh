@@ -1,4 +1,5 @@
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
+import 'package:elkosh/core/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models_repository/models_repository.dart';
@@ -19,6 +20,7 @@ class CartProductQuantityCounter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 40,
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.circular(12),
@@ -28,9 +30,8 @@ class CartProductQuantityCounter extends StatelessWidget {
           IconButton(
             onPressed: quantity <= 1
                 ? null
-                : () => context
-                    .read<CartCubit>()
-                    .removeProductFromCart(product, false),
+                : () =>
+                    context.read<CartCubit>().removeProductFromCart(product),
             icon: const Icon(
               Icons.remove,
               color: Colors.black,
@@ -38,8 +39,8 @@ class CartProductQuantityCounter extends StatelessWidget {
             ),
           ),
           Text(
-            '$quantity',
-            style: const TextStyle(fontSize: 18),
+            toArNumber(quantity.toString()),
+            style: const TextStyle(fontSize: 20),
           ),
           IconButton(
             onPressed: () => product.quantity.toInt() >= quantity + 1

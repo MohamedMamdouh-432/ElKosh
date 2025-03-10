@@ -20,7 +20,7 @@ class ProductsCubit extends Cubit<ProductsState> {
     if (state.hasReachedMax) return;
     _subscription?.cancel();
     _subscription =
-        sl.get<DataRepository>().productsStream(state.products.length).listen(
+        sl.get<DataRepo>().productsStream(state.products.length).listen(
               (result) => result.fold(
                 (l) => emit(
                   state.copyWith(
@@ -55,7 +55,7 @@ class ProductsCubit extends Cubit<ProductsState> {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
       final results =
-          await sl.get<DataRepository>().fetchProducts(state.products.length);
+          await sl.get<DataRepo>().fetchProducts(state.products.length);
       results.fold(
         (l) => emit(state.copyWith(
           errMsg: l.message,
@@ -85,8 +85,7 @@ class ProductsCubit extends Cubit<ProductsState> {
   Future<void> fetchRelatedProducts() async {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
-      final results =
-          await sl.get<DataRepository>().fetchCategoryRelatedProducts();
+      final results = await sl.get<DataRepo>().fetchCategoryRelatedProducts();
       results.fold(
         (failure) => emit(state.copyWith(
             errMsg: failure.message, status: LoadStatus.failure)),
@@ -102,7 +101,7 @@ class ProductsCubit extends Cubit<ProductsState> {
   }
 
   void selectProduct(Product product) {
-    sl.get<DataRepository>().setCurProduct(product);
+    sl.get<DataRepo>().setCurProduct(product);
     emit(state.copyWith(curProduct: product));
   }
 

@@ -21,7 +21,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   FutureOr<void> _onRecognizeLogin(event, emit) async {
-    final userId = await sl.get<AuthRepository>().userId;
+    final userId = await sl.get<AuthRepo>().userId;
     emit(state.copyWith(
       submissionStatus: userId == null
           ? FormzSubmissionStatus.initial
@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.inputStatus == FormInputStatus.invalid) return;
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
     try {
-      await sl.get<AuthRepository>().logInWithEmailAndPassword(
+      await sl.get<AuthRepo>().logInWithEmailAndPassword(
             email: state.email.value,
             password: state.password.value,
           );

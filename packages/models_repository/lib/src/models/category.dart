@@ -7,9 +7,9 @@ part 'category.g.dart';
 class Category extends Equatable {
   @HiveField(0)
   final String id;
-   @HiveField(1)
+  @HiveField(1)
   final String name;
-   @HiveField(2)
+  @HiveField(2)
   final String imgUrl;
   @HiveField(3)
   final String marketId;

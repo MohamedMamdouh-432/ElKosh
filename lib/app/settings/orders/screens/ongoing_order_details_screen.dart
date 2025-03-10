@@ -1,9 +1,11 @@
 import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
-import 'package:elkosh/app/settings/orders/widgets/order_card.dart';
+import 'package:elkosh/app/settings/orders/widgets/order_ad_card.dart';
+import 'package:elkosh/app/settings/orders/widgets/order_item_card.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_section.dart';
 import 'package:elkosh/app/settings/orders/widgets/order_selector.dart';
-import 'package:elkosh/core/services/functions.dart';
 import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +20,6 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
     return BlocBuilder<OrdersCubit, OrdersState>(
       buildWhen: (p, c) => p != c,
       builder: (context, state) {
-        final shopping = state.curOrder.shopping;
         return Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -133,18 +134,67 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const Gap(20),
-                    const OrderSection(sectionTitle: "سلة المشتريات"),
-                    const Gap(20),
-                    ListView.separated(
+                    OrderSection(sectionTitle: 'سلة التسوق'),
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: shopping.length,
-                      itemBuilder: (context, i) => OrderCard(
-                        isAd: state.curOrder.isAd,
-                        shoppingItem: shopping[i],
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 20,
+                        children: [
+                          Visibility(
+                            visible: state.curOrder.items.isNotEmpty,
+                            child: ExpandablePanel(
+                              header: const Text('المشتريات',
+                                  textScaler: TextScaler.linear(1.5)),
+                              collapsed: const SizedBox(),
+                              expanded: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                child: Column(
+                                  spacing: 5,
+                                  children: state.curOrder.items.entries
+                                      .map((entry) => OrderItemCard(entry))
+                                      .toList(),
+                                ),
+                              ),
+                              theme: const ExpandableThemeData(
+                                headerAlignment:
+                                    ExpandablePanelHeaderAlignment.center,
+                                tapBodyToExpand: true,
+                                tapBodyToCollapse: true,
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: state.curOrder.ads.isNotEmpty,
+                            child: ExpandablePanel(
+                              header: const Text('العروض',
+                                  textScaler: TextScaler.linear(1.5)),
+                              collapsed: const SizedBox(),
+                              expanded: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                child: Column(
+                                  spacing: 5,
+                                  children: state.curOrder.ads.entries
+                                      .map((entry) => OrderAdCard(entry))
+                                      .toList(),
+                                ),
+                              ),
+                              theme: const ExpandableThemeData(
+                                headerAlignment:
+                                    ExpandablePanelHeaderAlignment.center,
+                                tapBodyToExpand: true,
+                                tapBodyToCollapse: true,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      separatorBuilder: (context, index) => const Gap(10),
                     ),
                   ],
                 ),
@@ -165,16 +215,14 @@ class OngoingOrderDetailsScreen extends StatelessWidget {
                   const Gap(10),
                   OrderSelector(
                     content: 'إالغاء',
-                    onTap: () => context
-                        .read<OrdersCubit>()
-                        .cancelOrder(state.curOrder),
+                    onTap: () =>
+                        context.read<OrdersCubit>().cancelOrder(state.curOrder),
                   ),
                   const Gap(10),
                   OrderSelector(
                     content: 'رفض',
-                    onTap: () => context
-                        .read<OrdersCubit>()
-                        .refuseOrder(state.curOrder),
+                    onTap: () =>
+                        context.read<OrdersCubit>().refuseOrder(state.curOrder),
                   ),
                 ],
               ),

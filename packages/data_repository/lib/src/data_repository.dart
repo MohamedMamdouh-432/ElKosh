@@ -3,10 +3,9 @@ import 'package:either_dart/either.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:models_repository/models_repository.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class DataRepository {
+class DataRepo {
   final FirebaseFirestore firestore;
   final FirebaseStorage fireStorage;
   final SharedPreferences sharedPref;
@@ -22,7 +21,7 @@ class DataRepository {
 
   // todo: remember to make cache listen to firebase changes
 
-  DataRepository({
+  DataRepo({
     required this.firestore,
     required this.fireStorage,
     required this.sharedPref,
@@ -459,7 +458,8 @@ class DataRepository {
           {};
 
       if (cartItemsMap.isEmpty && cartAdsMap.isEmpty) {
-        _items = _ads = {};
+        _items = {};
+        _ads = {};
         return const Right({
           'items': <Product, int>{},
           'ads': <Ad, int>{},
@@ -496,7 +496,8 @@ class DataRepository {
   Future<Either<Failure, Map<String, dynamic>>> resetCart() async {
     try {
       _price = 0;
-      _items = _ads = {};
+      _items = {};
+      _ads = {};
       final Box<Map> cartBox = Hive.box<Map>('cartBox');
       await cartBox.put('items', _items);
       await cartBox.put('ads', _ads);
@@ -529,19 +530,20 @@ class DataRepository {
   }
 
   Future<Either<Failure, void>> removeProductFromCart(
-      Product product, bool isAll) async {
+    Product p,
+    bool isAll,
+  ) async {
     try {
-      if (_items.containsKey(product.id)) {
-        _price -=
-            product.updatedPrice * (isAll ? (_items[product.id] ?? 0) : 1);
+      if (_items.containsKey(p.id)) {
+        _price -= p.updatedPrice * (isAll ? (_items[p.id] ?? 0) : 1);
         if (isAll)
-          _items.remove(product.id);
+          _items.remove(p.id);
         else {
           _items.update(
-            product.id,
+            p.id,
             (value) => value - 1,
           );
-          if (_items[product.id] == 0) _items.remove(product.id);
+          if (_items[p.id] == 0) _items.remove(p.id);
         }
         final Box<Map> cartBox = Hive.box<Map>('cartBox');
         await cartBox.put('items', _items);
@@ -617,17 +619,11 @@ class DataRepository {
       final seqIdDocData = await seqIdDoc.get();
       int seqIdVal = 1;
       if (seqIdDocData.exists) seqIdVal = seqIdDocData.data()?['seqId'];
-      Map<String, List> shoppingList = {};
-      for (MapEntry<String, int> entry in _items.entries) {
-        final product = await getProductById(entry.key);
-        shoppingList.putIfAbsent(
-            entry.key, () => [entry.value, product.updatedPrice]);
-      }
       final orderMap = {
-        'total': _price,
         'code': seqIdVal,
-        'items': shoppingList,
-        'isAd': false,
+        'total': _price,
+        'items': _items,
+        'ads': _ads,
         'userId': getUserId(),
         'status': OrderStatus.pending.name,
         'createdAt': DateTime.now(),
@@ -640,6 +636,14 @@ class DataRepository {
             .doc('${Constants.productsCol}/$id')
             .update({'quantity': FieldValue.increment(-taken)});
       });
+      _ads.forEach((id, taken) async {
+        final ad = await getAdById(id);
+        for (Offer offer in ad.offers) {
+          await firestore
+              .doc('${Constants.productsCol}/${offer.product.id}')
+              .update({'quantity': FieldValue.increment(-offer.quantity)});
+        }
+      });
       return const Right(null);
     } catch (e) {
       AppLogs.error('Error @placeOrder: $e');
@@ -647,98 +651,98 @@ class DataRepository {
     }
   }
 
-  Stream<Either<Failure, Map<String, List<UserOrder>>>> ordersStream() async* {
-    try {
-      final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
-      if (ordersBox.isNotEmpty) {
-        final ongoingOrders = ordersBox.values
-            .where((order) =>
-                order.status == OrderStatus.pending ||
-                order.status == OrderStatus.shipped)
-            .toList();
+  // Stream<Either<Failure, Map<String, List<UserOrder>>>> ordersStream() async* {
+  //   try {
+  //     final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+  //     if (ordersBox.isNotEmpty) {
+  //       final ongoingOrders = ordersBox.values
+  //           .where((order) =>
+  //               order.status == OrderStatus.pending ||
+  //               order.status == OrderStatus.shipped)
+  //           .toList();
 
-        final historyOrders = ordersBox.values
-            .where((order) =>
-                order.status == OrderStatus.cancelled ||
-                order.status == OrderStatus.delivered ||
-                order.status == OrderStatus.refused)
-            .toList();
+  //       final historyOrders = ordersBox.values
+  //           .where((order) =>
+  //               order.status == OrderStatus.cancelled ||
+  //               order.status == OrderStatus.delivered ||
+  //               order.status == OrderStatus.refused)
+  //           .toList();
 
-        yield Right({
-          'ongoing': ongoingOrders,
-          'history': historyOrders,
-        });
-      }
+  //       yield Right({
+  //         'ongoing': ongoingOrders,
+  //         'history': historyOrders,
+  //       });
+  //     }
 
-      final userId = getUserId();
-      final ongoingOrdersStream = firestore
-          .collection(Constants.ordersCol)
-          .where('userId', isEqualTo: userId)
-          .where('status', whereIn: ['pending', 'shipped'])
-          .orderBy('createdAt', descending: true)
-          .snapshots();
+  //     final userId = getUserId();
+  //     final ongoingOrdersStream = firestore
+  //         .collection(Constants.ordersCol)
+  //         .where('userId', isEqualTo: userId)
+  //         .where('status', whereIn: ['pending', 'shipped'])
+  //         .orderBy('createdAt', descending: true)
+  //         .snapshots();
 
-      final historyOrdersStream = firestore
-          .collection(Constants.ordersCol)
-          .where('userId', isEqualTo: userId)
-          .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
-          .orderBy('createdAt', descending: true)
-          .snapshots();
+  //     final historyOrdersStream = firestore
+  //         .collection(Constants.ordersCol)
+  //         .where('userId', isEqualTo: userId)
+  //         .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
+  //         .orderBy('createdAt', descending: true)
+  //         .snapshots();
 
-      yield* Rx.combineLatest2(
-        ongoingOrdersStream,
-        historyOrdersStream,
-        (ongoingSnapshot, historySnapshot) async {
-          try {
-            final List<UserOrder> ongoingOrderList = [];
-            final List<UserOrder> historyOrderList = [];
-            for (var doc in ongoingSnapshot.docs) {
-              if (doc.data()['seqId'] != null) continue;
-              List<ShoppingItem> shopping = [];
-              for (MapEntry entry in doc.data()['items'].entries) {
-                final product = await getProductById(entry.key);
-                shopping.add(ShoppingItem.fromDoc(entry.value, product));
-              }
-              ongoingOrderList.add(UserOrder.fromDoc(
-                doc.data(),
-                shopping,
-                doc.id,
-              ));
-            }
+  //     yield* Rx.combineLatest2(
+  //       ongoingOrdersStream,
+  //       historyOrdersStream,
+  //       (ongoingSnapshot, historySnapshot) async {
+  //         try {
+  //           final List<UserOrder> ongoingOrderList = [];
+  //           final List<UserOrder> historyOrderList = [];
+  //           for (var doc in ongoingSnapshot.docs) {
+  //             if (doc.data()['seqId'] != null) continue;
+  //             List<ShoppingItem> shopping = [];
+  //             for (MapEntry entry in doc.data()['items'].entries) {
+  //               final product = await getProductById(entry.key);
+  //               shopping.add(ShoppingItem.fromDoc(entry.value, product));
+  //             }
+  //             ongoingOrderList.add(UserOrder.fromDoc(
+  //               doc.data(),
+  //               shopping,
+  //               doc.id,
+  //             ));
+  //           }
 
-            for (var doc in historySnapshot.docs) {
-              if (doc.data()['seqId'] != null) continue;
-              List<ShoppingItem> shopping = [];
-              for (MapEntry entry in doc.data()['items'].entries) {
-                final product = await getProductById(entry.key);
-                if (product == Product.empty) continue;
-                shopping.add(ShoppingItem.fromDoc(entry.value, product));
-              }
-              historyOrderList.add(UserOrder.fromDoc(
-                doc.data(),
-                shopping,
-                doc.id,
-              ));
-            }
+  //           for (var doc in historySnapshot.docs) {
+  //             if (doc.data()['seqId'] != null) continue;
+  //             List<ShoppingItem> shopping = [];
+  //             for (MapEntry entry in doc.data()['items'].entries) {
+  //               final product = await getProductById(entry.key);
+  //               if (product == Product.empty) continue;
+  //               shopping.add(ShoppingItem.fromDoc(entry.value, product));
+  //             }
+  //             historyOrderList.add(UserOrder.fromDoc(
+  //               doc.data(),
+  //               shopping,
+  //               doc.id,
+  //             ));
+  //           }
 
-            await ordersBox.clear();
-            for (var order in [...ongoingOrderList, ...historyOrderList])
-              await ordersBox.put(order.id, order);
+  //           await ordersBox.clear();
+  //           for (var order in [...ongoingOrderList, ...historyOrderList])
+  //             await ordersBox.put(order.id, order);
 
-            return Right({
-              'ongoing': ongoingOrderList,
-              'history': historyOrderList,
-            });
-          } catch (e) {
-            return Left(Failure(e.toString()));
-          }
-        },
-      ).asyncMap((value) async =>
-          await value as Either<Failure, Map<String, List<UserOrder>>>);
-    } catch (e) {
-      yield Left(Failure(e.toString()));
-    }
-  }
+  //           return Right({
+  //             'ongoing': ongoingOrderList,
+  //             'history': historyOrderList,
+  //           });
+  //         } catch (e) {
+  //           return Left(Failure(e.toString()));
+  //         }
+  //       },
+  //     ).asyncMap((value) async =>
+  //         await value as Either<Failure, Map<String, List<UserOrder>>>);
+  //   } catch (e) {
+  //     yield Left(Failure(e.toString()));
+  //   }
+  // }
 
   Future<Either<Failure, Map<String, dynamic>>> fetchOngoingOrders(
       int curLength) async {
@@ -801,14 +805,20 @@ class DataRepository {
         final data = doc.data();
         if (data == null) continue;
         if ((data as Map<String, dynamic>)['seqId'] != null) continue;
-        List<ShoppingItem> shopping = [];
+        Map<Product, int> items = {};
         for (MapEntry entry in data['items'].entries) {
           final product = await getProductById(entry.key);
-          shopping.add(ShoppingItem.fromDoc(entry.value, product));
+          items.putIfAbsent(product, () => entry.value);
+        }
+        Map<Ad, int> ads = {};
+        for (MapEntry entry in data['ads'].entries) {
+          final ad = await getAdById(entry.key);
+          ads.putIfAbsent(ad, () => entry.value);
         }
         final order = UserOrder.fromDoc(
           data,
-          shopping,
+          items,
+          ads,
           doc.id,
         );
         orders.add(order);
@@ -891,14 +901,20 @@ class DataRepository {
         final data = doc.data();
         if (data == null) continue;
         if ((data as Map<String, dynamic>)['seqId'] != null) continue;
-        List<ShoppingItem> shopping = [];
+        Map<Product, int> items = {};
         for (MapEntry entry in data['items'].entries) {
           final product = await getProductById(entry.key);
-          shopping.add(ShoppingItem.fromDoc(entry.value, product));
+          items.putIfAbsent(product, () => entry.value);
+        }
+        Map<Ad, int> ads = {};
+        for (MapEntry entry in data['ads'].entries) {
+          final ad = await getAdById(entry.key);
+          ads.putIfAbsent(ad, () => entry.value);
         }
         final order = UserOrder.fromDoc(
           data,
-          shopping,
+          items,
+          ads,
           doc.id,
         );
         orders.add(order);
@@ -948,28 +964,46 @@ class DataRepository {
             .doc('${Constants.ordersCol}/$orderId')
             .update({'status': OrderStatus.cancelled.name});
         final Box<Product> productsBox = Hive.box<Product>('productsBox');
-        for (ShoppingItem shopItem in order.shopping) {
-          final p = productsBox.get(shopItem.product.id)!;
-          await productsBox.put(shopItem.product.id,
-              p.copyWith(quantity: p.quantity + shopItem.quantity));
+        for (MapEntry<Product, int> item in order.items.entries) {
+          await productsBox.put(item.key.id,
+              item.key.copyWith(quantity: item.key.quantity + item.value));
           await firestore
               .collection(Constants.productsCol)
-              .doc(shopItem.product.id)
-              .update({'quantity': FieldValue.increment(shopItem.quantity)});
+              .doc(item.key.id)
+              .update({'quantity': FieldValue.increment(item.value)});
+        }
+        for (MapEntry<Ad, int> ad in order.ads.entries) {
+          for (Offer offer in ad.key.offers) {
+            await productsBox.put(
+                offer.product.id,
+                offer.product.copyWith(
+                    quantity: offer.product.quantity + offer.quantity));
+            await firestore
+                .collection(Constants.productsCol)
+                .doc(offer.product.id)
+                .update({'quantity': FieldValue.increment(offer.quantity)});
+          }
         }
       } else {
         final orderData =
             await firestore.doc('${Constants.ordersCol}/$orderId').get();
-        if (orderData.data()?['status'] == OrderStatus.shipped.name)
+        final data = orderData.data();
+        if (data?['status'] == OrderStatus.shipped.name)
           return const Left(Failure('تم شحن الطلب بالفعل'));
-        List<ShoppingItem> shoppingItems = [];
-        for (MapEntry entry in orderData.data()?['items'].entries) {
+        Map<Product, int> items = {};
+        for (MapEntry entry in data?['items'].entries) {
           final product = await getProductById(entry.key);
-          shoppingItems.add(ShoppingItem.fromDoc(entry.value, product));
+          items.putIfAbsent(product, () => entry.value);
+        }
+        Map<Ad, int> ads = {};
+        for (MapEntry entry in data?['ads'].entries) {
+          final ad = await getAdById(entry.key);
+          ads.putIfAbsent(ad, () => entry.value);
         }
         final order = UserOrder.fromDoc(
-          orderData.data()!,
-          shoppingItems,
+          data!,
+          items,
+          ads,
           orderData.id,
         ).copyWith(status: OrderStatus.cancelled);
         await ordersBox.put(order.id, order);
@@ -977,13 +1011,24 @@ class DataRepository {
             .doc('${Constants.ordersCol}/$orderId')
             .update({'status': OrderStatus.cancelled.name});
         final Box<Product> productsBox = Hive.box<Product>('productsBox');
-        orderData['items'].forEach((id, takenObj) async {
+        orderData['items'].forEach((id, cnt) async {
           final p = productsBox.get(id)!;
-          await productsBox.put(
-              id, p.copyWith(quantity: p.quantity + takenObj[0]));
+          await productsBox.put(id, p.copyWith(quantity: p.quantity + cnt));
           await firestore
               .doc('${Constants.productsCol}/$id')
-              .update({'quantity': FieldValue.increment(takenObj[0])});
+              .update({'quantity': FieldValue.increment(cnt)});
+        });
+        orderData['ads'].forEach((id, cnt) async {
+          final ad = await getAdById(id);
+          for (Offer offer in ad.offers) {
+            await productsBox.put(
+                offer.product.id,
+                offer.product.copyWith(
+                    quantity: offer.product.quantity + offer.quantity));
+            await firestore
+                .doc('${Constants.productsCol}/${offer.product.id}')
+                .update({'quantity': FieldValue.increment(offer.quantity)});
+          }
         });
       }
       return const Right(null);
@@ -1004,25 +1049,46 @@ class DataRepository {
             .doc('${Constants.ordersCol}/$orderId')
             .update({'status': OrderStatus.refused.name});
         final Box<Product> productsBox = Hive.box<Product>('productsBox');
-        for (ShoppingItem shopItem in order.shopping) {
-          final p = productsBox.get(shopItem.product.id)!;
-          await productsBox.put(shopItem.product.id,
-              p.copyWith(quantity: p.quantity + shopItem.quantity));
+        for (MapEntry<Product, int> item in order.items.entries) {
+          await productsBox.put(item.key.id,
+              item.key.copyWith(quantity: item.key.quantity + item.value));
           await firestore
-              .doc('${Constants.productsCol}/${shopItem.product.id}')
-              .update({'quantity': FieldValue.increment(shopItem.quantity)});
+              .collection(Constants.productsCol)
+              .doc(item.key.id)
+              .update({'quantity': FieldValue.increment(item.value)});
+        }
+        for (MapEntry<Ad, int> ad in order.ads.entries) {
+          for (Offer offer in ad.key.offers) {
+            await productsBox.put(
+                offer.product.id,
+                offer.product.copyWith(
+                    quantity: offer.product.quantity + offer.quantity));
+            await firestore
+                .collection(Constants.productsCol)
+                .doc(offer.product.id)
+                .update({'quantity': FieldValue.increment(offer.quantity)});
+          }
         }
       } else {
         final orderData =
             await firestore.doc('${Constants.ordersCol}/$orderId').get();
-        List<ShoppingItem> shoppingItems = [];
-        for (MapEntry entry in orderData.data()?['items'].entries) {
+        final data = orderData.data();
+        if (data?['status'] == OrderStatus.shipped.name)
+          return const Left(Failure('تم شحن الطلب بالفعل'));
+        Map<Product, int> items = {};
+        for (MapEntry entry in data?['items'].entries) {
           final product = await getProductById(entry.key);
-          shoppingItems.add(ShoppingItem.fromDoc(entry.value, product));
+          items.putIfAbsent(product, () => entry.value);
+        }
+        Map<Ad, int> ads = {};
+        for (MapEntry entry in data?['ads'].entries) {
+          final ad = await getAdById(entry.key);
+          ads.putIfAbsent(ad, () => entry.value);
         }
         final order = UserOrder.fromDoc(
-          orderData.data()!,
-          shoppingItems,
+          data!,
+          items,
+          ads,
           orderData.id,
         ).copyWith(status: OrderStatus.refused);
         await ordersBox.put(order.id, order);
@@ -1030,18 +1096,29 @@ class DataRepository {
             .doc('${Constants.ordersCol}/$orderId')
             .update({'status': OrderStatus.refused.name});
         final Box<Product> productsBox = Hive.box<Product>('productsBox');
-        orderData['items'].forEach((id, takenObj) async {
+        orderData['items'].forEach((id, cnt) async {
           final p = productsBox.get(id)!;
-          await productsBox.put(
-              id, p.copyWith(quantity: p.quantity + takenObj[0]));
+          await productsBox.put(id, p.copyWith(quantity: p.quantity + cnt));
           await firestore
               .doc('${Constants.productsCol}/$id')
-              .update({'quantity': FieldValue.increment(takenObj[0])});
+              .update({'quantity': FieldValue.increment(cnt)});
+        });
+        orderData['ads'].forEach((id, cnt) async {
+          final ad = await getAdById(id);
+          for (Offer offer in ad.offers) {
+            await productsBox.put(
+                offer.product.id,
+                offer.product.copyWith(
+                    quantity: offer.product.quantity + offer.quantity));
+            await firestore
+                .doc('${Constants.productsCol}/${offer.product.id}')
+                .update({'quantity': FieldValue.increment(offer.quantity)});
+          }
         });
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @cancelOrder: $e');
+      AppLogs.error('Error @refuseOrder: $e');
       return Left(Failure(e.toString()));
     }
   }

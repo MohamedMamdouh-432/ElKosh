@@ -15,7 +15,7 @@ class CartCubit extends Cubit<CartState> {
   Future<void> fetchCart() async {
     try {
       emit(state.copyWith(status: CartStatus.loading));
-      final result = await sl.get<DataRepository>().fetchCart();
+      final result = await sl.get<DataRepo>().fetchCart();
       result.fold(
         (left) => emit(state.copyWith(
           status: CartStatus.failure,
@@ -38,7 +38,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> addProductToCart(Product p) async {
-    final result = await sl.get<DataRepository>().addProductToCart(p);
+    final result = await sl.get<DataRepo>().addProductToCart(p);
     result.fold(
       (left) => emit(state.copyWith(
         status: CartStatus.failure,
@@ -61,10 +61,9 @@ class CartCubit extends Cubit<CartState> {
     );
   }
 
-  Future<void> removeProductFromCart(Product p, bool isAll) async {
+  Future<void> removeProductFromCart(Product p, [bool isAll = false]) async {
     try {
-      final result =
-          await sl.get<DataRepository>().removeProductFromCart(p, isAll);
+      final result = await sl.get<DataRepo>().removeProductFromCart(p, isAll);
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,
@@ -107,7 +106,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> addAdToCart(Ad ad) async {
-    final result = await sl.get<DataRepository>().addAdToCart(ad);
+    final result = await sl.get<DataRepo>().addAdToCart(ad);
     result.fold(
       (left) => emit(state.copyWith(
         status: CartStatus.failure,
@@ -130,9 +129,9 @@ class CartCubit extends Cubit<CartState> {
     );
   }
 
-  Future<void> removeAdFromCart(Ad ad, bool isAll) async {
+  Future<void> removeAdFromCart(Ad ad, [bool isAll = false]) async {
     try {
-      final result = await sl.get<DataRepository>().removeAdFromCart(ad, isAll);
+      final result = await sl.get<DataRepo>().removeAdFromCart(ad, isAll);
       result.fold(
         (left) => emit(state.copyWith(
           errMsg: left.message,
@@ -177,9 +176,8 @@ class CartCubit extends Cubit<CartState> {
   Future<void> placeOrder(Location location) async {
     try {
       emit(state.copyWith(status: CartStatus.onProgress));
-      final result = await sl.get<DataRepository>().placeOrder(location);
-      List<String?> adminTokens =
-          await sl.get<DataRepository>().getAdminTokens();
+      final result = await sl.get<DataRepo>().placeOrder(location);
+      List<String?> adminTokens = await sl.get<DataRepo>().getAdminTokens();
       result.fold(
         (l) => emit(state.copyWith(
           status: CartStatus.placingfailure,
@@ -241,7 +239,7 @@ class CartCubit extends Cubit<CartState> {
   Future<void> resetCart() async {
     try {
       emit(state.copyWith(status: CartStatus.loading));
-      final result = await sl.get<DataRepository>().resetCart();
+      final result = await sl.get<DataRepo>().resetCart();
       result.fold(
         (left) => emit(state.copyWith(
           status: CartStatus.failure,

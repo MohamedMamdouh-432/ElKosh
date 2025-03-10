@@ -90,7 +90,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if (state.inputStatus == FormInputStatus.invalid) return;
     emit(state.copyWith(submitStatus: FormzSubmissionStatus.inProgress));
     try {
-      await sl.get<AuthRepository>().registerWithEmailAndPassword(
+      await sl.get<AuthRepo>().registerWithEmailAndPassword(
             email: state.email.value,
             password: state.password.value,
             name: state.name.value,
@@ -110,7 +110,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       if (state.verifyStatus == VerifyStatus.otpInProgress) return;
       emit(state.copyWith(verifyStatus: VerifyStatus.otpInProgress));
       final sentOtp =
-          await sl.get<AuthRepository>().sendOTPMessage(state.phone.value);
+          await sl.get<AuthRepo>().sendOTPMessage(state.phone.value);
       emit(state.copyWith(
         otp: sentOtp,
         verifyStatus: VerifyStatus.otpSent,

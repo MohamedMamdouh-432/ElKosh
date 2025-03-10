@@ -35,26 +35,26 @@ class UserOrder extends Equatable {
   final String userId;
 
   @HiveField(4)
-  final OrderStatus status; // سيتم إنشاء Adapter له
+  final OrderStatus status;
 
   @HiveField(5)
   final DateTime createdAt;
 
   @HiveField(6)
-  final Location location; // سيتم إنشاء Adapter له
+  final Location location;
 
   @HiveField(7)
-  final bool isAd;
+  final Map<Ad, int> ads;
 
   @HiveField(8)
-  final List<ShoppingItem> shopping;
+  final Map<Product, int> items;
 
   const UserOrder({
     required this.id,
     required this.code,
     required this.total,
-    required this.shopping,
-    required this.isAd,
+    required this.items,
+    required this.ads,
     required this.userId,
     required this.status,
     required this.createdAt,
@@ -66,8 +66,8 @@ class UserOrder extends Equatable {
     code: 0,
     total: 0,
     userId: '',
-    shopping: const [],
-    isAd: false,
+    items: const {},
+    ads: const {},
     createdAt: DateTime(0),
     location: Location.empty,
     status: OrderStatus.pending,
@@ -95,17 +95,18 @@ class UserOrder extends Equatable {
 
   factory UserOrder.fromDoc(
     Map<String, dynamic> map,
-    List<ShoppingItem> shoppingList,
+    Map<Product, int> items,
+    Map<Ad, int> ads,
     String id,
   ) =>
       UserOrder(
         id: id,
         userId: map['userId'],
-        shopping: shoppingList,
+        items: items,
+        ads: ads,
         code: map['code'].toInt(),
         total: map['total'].toDouble(),
         createdAt: map['createdAt'].toDate(),
-        isAd: map['isAd'],
         status: getOrderStatus(map['status']),
         location: Location.fromJson(map['location']),
       );
@@ -114,7 +115,8 @@ class UserOrder extends Equatable {
     String? id,
     int? code,
     double? total,
-    List<ShoppingItem>? shopping,
+    Map<Product, int>? items,
+    Map<Ad, int>? ads,
     String? userId,
     bool? isAd,
     OrderStatus? status,
@@ -125,10 +127,10 @@ class UserOrder extends Equatable {
       id: id ?? this.id,
       code: code ?? this.code,
       total: total ?? this.total,
-      shopping: shopping ?? this.shopping,
+      items: items ?? this.items,
+      ads: ads ?? this.ads,
       userId: userId ?? this.userId,
       status: status ?? this.status,
-      isAd: isAd ?? this.isAd,
       createdAt: createdAt ?? this.createdAt,
       location: location ?? this.location,
     );
@@ -140,8 +142,8 @@ class UserOrder extends Equatable {
       id,
       code,
       total,
-      isAd,
-      shopping,
+      ads,
+      items,
       userId,
       status,
       createdAt,

@@ -36,6 +36,7 @@ class SearchScreen extends StatelessWidget {
                     const Gap(20),
                     SearchBar(
                       hintText: 'ابحث من هنا',
+                      autoFocus: true,
                       leading: const Icon(Icons.search, size: 26),
                       elevation: const WidgetStatePropertyAll(0),
                       hintStyle: WidgetStatePropertyAll(

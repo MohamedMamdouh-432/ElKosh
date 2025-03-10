@@ -6,7 +6,7 @@ class OrdersState extends Equatable {
   final UserOrder curOrder;
   final String errMsg;
   final OrdersStatus status;
-  final bool hasReachedMax;
+  final bool hasOngoingsMax, hasHistorysMax;
 
   const OrdersState({
     required this.ongoingOrders,
@@ -14,7 +14,8 @@ class OrdersState extends Equatable {
     required this.errMsg,
     required this.status,
     required this.curOrder,
-    required this.hasReachedMax,
+    required this.hasOngoingsMax,
+    required this.hasHistorysMax,
   });
 
   static OrdersState initial = OrdersState(
@@ -23,7 +24,8 @@ class OrdersState extends Equatable {
     errMsg: '',
     curOrder: UserOrder.empty,
     status: OrdersStatus.initial,
-    hasReachedMax: false,
+    hasOngoingsMax: false,
+    hasHistorysMax: false,
   );
 
   OrdersState copyWith({
@@ -32,7 +34,8 @@ class OrdersState extends Equatable {
     String? errMsg,
     OrdersStatus? status,
     UserOrder? curOrder,
-    bool? hasReachedMax,
+    bool? hasOngoingsMax,
+    bool? hasHistorysMax,
   }) {
     return OrdersState(
       ongoingOrders: ongoingOrders ?? this.ongoingOrders,
@@ -40,7 +43,8 @@ class OrdersState extends Equatable {
       errMsg: errMsg ?? this.errMsg,
       status: status ?? this.status,
       curOrder: curOrder ?? this.curOrder,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      hasOngoingsMax: hasOngoingsMax ?? this.hasOngoingsMax,
+      hasHistorysMax: hasHistorysMax ?? this.hasHistorysMax,
     );
   }
 
@@ -52,7 +56,8 @@ class OrdersState extends Equatable {
       Error: $errMsg
       status: ${status.name}
       curOrder Id: ${curOrder == UserOrder.empty ? Null : curOrder.id}
-      Reach Max: ${hasReachedMax ? 'YES' : 'NO'}
+      Ongoings Reach Max: ${hasOngoingsMax ? 'YES' : 'NO'}
+      History Reach Max: ${hasHistorysMax ? 'YES' : 'NO'}
     ''';
   }
 
@@ -63,5 +68,7 @@ class OrdersState extends Equatable {
         errMsg,
         status,
         curOrder,
+        hasOngoingsMax,
+        hasHistorysMax,
       ];
 }

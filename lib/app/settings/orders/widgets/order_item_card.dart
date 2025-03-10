@@ -1,20 +1,14 @@
-import 'package:elkosh/core/theme/themes.dart';
-import 'package:elkosh/core/services/functions.dart';
 import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/theme/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:models_repository/models_repository.dart';
 
-class OrderCard extends StatelessWidget {
-  final bool isAd;
-  final ShoppingItem shoppingItem;
-
-  const OrderCard({
-    super.key,
-    required this.shoppingItem,
-    required this.isAd,
-  });
+class OrderItemCard extends StatelessWidget {
+  final MapEntry<Product, int> item;
+  const OrderItemCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +20,7 @@ class OrderCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade500,
-                spreadRadius: 4,
-                blurRadius: 4,
-              ),
-            ],
+            border: Border.all(color: Colors.grey.shade400, width: 2),
           ),
           child: Row(
             children: [
@@ -47,7 +35,7 @@ class OrderCard extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: Text(
-                  toArNumber(shoppingItem.quantity.toString()),
+                  toArNumber(item.value.toString()),
                   style: TextStyle(
                     fontSize: 18.sp,
                     color: ColorManager.primary,
@@ -64,7 +52,7 @@ class OrderCard extends StatelessWidget {
                   SizedBox(
                     width: context.width * 0.45,
                     child: Text(
-                      shoppingItem.product.name,
+                      item.key.name,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
@@ -74,7 +62,7 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${toArNumber((isAd ? shoppingItem.price : shoppingItem.product.updatedPrice).toStringAsFixed(2))} جنيه',
+                    '${toArNumber(item.key.updatedPrice.toStringAsFixed(2))} جنيه',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,
@@ -98,7 +86,7 @@ class OrderCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '${toArNumber(((isAd ? shoppingItem.price : shoppingItem.product.updatedPrice) * shoppingItem.quantity).toString())} جنيه',
+                    '${toArNumber((item.key.updatedPrice * item.value).toString())} جنيه',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 17,

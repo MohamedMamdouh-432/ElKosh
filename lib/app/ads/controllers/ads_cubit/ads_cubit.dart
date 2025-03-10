@@ -17,7 +17,7 @@ class AdsCubit extends Cubit<AdsState> {
 
   void _listenToAdsStream() {
     _subscription?.cancel();
-    _subscription = sl.get<DataRepository>().adsStream().listen(
+    _subscription = sl.get<DataRepo>().adsStream().listen(
       (result) {
         result.fold(
           (l) => emit(
@@ -33,7 +33,7 @@ class AdsCubit extends Cubit<AdsState> {
   Future<void> fetchAds() async {
     try {
       emit(state.copyWith(status: LoadStatus.inProgress));
-      final results = await sl.get<DataRepository>().fetchAds();
+      final results = await sl.get<DataRepo>().fetchAds();
       results.fold(
         (l) =>
             emit(state.copyWith(errMsg: l.message, status: LoadStatus.failure)),
@@ -49,7 +49,7 @@ class AdsCubit extends Cubit<AdsState> {
 
   void selectAd(Ad ad) {
     try {
-      sl.get<DataRepository>().setCurAd(ad);
+      sl.get<DataRepo>().setCurAd(ad);
       emit(state.copyWith(curAd: ad));
     } catch (e) {
       emit(state.copyWith(errMsg: e.toString(), status: LoadStatus.failure));

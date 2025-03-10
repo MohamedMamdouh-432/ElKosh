@@ -1,7 +1,9 @@
 import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
-import 'package:elkosh/app/settings/orders/widgets/order_card.dart';
-import 'package:elkosh/core/theme/color_manager.dart';
+import 'package:elkosh/app/settings/orders/widgets/order_ad_card.dart';
+import 'package:elkosh/app/settings/orders/widgets/order_item_card.dart';
+import 'package:elkosh/app/settings/orders/widgets/order_section.dart';
 import 'package:elkosh/core/services/functions.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +18,6 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
     return BlocBuilder<OrdersCubit, OrdersState>(
       buildWhen: (p, c) => p != c,
       builder: (context, state) {
-        final shopping = state.curOrder.shopping;
         return Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -131,53 +132,67 @@ class HistoryOrderDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const Gap(20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            endIndent: 10,
-                            thickness: 2,
-                            color: ColorManager.primary,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 25,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: ColorManager.primary),
-                          ),
-                          child: const Text(
-                            "سلة المشتريات",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
+                    OrderSection(sectionTitle: 'سلة التسوق'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        spacing: 20,
+                        children: [
+                          Visibility(
+                            visible: state.curOrder.items.isNotEmpty,
+                            child: ExpandablePanel(
+                              header: const Text('المشتريات',
+                                  textScaler: TextScaler.linear(1.5)),
+                              collapsed: const SizedBox(),
+                              expanded: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                child: Column(
+                                  spacing: 5,
+                                  children: state.curOrder.items.entries
+                                      .map((entry) => OrderItemCard(entry))
+                                      .toList(),
+                                ),
+                              ),
+                              theme: const ExpandableThemeData(
+                                headerAlignment:
+                                    ExpandablePanelHeaderAlignment.center,
+                                tapBodyToExpand: true,
+                                tapBodyToCollapse: true,
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            indent: 10,
-                            thickness: 2,
-                            color: ColorManager.primary,
+                          Visibility(
+                            visible: state.curOrder.ads.isNotEmpty,
+                            child: ExpandablePanel(
+                              header: const Text('العروض',
+                                  textScaler: TextScaler.linear(1.5)),
+                              collapsed: const SizedBox(),
+                              expanded: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                child: Column(
+                                  spacing: 5,
+                                  children: state.curOrder.ads.entries
+                                      .map((entry) => OrderAdCard(entry))
+                                      .toList(),
+                                ),
+                              ),
+                              theme: const ExpandableThemeData(
+                                headerAlignment:
+                                    ExpandablePanelHeaderAlignment.center,
+                                tapBodyToExpand: true,
+                                tapBodyToCollapse: true,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const Gap(20),
-                    ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: shopping.length,
-                      itemBuilder: (context, i) => OrderCard(
-                        isAd: state.curOrder.isAd,
-                        shoppingItem: shopping[i],
+                        ],
                       ),
-                      separatorBuilder: (context, index) => const Gap(10),
                     ),
                   ],
                 ),
