@@ -66,10 +66,6 @@
     * search feature
 
 # Edits
-	- Cart Staratigy
-		* ads: List<Ad>
-		* items: List<Product>
-	- Order
 
 # Bugs
 
