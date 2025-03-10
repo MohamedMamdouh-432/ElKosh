@@ -20,8 +20,8 @@ class UserOrderAdapter extends TypeAdapter<UserOrder> {
       id: fields[0] as String,
       code: fields[1] as int,
       total: fields[2] as double,
-      shopping: (fields[8] as List).cast<ShoppingItem>(),
-      isAd: fields[7] as bool,
+      items: (fields[8] as Map).cast<Product, int>(),
+      ads: (fields[7] as Map).cast<Ad, int>(),
       userId: fields[3] as String,
       status: fields[4] as OrderStatus,
       createdAt: fields[5] as DateTime,
@@ -48,9 +48,9 @@ class UserOrderAdapter extends TypeAdapter<UserOrder> {
       ..writeByte(6)
       ..write(obj.location)
       ..writeByte(7)
-      ..write(obj.isAd)
+      ..write(obj.ads)
       ..writeByte(8)
-      ..write(obj.shopping);
+      ..write(obj.items);
   }
 
   @override

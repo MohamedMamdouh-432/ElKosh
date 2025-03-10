@@ -13,11 +13,11 @@ class OrdersCubit extends Cubit<OrdersState> {
   OrdersCubit() : super(OrdersState.initial);
 
   Future<void> fetchOngoingOrders() async {
-    if (state.hasReachedMax) return;
+    if (state.hasOngoingsMax) return;
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
       final orders = await sl
-          .get<DataRepository>()
+          .get<DataRepo>()
           .fetchOngoingOrders(state.ongoingOrders.length);
       orders.fold(
         (l) => emit(state.copyWith(
@@ -28,7 +28,10 @@ class OrdersCubit extends Cubit<OrdersState> {
           final skip = r['skip'];
           final data = r['data'] as List<UserOrder>;
           if (data.isEmpty && !skip) {
-            emit(state.copyWith(hasReachedMax: true));
+            emit(state.copyWith(
+              hasOngoingsMax: true,
+              status: OrdersStatus.fetchSuccess,
+            ));
           } else {
             emit(state.copyWith(
               ongoingOrders: [...state.ongoingOrders, ...data],
@@ -46,11 +49,11 @@ class OrdersCubit extends Cubit<OrdersState> {
   }
 
   Future<void> fetchHistoryOrders() async {
-    if (state.hasReachedMax) return;
+    if (state.hasHistorysMax) return;
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
       final orders = await sl
-          .get<DataRepository>()
+          .get<DataRepo>()
           .fetchHistoryOrders(state.historyOrders.length);
       orders.fold(
         (l) => emit(state.copyWith(
@@ -61,7 +64,10 @@ class OrdersCubit extends Cubit<OrdersState> {
           final skip = r['skip'];
           final data = r['data'] as List<UserOrder>;
           if (data.isEmpty && !skip) {
-            emit(state.copyWith(hasReachedMax: true));
+            emit(state.copyWith(
+              hasHistorysMax: true,
+              status: OrdersStatus.fetchSuccess,
+            ));
           } else {
             emit(state.copyWith(
               historyOrders: [...state.historyOrders, ...data],
@@ -83,8 +89,7 @@ class OrdersCubit extends Cubit<OrdersState> {
   Future<void> deliverOrder(UserOrder order) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result =
-          await sl.get<DataRepository>().confirmDeliveryOrder(order.id);
+      final result = await sl.get<DataRepo>().confirmDeliveryOrder(order.id);
       final newOngoingOrders = state.ongoingOrders;
       final newHistoryOrders = state.historyOrders;
       newOngoingOrders.remove(order);
@@ -113,7 +118,7 @@ class OrdersCubit extends Cubit<OrdersState> {
   Future<void> cancelOrder(UserOrder order) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result = await sl.get<DataRepository>().cancelOrder(order.id);
+      final result = await sl.get<DataRepo>().cancelOrder(order.id);
       final newOngoingOrders = state.ongoingOrders;
       final newHistoryOrders = state.historyOrders;
       newOngoingOrders.remove(order);
@@ -142,7 +147,7 @@ class OrdersCubit extends Cubit<OrdersState> {
   Future<void> refuseOrder(UserOrder order) async {
     try {
       emit(state.copyWith(status: OrdersStatus.onProgress));
-      final result = await sl.get<DataRepository>().refuseOrder(order.id);
+      final result = await sl.get<DataRepo>().refuseOrder(order.id);
       final newOngoingOrders = state.ongoingOrders;
       final newHistoryOrders = state.historyOrders;
       newOngoingOrders.remove(order);

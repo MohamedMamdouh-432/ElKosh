@@ -1,14 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elkosh/app/ads/controllers/ad_details_provider/ad_details_provider.dart';
 import 'package:elkosh/app/ads/widgets/offer_item.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
+import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/app/home/widgets/image_section.dart';
 import 'package:elkosh/core/services/context_media.dart';
-import 'package:elkosh/core/services/service_locator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/core/theme/color_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -43,6 +44,7 @@ class AdDetailsScreen extends StatelessWidget {
         builder: (context, cartState) {
           return Consumer<AdDetailsProvider>(
             builder: (context, state, _) {
+              bool isInCart = cartState.ads.containsKey(state.ad);
               return SafeArea(
                 child: Container(
                   decoration: const BoxDecoration(
@@ -103,6 +105,71 @@ class AdDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    '${toArNumber(state.ad.total.toStringAsFixed(2))} جنيه',
+                                    style: TextStyle(
+                                      fontSize: 15.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Gap(10),
+                                  Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: !isInCart
+                                            ? null
+                                            : () => context
+                                                .read<CartCubit>()
+                                                .removeAdFromCart(
+                                                    state.ad, false),
+                                        icon: Icon(
+                                          Icons.remove,
+                                          size: 35,
+                                          color: isInCart
+                                              ? ColorManager.primary
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 15,
+                                          vertical: 10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                        ),
+                                        child: Text(
+                                          isInCart
+                                              ? (cartState.ads[state.ad] ?? 0)
+                                                  .toString()
+                                              : "0",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () => context
+                                            .read<CartCubit>()
+                                            .addAdToCart(state.ad),
+                                        icon: Icon(
+                                          Icons.add,
+                                          size: 35,
+                                          color: ColorManager.primary,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                               const Gap(10),
                               ListView.separated(
                                 physics: const NeverScrollableScrollPhysics(),
@@ -125,29 +192,12 @@ class AdDetailsScreen extends StatelessWidget {
                         child: SizedBox(
                           width: context.width * 0.8,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              final userData = await sl
-                                  .get<FirebaseFirestore>()
-                                  .collection(Constants.userCol)
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .get();
-                              if (userData['active'] == false)
-                                QuickAlert.show(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  disableBackBtn: true,
-                                  type: QuickAlertType.warning,
-                                  title: 'خطأ',
-                                  text: 'الحساب موقوف لذا لا يمكنك الطلب',
-                                  borderRadius: 20,
-                                  animType: QuickAlertAnimType.scale,
-                                  confirmBtnText: 'حسنا',
-                                );
-                              else
-                                context.read<CartCubit>().addAdToCart(state.ad);
+                            onPressed: () {
+                              context.read<NavProvider>().navToPage(2);
+                              context.pop();
                             },
                             child: const Text(
-                              "أطلب العرض",
+                              "إذهب للسلة",
                               textScaler: TextScaler.linear(1.8),
                             ),
                           ),

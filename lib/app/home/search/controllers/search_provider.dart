@@ -24,7 +24,7 @@ class SearchProvider extends ChangeNotifier {
         return;
       }
 
-      final result = await sl.get<DataRepository>().searchForProduct(query);
+      final result = await sl.get<DataRepo>().searchForProduct(query);
       result.fold(
         (l) {
           _errMsg = l.message;

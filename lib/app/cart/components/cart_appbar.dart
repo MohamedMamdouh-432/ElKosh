@@ -12,7 +12,7 @@ class CartAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: context.width,
-        height: 80,
+        height: 70,
         decoration: BoxDecoration(
           color: ColorManager.primary.withValues(alpha: 0.9),
           borderRadius: const BorderRadius.vertical(
@@ -20,6 +20,7 @@ class CartAppBar extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+        margin: const EdgeInsets.only(bottom: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

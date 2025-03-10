@@ -1,14 +1,15 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
+import 'package:elkosh/app/cart/components/cart_appbar.dart';
 import 'package:elkosh/app/cart/components/place_order_bottom_sheet.dart';
-import 'package:elkosh/app/cart/components/settings_appbar.dart';
 import 'package:elkosh/app/cart/screens/empty_cart_screen.dart';
-import 'package:elkosh/app/cart/widgets/cart_card.dart';
+import 'package:elkosh/app/cart/widgets/cart_ad_card.dart';
+import 'package:elkosh/app/cart/widgets/cart_item_card.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/core/theme/themes.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
@@ -21,7 +22,6 @@ class CartScreen extends StatelessWidget {
     return BlocListener<ProductsCubit, ProductsState>(
       listener: (context, state) {
         if (state.status == LoadStatus.updated)
-          // todo: when fetching if product.quantity == 0 => ignore it
           context.read<CartCubit>().fetchCart();
       },
       child: BlocConsumer<CartCubit, CartState>(
@@ -69,24 +69,78 @@ class CartScreen extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Column(
-                    children: [
-                      const CartAppBar(),
-                      Expanded(
-                        child: ConditionalBuilder(
-                          condition: state.items.isEmpty,
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 80),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CartAppBar(),
+                        ConditionalBuilder(
+                          condition: state.items.isEmpty && state.ads.isEmpty,
                           builder: (context) => const EmptyCartView(),
-                          fallback: (context) => ListView.builder(
-                            padding: EdgeInsets.only(bottom: 60.sp),
-                            itemCount: state.items.length,
-                            itemBuilder: (context, index) => CartCard(
-                              product: state.items.keys.elementAt(index),
-                              quantity: state.items.values.elementAt(index),
+                          fallback: (context) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 20,
+                              children: [
+                                Visibility(
+                                  visible: state.items.isNotEmpty,
+                                  child: ExpandablePanel(
+                                    header: const Text('المشتريات',
+                                        textScaler: TextScaler.linear(1.5)),
+                                    collapsed: const SizedBox(),
+                                    expanded: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: state.items.entries
+                                            .map((entry) => CartItemCard(
+                                                product: entry.key,
+                                                quantity: entry.value))
+                                            .toList(),
+                                      ),
+                                    ),
+                                    theme: const ExpandableThemeData(
+                                      headerAlignment:
+                                          ExpandablePanelHeaderAlignment.center,
+                                      tapBodyToExpand: true,
+                                      tapBodyToCollapse: true,
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: state.ads.isNotEmpty,
+                                  child: ExpandablePanel(
+                                    header: const Text('العروض',
+                                        textScaler: TextScaler.linear(1.5)),
+                                    collapsed: const SizedBox(),
+                                    expanded: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: Column(
+                                        children: state.ads.entries
+                                            .map((entry) => CartAdCard(
+                                                ad: entry.key,
+                                                quantity: entry.value))
+                                            .toList(),
+                                      ),
+                                    ),
+                                    theme: const ExpandableThemeData(
+                                      headerAlignment:
+                                          ExpandablePanelHeaderAlignment.center,
+                                      tapBodyToExpand: true,
+                                      tapBodyToCollapse: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Positioned(
                     bottom: 5,

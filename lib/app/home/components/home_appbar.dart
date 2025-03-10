@@ -1,7 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
-import 'package:elkosh/app/home/search/controllers/search_provider.dart';
 import 'package:elkosh/app/home/widgets/home_hi_item.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
 import 'package:elkosh/core/services/context_media.dart';
@@ -102,10 +101,7 @@ class HomeAppBar extends StatelessWidget {
                         ),
                         padding: const WidgetStatePropertyAll(
                             EdgeInsets.symmetric(horizontal: 10)),
-                        onSubmitted: (value) async {
-                          ctx.push(RouteManager.searchRoute);
-                          await ctx.read<SearchProvider>().submitQuery(value);
-                        },
+                        onTap: () => ctx.push(RouteManager.searchRoute),
                       ),
                       const Gap(15),
                     ],

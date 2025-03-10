@@ -6,13 +6,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserRepository {
+class UserRepo {
   User? _user;
   String? _userId;
   final FirebaseFirestore _firestore;
   final SharedPreferences _sharedPref;
 
-  UserRepository({
+  UserRepo({
     required FirebaseFirestore firestore,
     required FirebaseStorage storage,
     required SharedPreferences sharedPreferences,

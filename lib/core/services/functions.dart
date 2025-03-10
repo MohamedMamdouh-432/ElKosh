@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:image_picker/image_picker.dart';
 import 'package:models_repository/models_repository.dart';
-import 'package:path_provider/path_provider.dart';
 
 String getAddress(Map<String, dynamic> addressMap) {
   String address = '';
@@ -38,15 +34,15 @@ String toArNumber(String input) {
 
 String toArabicPeriod(String period) => period == 'am' ? 'ص' : 'م';
 
-Future<File?> fetchImage() async {
-  final XFile? fetchedImage =
-      await ImagePicker().pickImage(source: ImageSource.gallery);
-  if (fetchedImage == null) return null;
-  String appDirPath = (await getApplicationDocumentsDirectory()).path;
-  final imgPath = '$appDirPath/${fetchedImage.name}';
-  final file = await File(fetchedImage.path).copy(imgPath);
-  return file;
-}
+// Future<File?> fetchImage() async {
+//   final XFile? fetchedImage =
+//       await ImagePicker().pickImage(source: ImageSource.gallery);
+//   if (fetchedImage == null) return null;
+//   String appDirPath = (await getApplicationDocumentsDirectory()).path;
+//   final imgPath = '$appDirPath/${fetchedImage.name}';
+//   final file = await File(fetchedImage.path).copy(imgPath);
+//   return file;
+// }
 
 bool isMarketOpen(Market market, DateTime currentTime) {
   final todayOpenTime = DateTime(

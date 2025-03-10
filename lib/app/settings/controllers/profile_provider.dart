@@ -19,7 +19,7 @@ class ProfileProvider extends ChangeNotifier {
     _status = ProfileStatus.loading;
     notifyListeners();
 
-    var userResult = await sl.get<UserRepository>().getUser();
+    var userResult = await sl.get<UserRepo>().getUser();
     userResult.fold(
       (failure) {
         _user = User.empty;
@@ -35,8 +35,8 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await sl.get<AuthRepository>().logOut();
-    await sl.get<UserRepository>().signOut();
+    await sl.get<AuthRepo>().logOut();
+    await sl.get<UserRepo>().signOut();
     _user = User.empty;
     _status = ProfileStatus.initial;
     notifyListeners();
@@ -44,8 +44,8 @@ class ProfileProvider extends ChangeNotifier {
 
   Future<void> deleteProfile() async {
     try {
-      await sl.get<AuthRepository>().deleteAccount();
-      await sl.get<UserRepository>().deleteAccount();
+      await sl.get<AuthRepo>().deleteAccount();
+      await sl.get<UserRepo>().deleteAccount();
       _user = User.empty;
       _status = ProfileStatus.initial;
     } catch (e) {
