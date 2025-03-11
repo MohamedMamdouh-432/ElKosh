@@ -49,7 +49,7 @@ class MainScreen extends StatelessWidget {
                   idx: 0,
                   curIdx: navProvider.curIdx,
                   label: 'الإعدادات',
-                  icon: ImageManager.settingsSvg,
+                  icon: Images.settingsSvg,
                   onTap: () => navProvider.animateToPage(0),
                 ),
                 HomeNavItem(
@@ -61,7 +61,7 @@ class MainScreen extends StatelessWidget {
                   idx: 2,
                   curIdx: navProvider.curIdx,
                   label: 'السله',
-                  icon: ImageManager.basketSvg,
+                  icon: Images.basketSvg,
                   onTap: () => navProvider.animateToPage(2),
                 ),
               ],

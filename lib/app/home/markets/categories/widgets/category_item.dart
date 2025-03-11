@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/app/home/markets/categories/controllers/categorys_bloc/categorys_bloc.dart';
-import 'package:elkosh/core/utils/route_manager.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
+import 'package:elkosh/core/utils/routes.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 
 class CategoryItem extends StatelessWidget {
   final Category category;
@@ -19,7 +19,7 @@ class CategoryItem extends StatelessWidget {
       onTap: () {
         context.read<CategorysBloc>().add(CategorySelectedEvent(category));
         context.push(
-          RouteManager.productsRoute,
+          Routes.productsRoute,
           extra: {
             'isRelated': true,
             'steps': 3,

@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:elkosh/repos/data_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
-import 'package:models_repository/models_repository.dart';
 
 class ProductDetailsProvider extends ChangeNotifier {
   Product _product = Product.empty;

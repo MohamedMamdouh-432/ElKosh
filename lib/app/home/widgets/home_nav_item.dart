@@ -26,7 +26,7 @@ class HomeNavItem extends StatelessWidget {
           children: [
             Center(
               child: SvgPicture.asset(
-                ImageManager.homeNavSvg,
+                Images.homeNavSvg,
                 colorFilter: const ColorFilter.mode(
                   Colors.white,
                   BlendMode.srcIn,
@@ -40,7 +40,7 @@ class HomeNavItem extends StatelessWidget {
               left: 0,
               child: Center(
                 child: SvgPicture.asset(
-                  ImageManager.homeSvg,
+                  Images.homeSvg,
                   colorFilter: const ColorFilter.mode(
                     Colors.black87,
                     BlendMode.srcIn,

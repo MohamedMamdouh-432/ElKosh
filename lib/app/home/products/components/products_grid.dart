@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/app/home/products/widgets/product_grid_card.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -71,7 +71,7 @@ class ProductsGrid extends StatelessWidget {
                       visible: state.products.isNotEmpty,
                       child: InkWell(
                         onTap: () => context.push(
-                          RouteManager.productsRoute,
+                          Routes.productsRoute,
                           extra: {
                             'isRelated': false,
                             'steps': 2,

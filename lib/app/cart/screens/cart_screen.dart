@@ -7,11 +7,11 @@ import 'package:elkosh/app/cart/widgets/cart_ad_card.dart';
 import 'package:elkosh/app/cart/widgets/cart_item_card.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 
 class CartScreen extends StatelessWidget {
@@ -137,7 +137,6 @@ class CartScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                        
                         ),
                       ],
                     ),

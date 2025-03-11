@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elkosh/app/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/app/auth/widgets/auth_button.dart';
+import 'package:elkosh/app/auth/widgets/auth_form_field.dart';
 import 'package:elkosh/app/auth/widgets/tip_text.dart';
 import 'package:elkosh/core/theme/themes.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/app/auth/widgets/auth_form_field.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/fields/fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
@@ -42,7 +43,7 @@ class RegisterScreen extends StatelessWidget {
             listenWhen: (p, c) => p != c,
             listener: (context, state) {
               if (state.verifyStatus == VerifyStatus.otpSent) {
-                context.push(RouteManager.otpRoute);
+                context.push(Routes.otpRoute);
                 context.read<RegisterBloc>().add(RegisterVerifyStateReset());
               }
             },
@@ -229,7 +230,7 @@ class RegisterScreen extends StatelessWidget {
                               style: TextStyle(fontSize: 10.sp)),
                           TextButton(
                             onPressed: () =>
-                                context.push(RouteManager.privacyPolicyRoute),
+                                context.push(Routes.privacyPolicyRoute),
                             child: Text(
                               "سياسة الخصوصية",
                               style: TextStyle(

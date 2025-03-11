@@ -1,4 +1,4 @@
-import 'package:elkosh/core/utils/route_manager.dart';
+import 'package:elkosh/core/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -43,7 +43,7 @@ class AboutAppScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 20),
                   ),
                   onTap: () {
-                    context.push(RouteManager.privacyPolicyRoute2);
+                    context.push(Routes.privacyPolicyRoute2);
                   },
                 ),
                 ListTile(
@@ -56,7 +56,7 @@ class AboutAppScreen extends StatelessWidget {
                     'سياسة الخصوصية',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () => context.push(RouteManager.privacyPolicyRoute),
+                  onTap: () => context.push(Routes.privacyPolicyRoute),
                 ),
               ],
             ),

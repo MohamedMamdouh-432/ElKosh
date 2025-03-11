@@ -3,7 +3,6 @@ import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/app/home/controllers/nav_provider/nav_provider.dart';
 import 'package:elkosh/app/home/widgets/home_hi_item.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
-import 'package:elkosh/core/services/context_media.dart';
 import 'package:elkosh/core/theme/themes.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class HomeAppBar extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: SvgPicture.asset(
-                                        ImageManager.basketSvg,
+                                        Images.basketSvg,
                                         colorFilter: const ColorFilter.mode(
                                           Colors.white,
                                           BlendMode.srcIn,
@@ -101,7 +100,7 @@ class HomeAppBar extends StatelessWidget {
                         ),
                         padding: const WidgetStatePropertyAll(
                             EdgeInsets.symmetric(horizontal: 10)),
-                        onTap: () => ctx.push(RouteManager.searchRoute),
+                        onTap: () => ctx.push(Routes.searchRoute),
                       ),
                       const Gap(15),
                     ],

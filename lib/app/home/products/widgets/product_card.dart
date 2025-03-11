@@ -1,14 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/core/services/functions.dart';
-import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:super_banners/super_banners.dart';
 
 class ProductCard extends StatelessWidget {
@@ -26,7 +25,7 @@ class ProductCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<ProductsCubit>().selectProduct(product);
-        context.push(RouteManager.productDetailsRoute, extra: {
+        context.push(Routes.productDetailsRoute, extra: {
           'steps': steps,
           'isRelated': ((GoRouter.of(context).state.extra ?? {})
                   as Map<dynamic, dynamic>)['isRelated'] ??

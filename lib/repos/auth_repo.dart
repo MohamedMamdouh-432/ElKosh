@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:elkosh/core/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CodeErrorGetter {
@@ -63,21 +62,21 @@ class CodeErrorGetter {
 class AuthRepo {
   final FirebaseAuth _fireAuth;
   final FirebaseFirestore _firestore;
-  final GoogleSignIn _googleSignIn;
+  // final GoogleSignIn _googleSignIn;
   final SharedPreferences _sharedPref;
   final Dio _dio;
   String? _userId;
 
   AuthRepo({
     required FirebaseAuth firebaseAuth,
-    GoogleSignIn? googleSignIn,
+    // GoogleSignIn? googleSignIn,
     required FirebaseFirestore firestore,
     required SharedPreferences sharedPreferences,
     required Dio dio,
   })  : _fireAuth = firebaseAuth,
         _firestore = firestore,
         _dio = dio,
-        _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
+        // _googleSignIn = googleSignIn ?? GoogleSignIn.standard(),
         _sharedPref = sharedPreferences;
 
   bool get userExists => _userId != null;
@@ -91,7 +90,7 @@ class AuthRepo {
 
   Future<String> sendOTPMessage(String phone) async {
     try {
-      AppLogs.debug("Starting to send OTP Message ...");
+      Logger.debug("Starting to send OTP Message ...");
       Response response = await _dio.post(
         'https://beon.chat/api/send/message/otp',
         options: Options(headers: {'beon-token': 'l059YhFIxnufsItml977'}),
@@ -105,14 +104,14 @@ class AuthRepo {
         }),
       );
       if (response.data['status'] == 200) {
-        AppLogs.success("OTP Message sent successfully...");
+        Logger.success("OTP Message sent successfully...");
         return response.data['data'];
       } else {
-        AppLogs.error("OTP Message sent failed...");
+        Logger.error("OTP Message sent failed...");
         throw Exception(response.data['message']);
       }
     } catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       throw Exception(e.toString());
     }
   }
@@ -170,29 +169,29 @@ class AuthRepo {
       });
       await _sharedPref.setString('userId', userCredentials.user?.uid ?? '');
     } on FirebaseAuthException catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       throw Exception(CodeErrorGetter.epRegisterError(e.code));
     } catch (_) {
       throw Exception("حدث خطأ أثناء انشاء الحساب");
     }
   }
 
-  Future<void> logInWithGoogle() async {
-    try {
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser?.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      await _fireAuth.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      AppLogs.error(e.toString());
-      throw Exception(CodeErrorGetter.googleLoginError(e.code));
-    } catch (_) {
-      throw Exception("حدث خطأ اثناء تسجيل الدخول الى حساب جوجل");
-    }
-  }
+  // Future<void> logInWithGoogle() async {
+  //   try {
+  //     final googleUser = await _googleSignIn.signIn();
+  //     final googleAuth = await googleUser?.authentication;
+  //     final credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth?.accessToken,
+  //       idToken: googleAuth?.idToken,
+  //     );
+  //     await _fireAuth.signInWithCredential(credential);
+  //   } on FirebaseAuthException catch (e) {
+  //     AppLogs.error(e.toString());
+  //     throw Exception(CodeErrorGetter.googleLoginError(e.code));
+  //   } catch (_) {
+  //     throw Exception("حدث خطأ اثناء تسجيل الدخول الى حساب جوجل");
+  //   }
+  // }
 
   Future<String> logInWithEmailAndPassword({
     required String email,
@@ -211,10 +210,10 @@ class AuthRepo {
       await _sharedPref.setString('userId', _userId ?? '');
       return _userId ?? '';
     } on FirebaseAuthException catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       throw Exception(CodeErrorGetter.epLoginError(e.code));
     } catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       throw Exception(e.toString());
     }
   }
@@ -225,7 +224,7 @@ class AuthRepo {
       await _sharedPref.remove('userId');
       await Future.wait([
         _fireAuth.signOut(),
-        _googleSignIn.signOut(),
+        // _googleSignIn.signOut(),
       ]);
     } catch (_) {
       throw Exception("حدث خطأ اثناء تسجيل الخروج");
@@ -240,7 +239,7 @@ class AuthRepo {
         _fireAuth.currentUser!.delete(),
       ]);
     } catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       throw Exception("حدث خطأ اثناء حذف حسابك");
     }
   }

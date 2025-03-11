@@ -1,16 +1,18 @@
-import 'package:auth_repository/auth_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:data_repository/data_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:elkosh/core/services/observer.dart';
+import 'package:elkosh/repos/auth_repo.dart';
+import 'package:elkosh/repos/data_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
+import 'package:elkosh/repos/submodels/submodels.dart';
+import 'package:elkosh/repos/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:user_repository/user_repository.dart';
 
 final GetIt sl = GetIt.instance;
 

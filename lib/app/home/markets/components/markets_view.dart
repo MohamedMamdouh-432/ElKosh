@@ -1,10 +1,10 @@
 import 'package:elkosh/app/home/markets/controllers/markets_cubit/markets_cubit.dart';
 import 'package:elkosh/app/home/markets/widgets/market_item.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

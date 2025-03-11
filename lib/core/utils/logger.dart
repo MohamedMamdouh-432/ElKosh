@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
-class AppLogs {
-  AppLogs._();
+class Logger {
+  Logger._();
 
 //* Success
   static void success(String message) {

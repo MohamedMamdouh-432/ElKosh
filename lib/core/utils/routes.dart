@@ -19,7 +19,7 @@ import 'package:elkosh/app/settings/screens/privacy_policy.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-abstract class RouteManager {
+abstract class Routes {
   static const String loginRoute = '/';
   static const String registerRoute = '/register';
   static const String otpRoute = '/opt';

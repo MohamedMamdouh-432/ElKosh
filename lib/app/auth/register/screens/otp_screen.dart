@@ -2,6 +2,7 @@ import 'package:elkosh/app/auth/register/bloc/register_bloc.dart';
 import 'package:elkosh/app/auth/widgets/auth_button.dart';
 import 'package:elkosh/core/theme/themes.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,6 @@ import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:pinput/pinput.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -63,7 +63,7 @@ class OtpScreen extends StatelessWidget {
                   animType: QuickAlertAnimType.scale,
                 );
                 context.read<RegisterBloc>().add(RegisterFormReset());
-                context.go(RouteManager.loginRoute);
+                context.go(Routes.loginRoute);
               }
               if (state.verifyStatus == VerifyStatus.verified) {
                 QuickAlert.show(
@@ -111,12 +111,12 @@ class OtpScreen extends StatelessWidget {
                       Pinput(
                         length: 6,
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        defaultPinTheme: ConstsManager.defaultPinTheme,
-                        focusedPinTheme: ConstsManager.defaultPinTheme
+                        defaultPinTheme: Constants.defaultPinTheme,
+                        focusedPinTheme: Constants.defaultPinTheme
                             .copyDecorationWith(
                                 border:
                                     Border.all(color: ColorManager.primary)),
-                        submittedPinTheme: ConstsManager.defaultPinTheme
+                        submittedPinTheme: Constants.defaultPinTheme
                             .copyDecorationWith(color: Colors.grey.shade200),
                         validator: (s) => s == '000000' ? '✅✅✅' : '❌❌❌',
                         pinputAutovalidateMode: PinputAutovalidateMode.disabled,

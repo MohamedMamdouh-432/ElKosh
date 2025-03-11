@@ -1,15 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/app/home/markets/controllers/markets_cubit/markets_cubit.dart';
-import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/core/services/functions.dart';
-import 'package:elkosh/core/services/context_media.dart';
 import 'package:elkosh/core/services/time_service.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 
 class MarketItem extends StatelessWidget {
   final Market market;
@@ -24,7 +23,7 @@ class MarketItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.read<MarketsCubit>().selectMarket(market);
-        context.push(RouteManager.marketDetailsRoute);
+        context.push(Routes.marketDetailsRoute);
       },
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),

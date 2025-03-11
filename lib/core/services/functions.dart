@@ -1,4 +1,4 @@
-import 'package:models_repository/models_repository.dart';
+import 'package:elkosh/repos/models/models.dart';
 
 String getAddress(Map<String, dynamic> addressMap) {
   String address = '';
@@ -71,4 +71,3 @@ bool isMarketOpen(Market market, DateTime currentTime) {
   }
   return false;
 }
-

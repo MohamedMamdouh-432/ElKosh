@@ -1,5 +1,5 @@
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:equatable/equatable.dart';
-import 'package:models_repository/models_repository.dart';
 
 UserType getUserType(String userType) {
   switch (userType) {

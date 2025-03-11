@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepo {
@@ -38,7 +39,7 @@ class UserRepo {
           ? Right(_user ?? User.empty)
           : const Left(Failure("المستخدم غير موجود"));
     } catch (e) {
-      AppLogs.error(e.toString());
+      Logger.error(e.toString());
       return Left(Failure(e.toString()));
     }
   }

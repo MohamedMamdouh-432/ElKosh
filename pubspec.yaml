@@ -10,14 +10,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  auth_repository:
-    path: packages/auth_repository
-  data_repository:
-    path: packages/data_repository
-  models_repository:
-    path: packages/models_repository
-  user_repository:
-    path: packages/user_repository
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   app_settings: ^5.2.0
@@ -25,8 +17,6 @@ dependencies:
   carousel_slider: ^5.0.0
   cloud_firestore: ^5.6.5
   conditional_builder_null_safety: ^0.0.6
-  cupertino_icons: ^1.0.8
-  device_preview: ^1.2.0
   dio: ^5.8.0+1
   equatable: ^2.0.7
   fancy_shimmer_image: ^2.0.3
@@ -62,6 +52,7 @@ dependencies:
   badges: ^3.1.2
   expandable: ^5.0.1
   curved_navigation_bar: ^1.0.6
+  either_dart: ^1.0.0
 
 dev_dependencies:
   flutter_test:
