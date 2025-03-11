@@ -1,10 +1,10 @@
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/app/home/products/widgets/product_card.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 
 class ProductsScreen extends StatefulWidget {

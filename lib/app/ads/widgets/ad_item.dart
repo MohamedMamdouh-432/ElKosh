@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/app/ads/controllers/ad_details_provider/ad_details_provider.dart';
 import 'package:elkosh/app/ads/controllers/ads_cubit/ads_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 
 class AdItem extends StatelessWidget {
   final Ad ad;
@@ -17,7 +17,7 @@ class AdItem extends StatelessWidget {
       onTap: () {
         context.read<AdsCubit>().selectAd(ad);
         context.read<AdDetailsProvider>().loadAdDetails();
-        context.push(RouteManager.adDetailsRoute);
+        context.push(Routes.adDetailsRoute);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),

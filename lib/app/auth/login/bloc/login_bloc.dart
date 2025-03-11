@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:auth_repository/auth_repository.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:elkosh/repos/auth_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/fields/fields.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
-import 'package:models_repository/models_repository.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';

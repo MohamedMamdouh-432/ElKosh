@@ -1,7 +1,8 @@
-import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:elkosh/repos/data_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/foundation.dart';
-import 'package:models_repository/models_repository.dart';
 
 class SearchProvider extends ChangeNotifier {
   List<Product> _products = [];

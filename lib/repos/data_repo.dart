@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:either_dart/either.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
+import 'package:elkosh/repos/submodels/submodels.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataRepo {
@@ -50,10 +53,10 @@ class DataRepo {
     try {
       final Box<Market> marketBox = Hive.box<Market>('marketsBox');
       if (marketBox.isNotEmpty) {
-        AppLogs.debug('Fetching Markets from Cache ...');
+        Logger.debug('Fetching Markets from Cache ...');
         yield Right(marketBox.values.toList());
       }
-      AppLogs.debug('Fetching Markets from Firebase ...');
+      Logger.debug('Fetching Markets from Firebase ...');
       final query = firestore.collection(Constants.marketsCol);
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
@@ -79,10 +82,10 @@ class DataRepo {
     try {
       final Box<Market> marketBox = Hive.box<Market>('marketsBox');
       if (marketBox.containsKey(_curMarket?.id)) {
-        AppLogs.debug('Fetching Market Details from Cache ...');
+        Logger.debug('Fetching Market Details from Cache ...');
         yield Right(marketBox.get(_curMarket?.id)!);
       }
-      AppLogs.debug('Fetching Market Details from Firebase ...');
+      Logger.debug('Fetching Market Details from Firebase ...');
       final docRef = firestore.doc('${Constants.marketsCol}/${_curMarket?.id}');
       yield* docRef.snapshots().asyncMap((snapshot) async {
         try {
@@ -104,10 +107,10 @@ class DataRepo {
     try {
       final Box<Market> marketBox = Hive.box<Market>('marketsBox');
       if (marketBox.isNotEmpty) {
-        AppLogs.debug('Fetching Markets from Cache ...');
+        Logger.debug('Fetching Markets from Cache ...');
         return Right(marketBox.values.toList());
       }
-      AppLogs.debug('Fetching Markets from Firebase ...');
+      Logger.debug('Fetching Markets from Firebase ...');
       final response = await firestore.collection(Constants.marketsCol).get();
       List<Market> marketsList = [];
       for (var marketDoc in response.docs) {
@@ -122,7 +125,7 @@ class DataRepo {
 
       return Right(marketsList);
     } catch (e) {
-      AppLogs.error('Markets Loading Error: $e');
+      Logger.error('Markets Loading Error: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -136,14 +139,14 @@ class DataRepo {
       final marketDoc =
           await firestore.doc('${Constants.marketsCol}/$id').get();
       if (!marketDoc.exists) {
-        AppLogs.debug('Market $id Not Found');
+        Logger.debug('Market $id Not Found');
         return false;
       }
       final Market market = Market.fromDoc(id, marketDoc.data()!);
       await marketBox.put(market.id, market);
       return marketDoc.data()?['active'] ?? false;
     } catch (e) {
-      AppLogs.error('Error @isMarketActive: $e');
+      Logger.error('Error @isMarketActive: $e');
       throw const Failure("حدث خطأ أثناء جلب المتجر");
     }
   }
@@ -154,13 +157,13 @@ class DataRepo {
     try {
       final Box<Category> categoryBox = Hive.box<Category>('categoriesBox');
       if (categoryBox.isNotEmpty) {
-        AppLogs.debug('Fetching Categories from Cache ...');
+        Logger.debug('Fetching Categories from Cache ...');
         List<Category> categories = categoryBox.values
             .where((cat) => cat.marketId == _curMarket?.id)
             .toList();
         yield Right(categories);
       }
-      AppLogs.debug('Fetching Categories from Firebase ...');
+      Logger.debug('Fetching Categories from Firebase ...');
       final query = firestore
           .collection(Constants.categorysCol)
           .where('marketId', isEqualTo: _curMarket?.id)
@@ -188,13 +191,13 @@ class DataRepo {
     try {
       final Box<Category> categoryBox = Hive.box<Category>('categoriesBox');
       if (categoryBox.isNotEmpty) {
-        AppLogs.debug('Fetching Categories from Cache ...');
+        Logger.debug('Fetching Categories from Cache ...');
         List<Category> categories = categoryBox.values
             .where((cat) => cat.marketId == _curMarket?.id)
             .toList();
         return Right(categories);
       }
-      AppLogs.debug('Fetching Categories from Firebase ...');
+      Logger.debug('Fetching Categories from Firebase ...');
       final response = await firestore
           .collection(Constants.categorysCol)
           .where('marketId', isEqualTo: _curMarket?.id)
@@ -209,7 +212,7 @@ class DataRepo {
         await categoryBox.put(category.id, category);
       return Right(categoriesList);
     } catch (e) {
-      AppLogs.error('Categories Loading Error: $e');
+      Logger.error('Categories Loading Error: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -220,10 +223,10 @@ class DataRepo {
     try {
       final Box<Product> productBox = Hive.box<Product>('productsBox');
       if (productBox.containsKey(_curProduct?.id)) {
-        AppLogs.debug('Fetching Product from Cache ...');
+        Logger.debug('Fetching Product from Cache ...');
         yield Right(productBox.get(_curProduct?.id)!);
       }
-      AppLogs.debug('Fetching Product from Firebase ...');
+      Logger.debug('Fetching Product from Firebase ...');
       final docRef =
           firestore.doc('${Constants.productsCol}/${_curProduct?.id}');
       yield* docRef.snapshots().asyncMap((snapshot) async {
@@ -246,7 +249,7 @@ class DataRepo {
   Future<Either<Failure, Map<String, dynamic>>> fetchProducts(
       int curLength) async {
     if (isThereProductThread) {
-      AppLogs.debug('fetchProducts already in progress, skipping...');
+      Logger.debug('fetchProducts already in progress, skipping...');
       return Right({
         'skip': true,
         'data': List<Product>.from([]),
@@ -259,14 +262,14 @@ class DataRepo {
       final Box<Product> productBox = Hive.box<Product>('productsBox');
       // await productBox.clear();
       if (productBox.length > curLength) {
-        AppLogs.debug('Fetching ${productBox.length} Products from Cache...');
+        Logger.debug('Fetching ${productBox.length} Products from Cache...');
         return Right({
           'skip': false,
           'data': productBox.values.toList(),
         });
       }
 
-      AppLogs.debug('Fetching Products from Firebase...');
+      Logger.debug('Fetching Products from Firebase...');
       Query query = firestore.collection(Constants.productsCol).limit(10);
 
       if (productBox.isNotEmpty) {
@@ -282,7 +285,7 @@ class DataRepo {
       final response = await query.get();
 
       if (response.docs.isEmpty) {
-        AppLogs.debug('No more products to load.');
+        Logger.debug('No more products to load.');
         return Right({
           'skip': false,
           'data': List<Product>.from([]),
@@ -308,7 +311,7 @@ class DataRepo {
         'data': productsList,
       });
     } catch (e, st) {
-      AppLogs.error('Error @fetching products: $e\n$st');
+      Logger.error('Error @fetching products: $e\n$st');
       return Left(Failure(e.toString()));
     } finally {
       isThereProductThread = false;
@@ -318,7 +321,7 @@ class DataRepo {
   Stream<Either<Failure, Map<String, dynamic>>> productsStream(
       int curLength) async* {
     if (isThereProductThread) {
-      AppLogs.debug(
+      Logger.debug(
           '@productsStream: There is another thread in progress, skipping...');
       yield Right({
         'skip': true,
@@ -332,13 +335,13 @@ class DataRepo {
       final Box<Product> productBox = Hive.box<Product>('productsBox');
       // await productBox.clear();
       if (productBox.length > curLength) {
-        AppLogs.debug('Fetching ${productBox.length} Products from Cache ...');
+        Logger.debug('Fetching ${productBox.length} Products from Cache ...');
         yield Right({
           'skip': false,
           'data': productBox.values.toList(),
         });
       }
-      AppLogs.debug('Fetching Products from Firebase ...');
+      Logger.debug('Fetching Products from Firebase ...');
       Query query = firestore.collection(Constants.productsCol).limit(10);
       if (productBox.isNotEmpty) {
         final lastProduct = productBox.values.last;
@@ -354,7 +357,7 @@ class DataRepo {
       yield* query.snapshots().asyncMap((snapshot) async {
         try {
           if (snapshot.docs.isEmpty) {
-            AppLogs.debug('No more products to load.');
+            Logger.debug('No more products to load.');
             return Right({
               'skip': false,
               'data': List<Product>.from([]),
@@ -383,7 +386,7 @@ class DataRepo {
         }
       });
     } catch (e, stackTrace) {
-      AppLogs.error('Error @fetching products: $e\n$stackTrace');
+      Logger.error('Error @fetching products: $e\n$stackTrace');
       yield Left(Failure(e.toString()));
     } finally {
       isThereProductThread = false;
@@ -416,7 +419,7 @@ class DataRepo {
         await productBox.put(product.id, product);
       return Right(productsList);
     } catch (e) {
-      AppLogs.error('Error @fetchCategoryRelatedProducts: $e');
+      Logger.error('Error @fetchCategoryRelatedProducts: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -425,10 +428,10 @@ class DataRepo {
     try {
       final Box<Product> productBox = Hive.box<Product>('productsBox');
       if (productBox.containsKey(id)) {
-        AppLogs.debug('Fetching Product from Cache ...');
+        Logger.debug('Fetching Product from Cache ...');
         return productBox.get(id)!;
       }
-      AppLogs.debug('Fetching Product from Firebase ...');
+      Logger.debug('Fetching Product from Firebase ...');
       final productDoc =
           await firestore.doc('${Constants.productsCol}/$id').get();
       if (!productDoc.exists) return Product.empty;
@@ -437,7 +440,7 @@ class DataRepo {
       await productBox.put(product.id, product);
       return product;
     } catch (e) {
-      AppLogs.error('Error @getProductById: $e');
+      Logger.error('Error @getProductById: $e');
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -488,7 +491,7 @@ class DataRepo {
         'ads': cartAds,
       });
     } catch (e) {
-      AppLogs.error('Error @fetchCart: $e');
+      Logger.error('Error @fetchCart: $e');
       return const Left(Failure('حدث خطأ أثناء تحميل السلة'));
     }
   }
@@ -507,7 +510,7 @@ class DataRepo {
         'ads': const <Ad, int>{},
       });
     } catch (e) {
-      AppLogs.error('Error @resetCart: $e');
+      Logger.error('Error @resetCart: $e');
       return const Left(Failure('حدث خطأ أثناء تفريغ السلة'));
     }
   }
@@ -524,7 +527,7 @@ class DataRepo {
       await cartBox.put('items', _items);
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @addProductToCart: $e');
+      Logger.error('Error @addProductToCart: $e');
       return const Left(Failure('حدث خطأ أثناء إضافة المنتج للسلة'));
     }
   }
@@ -550,7 +553,7 @@ class DataRepo {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @removeProductFromCart: $e');
+      Logger.error('Error @removeProductFromCart: $e');
       return const Left(Failure('حدث خطأ أثناء حذف المنتج من السلة'));
     }
   }
@@ -567,7 +570,7 @@ class DataRepo {
       await cartBox.put('ads', _ads);
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @addAdToCart: $e');
+      Logger.error('Error @addAdToCart: $e');
       return const Left(Failure('حدث خطأ أثناء إضافة العرض للسلة'));
     }
   }
@@ -590,7 +593,7 @@ class DataRepo {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @removeAdFromCart: $e');
+      Logger.error('Error @removeAdFromCart: $e');
       return const Left(Failure('حدث خطأ أثناء حذف العرض من السلة'));
     }
   }
@@ -646,7 +649,7 @@ class DataRepo {
       });
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @placeOrder: $e');
+      Logger.error('Error @placeOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -747,7 +750,7 @@ class DataRepo {
   Future<Either<Failure, Map<String, dynamic>>> fetchOngoingOrders(
       int curLength) async {
     if (isThereOOrderThread) {
-      AppLogs.debug('fetchOngoingOrders already in progress, skipping...');
+      Logger.debug('fetchOngoingOrders already in progress, skipping...');
       return Right({
         'skip': true,
         'data': List<UserOrder>.from([]),
@@ -764,14 +767,14 @@ class DataRepo {
               o.status == OrderStatus.shipped)
           .toList();
       if (orders.length > curLength) {
-        AppLogs.debug('Fetching ${orders.length} Ongoing Orders from Cache...');
+        Logger.debug('Fetching ${orders.length} Ongoing Orders from Cache...');
         return Right({
           'skip': false,
           'data': orders,
         });
       }
 
-      AppLogs.debug('Fetching Ongoing Orders from Firebase...');
+      Logger.debug('Fetching Ongoing Orders from Firebase...');
       Query query = firestore
           .collection(Constants.ordersCol)
           .where('userId', isEqualTo: getUserId())
@@ -794,7 +797,7 @@ class DataRepo {
       final response = await query.get();
 
       if (response.docs.isEmpty) {
-        AppLogs.debug('No more Ongoing Orders to load.');
+        Logger.debug('No more Ongoing Orders to load.');
         return Right({
           'skip': false,
           'data': List<UserOrder>.from([]),
@@ -830,7 +833,7 @@ class DataRepo {
         'data': orders,
       });
     } catch (e, st) {
-      AppLogs.error('Error @fetching Ongoing Orders: $e\n$st');
+      Logger.error('Error @fetching Ongoing Orders: $e\n$st');
       return Left(Failure(e.toString()));
     } finally {
       isThereOOrderThread = false;
@@ -840,7 +843,7 @@ class DataRepo {
   Future<Either<Failure, Map<String, dynamic>>> fetchHistoryOrders(
       int curLength) async {
     if (isThereHOrderThread) {
-      AppLogs.debug('fetchHistoryOrders already in progress, skipping...');
+      Logger.debug('fetchHistoryOrders already in progress, skipping...');
       return Right({
         'skip': true,
         'data': List<UserOrder>.from([]),
@@ -858,14 +861,14 @@ class DataRepo {
               o.status == OrderStatus.refused)
           .toList();
       if (orders.length > curLength) {
-        AppLogs.debug('Fetching ${orders.length} History Orders from Cache...');
+        Logger.debug('Fetching ${orders.length} History Orders from Cache...');
         return Right({
           'skip': false,
           'data': orders,
         });
       }
 
-      AppLogs.debug('Fetching History Orders from Firebase...');
+      Logger.debug('Fetching History Orders from Firebase...');
 
       Query query = firestore
           .collection(Constants.ordersCol)
@@ -890,7 +893,7 @@ class DataRepo {
       final response = await query.get();
 
       if (response.docs.isEmpty) {
-        AppLogs.debug('No more History Orders to load.');
+        Logger.debug('No more History Orders to load.');
         return Right({
           'skip': false,
           'data': List<UserOrder>.from([]),
@@ -926,7 +929,7 @@ class DataRepo {
         'data': orders,
       });
     } catch (e, st) {
-      AppLogs.error('Error @fetching History Orders: $e\n$st');
+      Logger.error('Error @fetching History Orders: $e\n$st');
       return Left(Failure(e.toString()));
     } finally {
       isThereHOrderThread = false;
@@ -946,7 +949,7 @@ class DataRepo {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @confirmDeliveryOrder: $e');
+      Logger.error('Error @confirmDeliveryOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -1033,7 +1036,7 @@ class DataRepo {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @cancelOrder: $e');
+      Logger.error('Error @cancelOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -1118,7 +1121,7 @@ class DataRepo {
       }
       return const Right(null);
     } catch (e) {
-      AppLogs.error('Error @refuseOrder: $e');
+      Logger.error('Error @refuseOrder: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -1129,10 +1132,10 @@ class DataRepo {
     try {
       final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
       if (adsBox.containsKey(id)) {
-        AppLogs.debug('Fetching Ad from Cache ...');
+        Logger.debug('Fetching Ad from Cache ...');
         return adsBox.get(id)!;
       }
-      AppLogs.debug('Fetching Ad from Firebase ...');
+      Logger.debug('Fetching Ad from Firebase ...');
       final adDoc = await firestore.doc('${Constants.adsCol}/$id').get();
       if (!adDoc.exists) return Ad.empty;
       List<Offer> offers = [];
@@ -1144,7 +1147,7 @@ class DataRepo {
       await adsBox.put(ad.id, ad);
       return ad;
     } catch (e) {
-      AppLogs.error('Error @getProductById: $e');
+      Logger.error('Error @getProductById: $e');
       throw const Failure("حدث خطأ أثناء جلب المنتج");
     }
   }
@@ -1153,10 +1156,10 @@ class DataRepo {
     try {
       final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
       if (adsBox.isNotEmpty) {
-        AppLogs.debug('Fetching Ads from Cache ...');
+        Logger.debug('Fetching Ads from Cache ...');
         yield Right(adsBox.values.toList());
       }
-      AppLogs.debug('Fetching Ads from Firebase ...');
+      Logger.debug('Fetching Ads from Firebase ...');
       final query = firestore.collection(Constants.adsCol);
 
       yield* query.snapshots().asyncMap((snapshot) async {
@@ -1186,10 +1189,10 @@ class DataRepo {
     try {
       final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
       if (adsBox.isNotEmpty) {
-        AppLogs.debug('Fetching Ads from Cache ...');
+        Logger.debug('Fetching Ads from Cache ...');
         return Right(adsBox.values.toList());
       }
-      AppLogs.debug('Fetching Ads from Firebase ...');
+      Logger.debug('Fetching Ads from Firebase ...');
       final response = await firestore.collection(Constants.adsCol).get();
       List<Ad> adsList = [];
       for (var adDoc in response.docs) {
@@ -1204,7 +1207,7 @@ class DataRepo {
       for (var ad in adsList) await adsBox.put(ad.id, ad);
       return Right(adsList);
     } catch (e) {
-      AppLogs.error('Error @fetchAds: $e');
+      Logger.error('Error @fetchAds: $e');
       return Left(Failure(e.toString()));
     }
   }
@@ -1213,10 +1216,10 @@ class DataRepo {
     try {
       final Box<Ad> adsBox = Hive.box<Ad>('adsBox');
       if (adsBox.containsKey(_curAd?.id)) {
-        AppLogs.debug('Fetching Ad from Cache ...');
+        Logger.debug('Fetching Ad from Cache ...');
         yield Right(adsBox.get(_curAd?.id)!);
       }
-      AppLogs.debug('Fetching Ad from Firebase ...');
+      Logger.debug('Fetching Ad from Firebase ...');
       final docRef = firestore.doc('${Constants.adsCol}/${_curAd?.id}');
 
       yield* docRef.snapshots().asyncMap((snapshot) async {
@@ -1251,10 +1254,10 @@ class DataRepo {
               product.name.toLowerCase().contains(productName.toLowerCase()))
           .toList();
       if (cachedProducts.isNotEmpty) {
-        AppLogs.debug('Fetching Products from Cache ...');
+        Logger.debug('Fetching Products from Cache ...');
         return Right(cachedProducts);
       }
-      AppLogs.debug('Fetching Products from Firebase ...');
+      Logger.debug('Fetching Products from Firebase ...');
       final searchResults = await firestore
           .collection(Constants.productsCol)
           .where(
@@ -1272,7 +1275,7 @@ class DataRepo {
       }
       return Right(searchProductList);
     } catch (e) {
-      AppLogs.error('Error @searchForProductByName: $e');
+      Logger.error('Error @searchForProductByName: $e');
       return Left(Failure(e.toString()));
     }
   }

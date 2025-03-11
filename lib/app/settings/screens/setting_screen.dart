@@ -2,12 +2,12 @@ import 'package:elkosh/app/settings/components/settings_appbar.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
 import 'package:elkosh/app/settings/orders/bloc/orders_cubit.dart';
 import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -39,7 +39,7 @@ class SettingScreen extends StatelessWidget {
                   ),
                   onTap: () {
                     context.read<OrdersCubit>().fetchOngoingOrders();
-                    context.push(RouteManager.talabatyScreen);
+                    context.push(Routes.talabatyScreen);
                   },
                 ),
                 ListTile(
@@ -66,7 +66,7 @@ class SettingScreen extends StatelessWidget {
                     'عن التطبيق',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () => context.push(RouteManager.aboutAppRoute),
+                  onTap: () => context.push(Routes.aboutAppRoute),
                 ),
                 ListTile(
                   leading: const Icon(
@@ -95,7 +95,7 @@ class SettingScreen extends StatelessWidget {
                       },
                       onConfirmBtnTap: () {
                         context.read<ProfileProvider>().signOut();
-                        context.go(RouteManager.loginRoute);
+                        context.go(Routes.loginRoute);
                       },
                     );
                   },
@@ -124,7 +124,7 @@ class SettingScreen extends StatelessWidget {
                       },
                       onConfirmBtnTap: () {
                         context.read<ProfileProvider>().deleteProfile();
-                        context.go(RouteManager.loginRoute);
+                        context.go(Routes.loginRoute);
                       },
                     );
                   },
@@ -156,7 +156,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(phoneUri);
                           } catch (e) {
-                            AppLogs.error('Setting Phone Error: $e');
+                            Logger.error('Setting Phone Error: $e');
                           }
                         },
                         iconSize: 40,
@@ -175,7 +175,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(whatsappUri);
                           } catch (e) {
-                            AppLogs.error('Setting Whatsapp Error: $e');
+                            Logger.error('Setting Whatsapp Error: $e');
                           }
                         },
                         iconSize: 40,
@@ -193,7 +193,7 @@ class SettingScreen extends StatelessWidget {
                           try {
                             await launchUrl(facebookUri);
                           } catch (e) {
-                            AppLogs.error('Setting Facebook Error: $e');
+                            Logger.error('Setting Facebook Error: $e');
                           }
                         },
                         iconSize: 40,

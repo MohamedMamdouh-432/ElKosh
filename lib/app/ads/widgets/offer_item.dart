@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:elkosh/core/services/functions.dart';
-import 'package:elkosh/core/services/context_media.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/submodels/submodels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:models_repository/models_repository.dart';
 
 class OfferItem extends StatelessWidget {
   final Offer offer;

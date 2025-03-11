@@ -1,6 +1,6 @@
+import 'package:elkosh/repos/models/models.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:models_repository/models_repository.dart';
 
 part 'offer.g.dart';
 

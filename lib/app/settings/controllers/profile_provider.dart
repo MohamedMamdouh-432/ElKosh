@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:auth_repository/auth_repository.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:elkosh/repos/auth_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
+import 'package:elkosh/repos/user_repo.dart';
 import 'package:flutter/foundation.dart';
-import 'package:models_repository/models_repository.dart';
-import 'package:user_repository/user_repository.dart';
 
 class ProfileProvider extends ChangeNotifier {
   User _user = User.empty;

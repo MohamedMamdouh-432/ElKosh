@@ -1,9 +1,9 @@
 import 'package:elkosh/app/home/markets/categories/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/app/home/markets/categories/widgets/category_item.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class RelatedCategorysGrid extends StatelessWidget {

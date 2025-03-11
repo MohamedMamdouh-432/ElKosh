@@ -1,10 +1,10 @@
-import 'package:elkosh/core/services/context_media.dart';
 import 'package:elkosh/core/services/functions.dart';
 import 'package:elkosh/core/theme/themes.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:models_repository/models_repository.dart';
 
 class OrderAdCard extends StatelessWidget {
   final MapEntry<Ad, int> ad;

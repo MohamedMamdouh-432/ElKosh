@@ -1,5 +1,4 @@
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/core/services/context_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -39,7 +38,7 @@ class HomeHiItem extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SvgPicture.asset(ImageManager.hiSvg),
+              SvgPicture.asset(Images.hiSvg),
             ],
           ),
           const Text(

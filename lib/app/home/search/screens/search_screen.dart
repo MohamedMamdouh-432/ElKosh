@@ -1,9 +1,9 @@
 import 'package:elkosh/app/home/products/widgets/product_card.dart';
 import 'package:elkosh/app/home/search/controllers/search_provider.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

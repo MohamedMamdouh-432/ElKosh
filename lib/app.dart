@@ -65,7 +65,7 @@ class ElKoshLauncher extends StatelessWidget {
       designSize: const Size(320, 690),
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
-        routerConfig: RouteManager.router,
+        routerConfig: Routes.router,
         theme: ThemeData(
           textTheme: GoogleFonts.tajawalTextTheme(),
           useMaterial3: true,

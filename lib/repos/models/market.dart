@@ -1,7 +1,7 @@
+import 'package:elkosh/repos/submodels/submodels.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:models_repository/models_repository.dart';
 
 part 'market.g.dart';
 

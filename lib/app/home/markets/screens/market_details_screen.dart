@@ -1,9 +1,11 @@
 import 'package:elkosh/app/home/markets/categories/components/related_categories_grid.dart';
 import 'package:elkosh/app/home/markets/categories/controllers/categorys_bloc/categorys_bloc.dart';
 import 'package:elkosh/app/home/markets/controllers/market_details_provider/market_details_provider.dart';
+import 'package:elkosh/app/home/widgets/image_section.dart';
 import 'package:elkosh/core/services/functions.dart';
 import 'package:elkosh/core/services/time_service.dart';
-import 'package:elkosh/app/home/widgets/image_section.dart';
+import 'package:elkosh/core/utils/utils.dart';
+import 'package:elkosh/repos/enums/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +13,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -127,7 +128,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                                             try {
                                               await launchUrl(whatsappUri);
                                             } catch (e) {
-                                              AppLogs.error(
+                                              Logger.error(
                                                   'Market Whatsapp Error: $e');
                                             }
                                           },
@@ -149,7 +150,7 @@ class MarkettDetailsScreen extends StatelessWidget {
                                             try {
                                               await launchUrl(phoneUri);
                                             } catch (e) {
-                                              AppLogs.error(
+                                              Logger.error(
                                                   'Market Phone Error: $e');
                                             }
                                           },

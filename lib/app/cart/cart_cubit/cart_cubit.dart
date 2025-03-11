@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:data_repository/data_repository.dart';
 import 'package:elkosh/app/notifications/notific2/send_notification_service.dart';
 import 'package:elkosh/core/services/service_locator.dart';
+import 'package:elkosh/repos/data_repo.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/models/models.dart';
+import 'package:elkosh/repos/submodels/submodels.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:models_repository/models_repository.dart';
 
 part 'cart_state.dart';
 

@@ -1,4 +1,3 @@
-import 'package:elkosh/core/services/context_media.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ class EmptyCartView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            ImageManager.shoppingCart,
+            Images.shoppingCart,
             height: context.height * 0.2,
             width: double.infinity,
           ),

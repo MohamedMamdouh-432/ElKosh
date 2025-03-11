@@ -1,8 +1,8 @@
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/core/services/functions.dart';
+import 'package:elkosh/repos/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';

@@ -1,4 +1,4 @@
-class ImageManager {
+class Images {
   static String shoppingBasket = "assets/shopping_basket.png";
   static String shoppingCart = "assets/shopping_cart.png";
   static String hiSvg = "assets/hi.svg";

@@ -1,18 +1,19 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:elkosh/app/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/app/auth/widgets/auth_button.dart';
+import 'package:elkosh/app/auth/widgets/auth_form_field.dart';
 import 'package:elkosh/app/cart/cart_cubit/cart_cubit.dart';
 import 'package:elkosh/app/settings/controllers/profile_provider.dart';
 import 'package:elkosh/core/theme/themes.dart';
 import 'package:elkosh/core/utils/utils.dart';
-import 'package:elkosh/app/auth/widgets/auth_form_field.dart';
+import 'package:elkosh/repos/enums/enums.dart';
+import 'package:elkosh/repos/fields/fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:models_repository/models_repository.dart';
 import 'package:quickalert/quickalert.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -68,13 +69,13 @@ class LoginScreen extends StatelessWidget {
                 context.read<LoginBloc>().add(LoginStateReset());
                 Future.delayed(
                   const Duration(seconds: 2),
-                  () => context.go(RouteManager.navbarRoute),
+                  () => context.go(Routes.navbarRoute),
                 );
               } else if (state.submissionStatus.isCanceled) {
                 context.read<ProfileProvider>().loadProfile();
                 context.read<CartCubit>().fetchCart();
                 context.read<LoginBloc>().add(LoginStateReset());
-                context.go(RouteManager.navbarRoute);
+                context.go(Routes.navbarRoute);
               }
             },
             builder: (context, state) {
@@ -155,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                             const Text('ليس لديك حساب؟'),
                             TextButton(
                               onPressed: () =>
-                                  context.push(RouteManager.registerRoute),
+                                  context.push(Routes.registerRoute),
                               child: Text(
                                 'إنشاء حساب',
                                 style: TextStyle(
