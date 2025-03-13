@@ -22,8 +22,6 @@ class DataRepo {
   Map<String, int> _ads;
   bool isThereProductThread, isThereOOrderThread, isThereHOrderThread;
 
-  // todo: remember to make cache listen to firebase changes
-
   DataRepo({
     required this.firestore,
     required this.fireStorage,
@@ -598,23 +596,6 @@ class DataRepo {
     }
   }
 
-  /*----- Order Operations -----*/
-
-  Future<List<String?>> getAdminTokens() async {
-    QuerySnapshot querySnapshot = await firestore
-        .collection(Constants.userCol)
-        .where('userType', isEqualTo: 'admin')
-        .get();
-    List<String> adminTokens = [];
-    for (var doc in querySnapshot.docs) {
-      String? token = doc['token'];
-      if (token != null) {
-        adminTokens.add(token);
-      }
-    }
-    return adminTokens;
-  }
-
   Future<Either<Failure, Null>> placeOrder(Location location) async {
     try {
       final seqIdDoc =
@@ -654,98 +635,62 @@ class DataRepo {
     }
   }
 
-  // Stream<Either<Failure, Map<String, List<UserOrder>>>> ordersStream() async* {
-  //   try {
-  //     final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
-  //     if (ordersBox.isNotEmpty) {
-  //       final ongoingOrders = ordersBox.values
-  //           .where((order) =>
-  //               order.status == OrderStatus.pending ||
-  //               order.status == OrderStatus.shipped)
-  //           .toList();
+  /*----- Order Operations -----*/
 
-  //       final historyOrders = ordersBox.values
-  //           .where((order) =>
-  //               order.status == OrderStatus.cancelled ||
-  //               order.status == OrderStatus.delivered ||
-  //               order.status == OrderStatus.refused)
-  //           .toList();
+  Future<List<String?>> getAdminTokens() async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection(Constants.userCol)
+        .where('userType', isEqualTo: 'admin')
+        .get();
+    List<String> adminTokens = [];
+    for (var doc in querySnapshot.docs) {
+      String? token = doc['token'];
+      if (token != null) {
+        adminTokens.add(token);
+      }
+    }
+    return adminTokens;
+  }
 
-  //       yield Right({
-  //         'ongoing': ongoingOrders,
-  //         'history': historyOrders,
-  //       });
-  //     }
-
-  //     final userId = getUserId();
-  //     final ongoingOrdersStream = firestore
-  //         .collection(Constants.ordersCol)
-  //         .where('userId', isEqualTo: userId)
-  //         .where('status', whereIn: ['pending', 'shipped'])
-  //         .orderBy('createdAt', descending: true)
-  //         .snapshots();
-
-  //     final historyOrdersStream = firestore
-  //         .collection(Constants.ordersCol)
-  //         .where('userId', isEqualTo: userId)
-  //         .where('status', whereIn: ['cancelled', 'delivered', 'refused'])
-  //         .orderBy('createdAt', descending: true)
-  //         .snapshots();
-
-  //     yield* Rx.combineLatest2(
-  //       ongoingOrdersStream,
-  //       historyOrdersStream,
-  //       (ongoingSnapshot, historySnapshot) async {
-  //         try {
-  //           final List<UserOrder> ongoingOrderList = [];
-  //           final List<UserOrder> historyOrderList = [];
-  //           for (var doc in ongoingSnapshot.docs) {
-  //             if (doc.data()['seqId'] != null) continue;
-  //             List<ShoppingItem> shopping = [];
-  //             for (MapEntry entry in doc.data()['items'].entries) {
-  //               final product = await getProductById(entry.key);
-  //               shopping.add(ShoppingItem.fromDoc(entry.value, product));
-  //             }
-  //             ongoingOrderList.add(UserOrder.fromDoc(
-  //               doc.data(),
-  //               shopping,
-  //               doc.id,
-  //             ));
-  //           }
-
-  //           for (var doc in historySnapshot.docs) {
-  //             if (doc.data()['seqId'] != null) continue;
-  //             List<ShoppingItem> shopping = [];
-  //             for (MapEntry entry in doc.data()['items'].entries) {
-  //               final product = await getProductById(entry.key);
-  //               if (product == Product.empty) continue;
-  //               shopping.add(ShoppingItem.fromDoc(entry.value, product));
-  //             }
-  //             historyOrderList.add(UserOrder.fromDoc(
-  //               doc.data(),
-  //               shopping,
-  //               doc.id,
-  //             ));
-  //           }
-
-  //           await ordersBox.clear();
-  //           for (var order in [...ongoingOrderList, ...historyOrderList])
-  //             await ordersBox.put(order.id, order);
-
-  //           return Right({
-  //             'ongoing': ongoingOrderList,
-  //             'history': historyOrderList,
-  //           });
-  //         } catch (e) {
-  //           return Left(Failure(e.toString()));
-  //         }
-  //       },
-  //     ).asyncMap((value) async =>
-  //         await value as Either<Failure, Map<String, List<UserOrder>>>);
-  //   } catch (e) {
-  //     yield Left(Failure(e.toString()));
-  //   }
-  // }
+  void listenToOngoingOrders() {
+    firestore
+        .collection(Constants.ordersCol)
+        .where('userId', isEqualTo: getUserId())
+        .where('status', whereIn: [
+          OrderStatus.pending.name,
+          OrderStatus.shipped.name,
+        ])
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .listen(
+          (QuerySnapshot snapshot) async {
+            Logger.debug('Ongoing Orders Updated in Firestore...');
+            final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+            await ordersBox.clear();
+            for (var doc in snapshot.docs) {
+              final data = doc.data() as Map<String, dynamic>?;
+              if (data == null) continue;
+              if (data['seqId'] != null) continue;
+              Map<Product, int> items = {};
+              for (MapEntry entry in (data['items'] as Map).entries) {
+                final product = await getProductById(entry.key);
+                items.putIfAbsent(product, () => entry.value);
+              }
+              Map<Ad, int> ads = {};
+              for (MapEntry entry in (data['ads'] as Map).entries) {
+                final ad = await getAdById(entry.key);
+                ads.putIfAbsent(ad, () => entry.value);
+              }
+              await ordersBox.put(
+                doc.id,
+                UserOrder.fromDoc(data, items, ads, doc.id),
+              );
+            }
+            Logger.debug('Ongoing Orders Updated in Cache');
+          },
+          onError: (error) => Logger.error('Error in Orders Listener: $error'),
+        );
+  }
 
   Future<Either<Failure, Map<String, dynamic>>> fetchOngoingOrders(
       int curLength) async {
@@ -838,6 +783,47 @@ class DataRepo {
     } finally {
       isThereOOrderThread = false;
     }
+  }
+
+  void listenToHistoryOrders() {
+    firestore
+        .collection(Constants.ordersCol)
+        .where('userId', isEqualTo: getUserId())
+        .where('status', whereIn: [
+          OrderStatus.cancelled.name,
+          OrderStatus.delivered.name,
+          OrderStatus.refused.name,
+        ])
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .listen(
+          (QuerySnapshot snapshot) async {
+            Logger.debug('History Orders Updated in Firestore...');
+            final Box<UserOrder> ordersBox = Hive.box<UserOrder>('ordersBox');
+            await ordersBox.clear();
+            for (var doc in snapshot.docs) {
+              final data = doc.data() as Map<String, dynamic>?;
+              if (data == null) continue;
+              if (data['seqId'] != null) continue;
+              Map<Product, int> items = {};
+              for (MapEntry entry in (data['items'] as Map).entries) {
+                final product = await getProductById(entry.key);
+                items.putIfAbsent(product, () => entry.value);
+              }
+              Map<Ad, int> ads = {};
+              for (MapEntry entry in (data['ads'] as Map).entries) {
+                final ad = await getAdById(entry.key);
+                ads.putIfAbsent(ad, () => entry.value);
+              }
+              await ordersBox.put(
+                doc.id,
+                UserOrder.fromDoc(data, items, ads, doc.id),
+              );
+            }
+            Logger.debug('History Orders Updated in Cache');
+          },
+          onError: (error) => Logger.error('Error in Orders Listener: $error'),
+        );
   }
 
   Future<Either<Failure, Map<String, dynamic>>> fetchHistoryOrders(

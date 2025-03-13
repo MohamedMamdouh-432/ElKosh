@@ -37,8 +37,9 @@ class SettingScreen extends StatelessWidget {
                     'طلباتي',
                     style: TextStyle(fontSize: 20),
                   ),
-                  onTap: () {
-                    context.read<OrdersCubit>().fetchOngoingOrders();
+                  onTap: () async{
+                    await context.read<OrdersCubit>().listenToOrders();
+                    await context.read<OrdersCubit>().fetchOngoingOrders();
                     context.push(Routes.talabatyScreen);
                   },
                 ),

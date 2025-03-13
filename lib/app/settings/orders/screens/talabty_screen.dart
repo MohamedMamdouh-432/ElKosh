@@ -48,9 +48,13 @@ class TalabtyScreen extends StatelessWidget {
                     icon: Icon(Icons.list),
                   ),
                 ],
-                onTap: (value) => value == 0
-                    ? context.read<OrdersCubit>().fetchOngoingOrders()
-                    : context.read<OrdersCubit>().fetchHistoryOrders(),
+                onTap: (value) async{
+                  await context.read<OrdersCubit>().listenToOrders();
+                  if (value == 0)
+                    await context.read<OrdersCubit>().fetchOngoingOrders();
+                  else
+                    await context.read<OrdersCubit>().fetchHistoryOrders();
+                },
               ),
             ),
             body: const TabBarView(
