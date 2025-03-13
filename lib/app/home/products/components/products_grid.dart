@@ -4,7 +4,6 @@ import 'package:elkosh/app/home/products/controllers/products_cubit/products_cub
 import 'package:elkosh/app/home/products/widgets/product_grid_card.dart';
 import 'package:elkosh/core/utils/utils.dart';
 import 'package:elkosh/repos/enums/enums.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -91,11 +90,13 @@ class ProductsGrid extends StatelessWidget {
                                   color: Colors.blueGrey,
                                 ),
                               ),
-                              child: const Icon(
-                                CupertinoIcons.square_grid_2x2,
+                              child: Icon(
+                                Icons.grid_view_outlined,
                                 size: 40,
+                                color: Colors.blueGrey,
                               ),
                             ),
+                            Spacer(),
                             const Text("عرض الكل"),
                           ],
                         ),

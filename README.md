@@ -64,9 +64,3 @@
     	- image slider
 
     * search feature
-
-# Edits
-
-# Bugs
-
-- Search for any number: (?<!\w)\d+(\.\d+)?(?!\w)

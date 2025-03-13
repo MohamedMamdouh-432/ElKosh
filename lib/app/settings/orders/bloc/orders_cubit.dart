@@ -10,8 +10,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'orders_state.dart';
 
 class OrdersCubit extends Cubit<OrdersState> {
-  StreamSubscription? _subscription;
-  OrdersCubit() : super(OrdersState.initial);
+  OrdersCubit() : super(OrdersState.initial) {
+    listenToOrders();
+  }
+
+  FutureOr<void> listenToOrders() {
+    sl.get<DataRepo>().listenToOngoingOrders();
+    sl.get<DataRepo>().listenToHistoryOrders();
+    emit(state.copyWith(hasHistorysMax: false, hasOngoingsMax: false));
+  }
 
   Future<void> fetchOngoingOrders() async {
     if (state.hasOngoingsMax) return;
@@ -172,12 +179,5 @@ class OrdersCubit extends Cubit<OrdersState> {
         status: OrdersStatus.placingFailure,
       ));
     }
-  }
-
-  @override
-  Future<void> close() {
-    _subscription?.cancel();
-    _subscription = null;
-    return super.close();
   }
 }

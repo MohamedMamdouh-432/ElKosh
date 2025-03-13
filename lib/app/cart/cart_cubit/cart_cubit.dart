@@ -186,47 +186,47 @@ class CartCubit extends Cubit<CartState> {
           errMsg: l.message,
         )),
         (r) async {
-          Future.wait([
-            Future.delayed(Duration.zero, () async {
-              state.items.forEach((p, c) async {
-                if (p.quantity - c <= 7) {
-                  for (var token in adminTokens.take(2)) {
-                    await SendNotificationService.sendNotificationUsingApi(
-                      title: 'منتج على وشك النفاذ',
-                      token: token,
-                      body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
-                      data: {'type': 'orders'},
-                    );
-                  }
-                }
-              });
-              state.ads.forEach((ad, c) async {
-                for (Offer offer in ad.offers) {
-                  if (offer.quantity - c <= 7) {
-                    for (var token in adminTokens.take(2)) {
-                      await SendNotificationService.sendNotificationUsingApi(
-                        title: 'عرض على وشك النفاذ',
-                        token: token,
-                        body:
-                            'العرض ${offer.product.name} تبقى منه ${offer.quantity - c}',
-                        data: {'type': 'offers'},
-                      );
-                    }
-                  }
-                }
-              });
-            }),
-            Future.delayed(Duration.zero, () async {
-              for (var token in adminTokens.take(2)) {
-                await SendNotificationService.sendNotificationUsingApi(
-                  title: 'طلب جديد',
-                  token: token,
-                  body: 'تم استلام طلب جديد',
-                  data: {'type': 'orders'},
-                );
-              }
-            })
-          ]);
+          // Future.wait([
+          //   Future.delayed(Duration.zero, () async {
+          //     state.items.forEach((p, c) async {
+          //       if (p.quantity - c <= 7) {
+          //         for (var token in adminTokens.take(2)) {
+          //           await SendNotificationService.sendNotificationUsingApi(
+          //             title: 'منتج على وشك النفاذ',
+          //             token: token,
+          //             body: 'المنتج ${p.name} تبقى منه ${p.quantity - c}',
+          //             data: {'type': 'orders'},
+          //           );
+          //         }
+          //       }
+          //     });
+          //     state.ads.forEach((ad, c) async {
+          //       for (Offer offer in ad.offers) {
+          //         if (offer.quantity - c <= 7) {
+          //           for (var token in adminTokens.take(2)) {
+          //             await SendNotificationService.sendNotificationUsingApi(
+          //               title: 'عرض على وشك النفاذ',
+          //               token: token,
+          //               body:
+          //                   'العرض ${offer.product.name} تبقى منه ${offer.quantity - c}',
+          //               data: {'type': 'offers'},
+          //             );
+          //           }
+          //         }
+          //       }
+          //     });
+          //   }),
+          //   Future.delayed(Duration.zero, () async {
+          //     for (var token in adminTokens.take(2)) {
+          //       await SendNotificationService.sendNotificationUsingApi(
+          //         title: 'طلب جديد',
+          //         token: token,
+          //         body: 'تم استلام طلب جديد',
+          //         data: {'type': 'orders'},
+          //       );
+          //     }
+          //   })
+          // ]);
           emit(state.copyWith(status: CartStatus.placingSuccess));
         },
       );
