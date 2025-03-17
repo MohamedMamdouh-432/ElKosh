@@ -1,3 +1,4 @@
+import 'package:elkosh/app/home/components/home_appbar.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/app/home/products/widgets/product_card.dart';
 import 'package:elkosh/repos/enums/enums.dart';
@@ -71,34 +72,42 @@ class _ProductsScreenState extends State<ProductsScreen> {
             ),
             child: Scaffold(
               backgroundColor: Colors.transparent,
-              appBar: AppBar(title: const Text("تصفح المنتجات")),
-              body: GridView.builder(
-                cacheExtent: 20,
-                controller: _scrollController,
-                padding: EdgeInsets.symmetric(
-                  vertical: 10.h,
-                  horizontal: 10.w,
-                ),
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 120,
-                  crossAxisSpacing: 10.sp,
-                  mainAxisSpacing: 10.sp,
-                  childAspectRatio: 2.sp / 3.5.sp,
-                ),
-                itemCount: params['isRelated'] as bool
-                    ? state.relProducts.length
-                    : state.hasReachedMax
-                        ? state.products.length
-                        : state.products.length + 1,
-                itemBuilder: (context, index) => index >= state.products.length
-                    ? const Center(
-                        child: CircularProgressIndicator(strokeWidth: 3))
-                    : ProductCard(
-                        product: params['isRelated'] as bool
-                            ? state.relProducts[index]
-                            : state.products[index],
-                        steps: params['steps'] as int,
+              body: Column(
+                children: [
+                  HomeAppBar(),
+                  Expanded(
+                    flex: 1,
+                    child: GridView.builder(
+                      cacheExtent: 20,
+                      controller: _scrollController,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10.h,
+                        horizontal: 10.w,
                       ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 120,
+                        crossAxisSpacing: 10.sp,
+                        mainAxisSpacing: 10.sp,
+                        childAspectRatio: 2.sp / 3.5.sp,
+                      ),
+                      itemCount: params['isRelated'] as bool
+                          ? state.relProducts.length
+                          : state.hasReachedMax
+                              ? state.products.length
+                              : state.products.length + 1,
+                      itemBuilder: (context, index) => index >=
+                              state.products.length
+                          ? const Center(
+                              child: CircularProgressIndicator(strokeWidth: 3))
+                          : ProductCard(
+                              product: params['isRelated'] as bool
+                                  ? state.relProducts[index]
+                                  : state.products[index],
+                              steps: params['steps'] as int,
+                            ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

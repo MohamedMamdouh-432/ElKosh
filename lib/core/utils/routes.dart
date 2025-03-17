@@ -3,7 +3,7 @@ import 'package:elkosh/app/auth/login/bloc/login_bloc.dart';
 import 'package:elkosh/app/auth/login/screens/login_screen.dart';
 import 'package:elkosh/app/auth/register/screens/otp_screen.dart';
 import 'package:elkosh/app/auth/register/screens/register_screen.dart';
-import 'package:elkosh/app/cart/screens/delivery_location_picker_screen.dart';
+// import 'package:elkosh/app/cart/screens/delivery_location_picker_screen.dart';
 import 'package:elkosh/app/home/markets/screens/market_details_screen.dart';
 import 'package:elkosh/app/home/products/screens/product_details_screen.dart';
 import 'package:elkosh/app/home/products/screens/products_screen.dart';
@@ -93,10 +93,10 @@ abstract class Routes {
         path: marketDetailsRoute,
         builder: (_, __) => const MarkettDetailsScreen(),
       ),
-      GoRoute(
-        path: deliveryLocationPickerRoute,
-        builder: (_, __) => DeliveryLocationPickerScreen(),
-      ),
+      // GoRoute(
+      //   path: deliveryLocationPickerRoute,
+      //   builder: (_, __) => DeliveryLocationPickerScreen(),
+      // ),
       GoRoute(
         path: ongoingOrderDetailsRoute,
         builder: (_, __) => const OngoingOrderDetailsScreen(),

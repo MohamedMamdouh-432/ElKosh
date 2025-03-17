@@ -25,58 +25,69 @@ class SearchScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: Consumer<SearchProvider>(
-            builder: (context, state, _) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    const Gap(20),
-                    SearchBar(
-                      hintText: 'ابحث من هنا',
-                      autoFocus: true,
-                      leading: const Icon(Icons.search, size: 26),
-                      elevation: const WidgetStatePropertyAll(0),
-                      hintStyle: WidgetStatePropertyAll(
-                        TextStyle(
-                          color: Colors.black54,
-                          fontSize: 10.sp,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      padding: const WidgetStatePropertyAll(
-                          EdgeInsets.symmetric(horizontal: 10)),
-                      onSubmitted: (value) =>
-                          context.read<SearchProvider>().submitQuery(value),
+        child: SearchingBar(),
+      ),
+    );
+  }
+}
+
+class SearchingBar extends StatelessWidget {
+  const SearchingBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Consumer<SearchProvider>(
+        builder: (context, state, _) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                const Gap(20),
+                SearchBar(
+                  hintText: 'ابحث من هنا',
+                  autoFocus: true,
+                  leading: const Icon(Icons.search, size: 26),
+                  elevation: const WidgetStatePropertyAll(0),
+                  hintStyle: WidgetStatePropertyAll(
+                    TextStyle(
+                      color: Colors.black54,
+                      fontSize: 10.sp,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const Gap(10),
-                    Skeletonizer(
-                      enabled: state.status == LoadStatus.inProgress,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                          maxCrossAxisExtent: 120,
-                          crossAxisSpacing: 10.sp,
-                          mainAxisSpacing: 10.sp,
-                          childAspectRatio: 2.sp / 3.5.sp,
-                        ),
-                        itemCount: state.products.length,
-                        itemBuilder: (context, index) => ProductCard(
-                          product: state.products[index],
-                          steps: 2,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
+                  padding: const WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(horizontal: 10)),
+                  onSubmitted: (value) =>
+                      context.read<SearchProvider>().submitQuery(value),
                 ),
-              );
-            },
-          ),
-        ),
+                const Gap(10),
+                Skeletonizer(
+                  enabled: state.status == LoadStatus.inProgress,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 120,
+                      crossAxisSpacing: 10.sp,
+                      mainAxisSpacing: 10.sp,
+                      childAspectRatio: 2.sp / 3.5.sp,
+                    ),
+                    itemCount: state.products.length,
+                    itemBuilder: (context, index) => ProductCard(
+                      product: state.products[index],
+                      steps: 2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

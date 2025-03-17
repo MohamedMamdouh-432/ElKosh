@@ -8,7 +8,6 @@ import 'package:elkosh/app/cart/widgets/cart_item_card.dart';
 import 'package:elkosh/app/home/products/controllers/products_cubit/products_cubit.dart';
 import 'package:elkosh/core/theme/themes.dart';
 import 'package:elkosh/repos/enums/enums.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -86,51 +85,29 @@ class CartScreen extends StatelessWidget {
                               children: [
                                 Visibility(
                                   visible: state.items.isNotEmpty,
-                                  child: ExpandablePanel(
-                                    header: const Text('المشتريات',
-                                        textScaler: TextScaler.linear(1.5)),
-                                    collapsed: const SizedBox(),
-                                    expanded: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      child: Column(
-                                        children: state.items.entries
-                                            .map((entry) => CartItemCard(
-                                                product: entry.key,
-                                                quantity: entry.value))
-                                            .toList(),
-                                      ),
-                                    ),
-                                    theme: const ExpandableThemeData(
-                                      headerAlignment:
-                                          ExpandablePanelHeaderAlignment.center,
-                                      tapBodyToExpand: true,
-                                      tapBodyToCollapse: true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      children: state.items.entries
+                                          .map((entry) => CartItemCard(
+                                              product: entry.key,
+                                              quantity: entry.value))
+                                          .toList(),
                                     ),
                                   ),
                                 ),
                                 Visibility(
                                   visible: state.ads.isNotEmpty,
-                                  child: ExpandablePanel(
-                                    header: const Text('العروض',
-                                        textScaler: TextScaler.linear(1.5)),
-                                    collapsed: const SizedBox(),
-                                    expanded: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 5),
-                                      child: Column(
-                                        children: state.ads.entries
-                                            .map((entry) => CartAdCard(
-                                                ad: entry.key,
-                                                quantity: entry.value))
-                                            .toList(),
-                                      ),
-                                    ),
-                                    theme: const ExpandableThemeData(
-                                      headerAlignment:
-                                          ExpandablePanelHeaderAlignment.center,
-                                      tapBodyToExpand: true,
-                                      tapBodyToCollapse: true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Column(
+                                      children: state.ads.entries
+                                          .map((entry) => CartAdCard(
+                                              ad: entry.key,
+                                              quantity: entry.value))
+                                          .toList(),
                                     ),
                                   ),
                                 ),
